@@ -1,0 +1,39 @@
+//Test file for sprite loading
+//Loads following types of image: 
+//S - single images 
+//G - groups of images with incremental names (g1 g2 g3)
+//L - a line of images in one file
+//T - a sprite sheet (2d)
+//A - sprite sheet where each cell is a unique set
+
+//S format: S Name,filepath
+//G format: G SeriesName,Fnm1,Fnm2,Fnm3...
+//L format: L SeriesName,Filepath,Number of images on line
+//T format: T Filepath,number of rows, number of columns,RowName1, RowName2, RowName3, RowName4,.....  
+//A format: A Filepath,number of rows, number of columns, (1,1) name, (1,2) name........
+
+
+G TavishWalkSouth,Tavish_Walk_South_1.png,Tavish_Walk_South_2.png,Tavish_Walk_South_3.png,Tavish_Walk_South_4.png,Tavish_Walk_South_5.png,Tavish_Walk_South_6.png
+
+G TavishWalkNorth,Tavish_Walk_North_1.png,Tavish_Walk_North_2.png,Tavish_Walk_North_3.png,Tavish_Walk_North_4.png,Tavish_Walk_North_5.png,Tavish_Walk_North_6.png
+
+S TavishStandSouth,Tavish_Stand_South_1.png
+
+
+S Wal2l,w1.png
+
+S Wall,w2.png
+
+
+S Tile1,t1.png
+
+
+S WatchmanStandSouth,Watchman_Stand_South.png
+S WatchmanStandNorth,Watchman_Stand_North.png
+S WatchmanStandEast,Watchman_Stand_East.png
+S WatchmanStandWest,Watchman_Stand_West.png
+
+G WatchmanWalkNorth,Watchman_Walk_North_1.png,Watchman_Walk_North_2.png,Watchman_Walk_North_3.png,Watchman_Walk_North_4.png,Watchman_Walk_North_5.png,Watchman_Walk_North_6.png
+G WatchmanWalkSouth,Watchman_Walk_South_1.png,Watchman_Walk_South_2.png,Watchman_Walk_South_3.png,Watchman_Walk_South_4.png,Watchman_Walk_South_5.png,Watchman_Walk_South_6.png
+G WatchmanWalkEast,Watchman_Walk_East_1.png,Watchman_Walk_East_2.png,Watchman_Walk_East_3.png,Watchman_Walk_East_4.png,Watchman_Walk_East_5.png,Watchman_Walk_East_6.png
+G WatchmanWalkWest,Watchman_Walk_West_1.png,Watchman_Walk_West_2.png,Watchman_Walk_West_3.png,Watchman_Walk_West_4.png,Watchman_Walk_West_5.png,Watchman_Walk_West_6.png
