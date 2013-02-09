@@ -73,7 +73,7 @@ public class Camera  {
 
 		yOffset = y - this.height/3;
 		xOffset = x - this.width/2 + 50;
-		viewPort.translate(xOffset, yOffset);
+		viewPort.setLocation(xPos + xOffset, yPos + yOffset);
 	}
 	
 	

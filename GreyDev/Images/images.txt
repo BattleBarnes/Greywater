@@ -20,12 +20,14 @@ G TavishWalkNorth,Tavish_Walk_North_1.png,Tavish_Walk_North_2.png,Tavish_Walk_No
 S TavishStandSouth,Tavish_Stand_South_1.png
 
 
-S Wal2l,w1.png
+S Wal2l,wall_template_small.png
 
-S Wall,w2.png
+S Wall,wall_template_small_reverse.png
 
 
-S Tile1,t1.png
+S Tile1,floor_template_small.png
+
+S Inv,fakeinv.png
 
 
 S WatchmanStandSouth,Watchman_Stand_South.png

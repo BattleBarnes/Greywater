@@ -1,9 +1,21 @@
 /**
  * TANGIBLE CLASS 
  * 
- * This class is used to hold positional data about an Entities' hitbox. It works with Static and Dynamic Entities, because Tangibles
- * don't have to move. This abstract class holds the basic information that all hitboxes must have -
- * Position, destination, speed, movement and stop movement.
+ * This class is used to hold data about an Entities' hitbox, including position, speed, and accessor methods.
+ * In reality, this class is the Entity. The Entity interacts with the world entirely through this class because it is the
+ * 2D representation. 
+ * 
+ *  ***********  IMPORTANT ************************
+ * The graphics component (sprite) is the isometric image that is rendered to the screen, but isometric math is unnecessarily
+ * intense, and wasteful to do when cheaper, more effective methods are available. To that end, the world is ACTUALLY a top down
+ * rectangular world, and is merely represented isometrically.
+ * 
+ * This class is the 2D physics component (hitbox) and the iso aspect is the graphics component.
+ * This class controls the speed, movement, location, and collision of the object as if it were top-down, and then
+ * that data is taken by the entity class and math'd into isometric silliness.
+ * 
+ * I adopted this paradigm from Roger Engelbert
+ * http://www.rengelbert.com/tutorial.php?id=76&show_all=true
  * 
  * 
  * @author Jeremy Barnes Dec 28/12 
@@ -11,7 +23,6 @@
 package game.entities.components;
 
 import java.awt.Rectangle;
-import java.awt.Shape;
 
 public class Tangible {
 

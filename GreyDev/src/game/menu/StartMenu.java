@@ -2,7 +2,8 @@ package game.menu;
 
 import game.Core;
 import game.engine.Camera;
-import game.engine.InputBundle;
+import game.engine.InputHandler;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -11,6 +12,7 @@ import java.awt.Graphics;
 public class StartMenu{
 	String cursor = "";
 	String[] options = new String[]{"Start New Game", "Load Old Game", "Exit"};
+	int waitATick = 0;
 	
 	int option = 0;
 	
@@ -53,15 +55,22 @@ public class StartMenu{
 	}
 
 	public void update() {
-		if(InputBundle.up && option > 0){
+		if(waitATick < 3){
+			waitATick++;
+			InputHandler.resetCommands();
+			return;
+		}
+		waitATick = 0;
+		if(InputHandler.up && option > 0){
 			option--;
 		}
-		if(InputBundle.down && option < 2){
+		if(InputHandler.down && option < 2){
 			option++;
 		}
-		if(InputBundle.enter){
+		if(InputHandler.enter){
 			choose();
 		}
+
 	}
 	
 	public void choose(){

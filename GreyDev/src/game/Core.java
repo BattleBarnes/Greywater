@@ -3,12 +3,13 @@ package game;
 import game.engine.Camera;
 import game.engine.Engine;
 import game.engine.ImageLoader;
+import game.engine.InputHandler;
 import game.engine.State;
 import game.entities.Player;
-import game.entities.components.DynEntity;
 import game.entities.components.Sprite;
-import game.level.World;
+import game.menu.InventoryMenu;
 import game.menu.StartMenu;
+import game.world.World;
 
 import java.awt.Graphics;
 
@@ -18,6 +19,7 @@ import javax.swing.JOptionPane;
 public class Core extends Engine {
 	
 	StartMenu m;
+	InventoryMenu i;
 	Camera cam;
 	Player p;
 	ImageLoader imgLd;
@@ -63,7 +65,10 @@ public class Core extends Engine {
 	 * Draws the menu
 	 */
 	protected void menuRender(Graphics g) {
-		m.render(g);
+		if(Globals.state == State.mainMenu)
+			m.render(g);
+		else
+			i.render(g);
 	}
 
 	/**
@@ -79,9 +84,10 @@ public class Core extends Engine {
 	 * Allows user input on menu's
 	 */
 	protected void menuTick() {
-		inHandle.getCommands();
+		InputHandler.getCommands();
 		m.update();
-		inHandle.resetCommands();
+	//	i.update();
+		InputHandler.resetCommands();
 
 	}
 
@@ -89,7 +95,7 @@ public class Core extends Engine {
 	 * Updates game state
 	 */
 	protected void gameTick(){
-		inHandle.getCommands();
+		InputHandler.getCommands();
 		l.tick();
 	}
 
@@ -108,6 +114,7 @@ public class Core extends Engine {
 		//inventory screens and such.
 		p = new Player(0, 0, (int) (anim_period_nano/1000000), imgLd);
 		m = new StartMenu(this);
+		i = new InventoryMenu(this, new Sprite(imgLd, "Inv", "Inv"));
 		Sprite w = new Sprite(imgLd, "Wal2l", "Wal2l");
 		Sprite ow = new Sprite(imgLd, "Wall", "Wall");
 		l = new World(s,w,ow, cam, p);
@@ -117,7 +124,7 @@ public class Core extends Engine {
 	 * Start a brand new game
 	 */
 	public void initNewGame() {
-		state = State.inGame;
+		Globals.state = State.inGame;
 	}
 	
 	/**
@@ -131,6 +138,6 @@ public class Core extends Engine {
 	 * Make the game go away.
 	 */
 	public void exitGame(){
-		state = state.gameEnding;
+		Globals.state = State.gameEnding;
 	}
 }
