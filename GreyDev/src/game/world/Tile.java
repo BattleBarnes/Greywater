@@ -1,67 +1,57 @@
 /**
  *TILE CLASS
  * 
- * Used for objects which need collision detection but do not move (Walls, doodads, items on the ground)
- * Object which do not move do not translate their physics space, but they MAY animate (glowing symbols on a wall for instance).
- * Items such as these do not actually have a physics space, they make a tile "unpassable".
+ * Used for floor tiles. They have a collision space in case tiles need to be "unpassable" or have effects
+ * such as harming a player or slowing their movement, now that's possible.
  * 
- * Hold the graphics and collision aspects of the object. 
+ * Tiles do not move and do not translate their physics space, but they MAY animate (glowing symbols on for instance)
  * 
- * 
- * 
- * 
+ * PLEASE SEE THE ENTITY CLASS FOR INFORMATION ABOUT ISOMETRIC/FLATSPACE INTERCHANGE.
  * 
  * @author Jeremy Barnes Feb 3/13
  */
 package game.world;
 
-import game.engine.Camera;
+import game.entities.components.Entity;
 import game.entities.components.Sprite;
+import game.entities.components.Tangible;
 
 import java.awt.Graphics;
-import java.awt.Polygon;
 
-public class Tile {
+public class Tile extends Entity {
 
-	/* **** All entities have a physics component for collisions and position, and a graphics component to render on screen ****/
-	protected Polygon physicsComponent; //hitbox
-	protected Sprite graphicsComponent; //sprite
-
-	/* **** Gives the location of the hitbox ******/
-	public int xPos;//current x
-	public int yPos;//current y
-
-	
-	
-	public Tile(Sprite graphicsComponent, int xPos, int yPos) {
+	/**
+	 * Constructor!
+	 * 
+	 * @param graphicsComponent - tile sprite that represents this bit of terrain
+	 * @param xPos -y location in 2D flatspace
+	 * @param yPos -x location in 2D flatspace
+	 */
+	public Tile(Sprite graphicsComponent, int xPos, int yPos, boolean interactive) {
 		this.graphicsComponent = graphicsComponent;
 		this.xPos = xPos;
 		this.yPos = yPos;
-		int[] xes = {0, graphicsComponent.getWidth()/2, graphicsComponent.getWidth(), graphicsComponent.getWidth()/2, 0};
-		int[] yes = {graphicsComponent.getHeight()/2, graphicsComponent.getHeight(), graphicsComponent.getHeight()/2, 0, graphicsComponent.getHeight()/2};
-		physicsComponent = new Polygon(xes, yes, 5);
-		physicsComponent.translate(xPos,yPos);
+		//width is half because graphics component is isometric - 2:1 W:H ratio, needs fixing for square flatspace
+		//speed is 0 because tiles don't move, silly
+		if(interactive)
+			this.physicsComponent = new Tangible(xPos, yPos, graphicsComponent.getWidth()/2, graphicsComponent.getHeight(), 0); 
+		
 	}
 
 
 	/**
-	 *  Draws the current sprite for this entity.
+	 * Ticks the graphics component in case it is animated.
+	 *  Draws the current sprite for this entity by calling the superclasses render method
 	 * @param g - Graphics device
 	 */
 	public void render(Graphics g){
 		graphicsComponent.tick(); //maybe walls are animated
-		graphicsComponent.draw(g, xPos  - Camera.xOffset, yPos - Camera.yOffset);
+		super.render(g);
 	}
 
+	@Override
+	protected void getInput() {return;} //Tiles do not need input. No matter what their superclass thinks.
 
-	/**
-	 * @return the Shape used for collisions and positioning
-	 */
-	public Polygon getPhysicsShape(){
-		return physicsComponent;
-	}
-
-	
 
 
 }

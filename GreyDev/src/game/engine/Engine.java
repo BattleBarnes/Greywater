@@ -13,13 +13,10 @@
 
 package game.engine;
 
-import game.engine.InputHandler;
-import game.engine.State;
+import game.Globals;
 
 import java.awt.Color;
-import java.awt.DisplayMode;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Window;
@@ -41,7 +38,6 @@ public abstract class Engine extends JFrame implements Runnable {
 	// i.e the games state is updated but not rendered
 
 	private Thread animator; // the thread that performs the animation
-	public State state; //gamestate
 
 	protected long anim_period_nano; // period between drawing in nanoseconds
 
@@ -54,7 +50,7 @@ public abstract class Engine extends JFrame implements Runnable {
 	private BufferStrategy bufferStrategy;
 
 	//player input
-	protected InputHandler inHandle = new InputHandler(this);
+	protected InputHandler inHandle = new InputHandler();
 
 	protected Camera cam; //Graphics devices
 	private Graphics g;
@@ -71,7 +67,7 @@ public abstract class Engine extends JFrame implements Runnable {
 		this.windowed = w;
 		this.anim_period_nano = anim_period_ns;
 
-		state = State.mainMenu;
+		Globals.state = State.mainMenu;
 
 		if (!windowed)
 			initFullScreen();
@@ -91,7 +87,7 @@ public abstract class Engine extends JFrame implements Runnable {
 	 */
 	private void initWindowMode() {
 		windowedPanel = new WindowPanel(this);
-		this.setSize(1200, 1000);
+		this.setSize(1920, 1080);
 		this.add(windowedPanel);
 		this.setVisible(true);
 		this.pack();
@@ -161,11 +157,11 @@ public abstract class Engine extends JFrame implements Runnable {
   These methods are for pausing, unpausing, and ending the game*/
 	
 	public void resumeGame() {
-		state = State.inGame;
+		Globals.state = State.inGame;
 	}
 
 	public void pauseGame() {
-		state = State.pauseMenu;
+		Globals.state = State.pauseMenu;
 	}
 	
 	/**
@@ -175,11 +171,11 @@ public abstract class Engine extends JFrame implements Runnable {
 	 * being called twice.
 	 */
 	private void finishOff() {
-		if (state.finishedOff) {
+		if (Globals.state.finishedOff) {
 			if (!windowed)
 				restoreScreen();
 			System.exit(0);
-			state = State.gameEnding;
+			Globals.state = State.gameEnding;
 		}
 	} // end of finishedOff()
 
@@ -218,11 +214,11 @@ public abstract class Engine extends JFrame implements Runnable {
 		
 		double secondselapsed = 0;
 
-		state = State.mainMenu; //begin in menu
+		Globals.state = State.mainMenu; //begin in menu
 		int tickCount = 0;
 		int frameCount = 0;
 
-		while (!state.finishedOff) {
+		while (!Globals.state.finishedOff) {
 			//used to calculate cycle time to keep it bounded
 			startTime = System.nanoTime();
 			
@@ -298,9 +294,9 @@ public abstract class Engine extends JFrame implements Runnable {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, cam.width, cam.height);
 
-		if(state.gameRunning)
+		if(Globals.state.gameRunning)
 			gameRender(g);
-		if(state.drawMenu)
+		if(Globals.state.drawMenu)
 			menuRender(g);
 
 	} // end of gameRender()
@@ -326,7 +322,7 @@ public abstract class Engine extends JFrame implements Runnable {
 				System.out.println("Contents Lost");
 		} catch (Exception e) {
 			e.printStackTrace();
-			state = State.gameEnding;
+			Globals.state = State.gameEnding;
 		}
 	}//end screenUpdate
 
@@ -335,7 +331,7 @@ public abstract class Engine extends JFrame implements Runnable {
 	 * Updates the game logic
 	 */
 	private void gameUpdate() {
-		if (state.gameRunning)
+		if (Globals.state.gameRunning)
 			gameTick();
 		else{
 			menuTick();

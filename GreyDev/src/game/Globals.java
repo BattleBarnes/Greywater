@@ -1,5 +1,7 @@
 package game;
 
+import game.engine.State;
+
 public class Globals {
 	
 	
@@ -12,7 +14,7 @@ public class Globals {
 	public static final int SOUTHWEST = 5;
 	public static final int WEST = 6;
 	public static final int NORTHWEST = 7;
-	
+	public static State state = State.mainMenu;
 	
 	
 

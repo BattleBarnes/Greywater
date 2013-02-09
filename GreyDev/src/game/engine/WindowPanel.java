@@ -8,6 +8,8 @@
 package game.engine;
 
 
+import game.Globals;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -33,7 +35,7 @@ public class WindowPanel extends JPanel{
 		setDoubleBuffered(false);
 		setVisible(true);
 		setBackground(Color.white);
-		setPreferredSize( new Dimension(1200, 1000));
+		setPreferredSize( new Dimension(1920, 1080));
 		
 		addKeyListener(parent.inHandle);
 		addMouseListener(parent.inHandle);
@@ -58,7 +60,7 @@ public class WindowPanel extends JPanel{
 		dgb.setColor(Color.white);
 		dgb.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
-		if(parent.state.gameRunning)
+		if(Globals.state.gameRunning)
 			parent.gameRender(dgb);
 		else
 			parent.menuRender(dgb);
