@@ -5,6 +5,7 @@
  */
 package game.world;
 
+import game.Globals;
 import game.engine.Camera;
 import game.entities.Player;
 import game.entities.Wall;
@@ -62,6 +63,9 @@ public class World {
 		tileWidth = t.getWidth()/2;
 		tileHeight = t.getHeight();
 		
+		Globals.tileHeight =tileHeight;
+		Globals.tileWidth = t.getWidth()/2;
+		
 		wall = w;
 		tile = t;
 		otherwall = ow;
@@ -75,8 +79,8 @@ public class World {
 
 	public void render(Graphics g){
 
-		Point origin = findTile(player.xPos - 1250, player.yPos - 1200);
-		Point bottomRight = findTile(player.xPos + 1250, player.yPos + 1250);
+		Point origin = Globals.findTile(player.xPos - 1250, player.yPos - 1200);
+		Point bottomRight = Globals.findTile(player.xPos + 1250, player.yPos + 1250);
 
 		for(int x = origin.x; x < bottomRight.x; x++){
 		for(int y  = bottomRight.y; y >=origin.y ; y--){
@@ -123,21 +127,11 @@ public class World {
 			}
 		}
 		
-		Point p = player.getIsoCoords(player.xPos, player.yPos);
+		Point p = Globals.getIsoCoords(player.xPos, player.yPos);
 		cam.moveTo(p.x, p.y);
 		
 		
 	}
-	
-	private Point findTile(int x, int y){
-		int xt = x / tileWidth;
-		int yt = y/tileHeight;
-		return new Point(xt,yt);
-	}
-
-
-
-	
 
 
 

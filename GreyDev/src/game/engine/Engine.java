@@ -50,7 +50,7 @@ public abstract class Engine extends JFrame implements Runnable {
 	private BufferStrategy bufferStrategy;
 
 	//player input
-	protected InputHandler inHandle = new InputHandler();
+	protected InputHandler inHandle = new InputHandler(this);
 
 	protected Camera cam; //Graphics devices
 	private Graphics g;

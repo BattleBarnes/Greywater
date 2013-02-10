@@ -214,7 +214,7 @@ public class ImageLoader {
 				imageSet.add(sheet.getSubimage(j*frameWidth, i*frameHeight, frameWidth, frameHeight));
 			}
 			String name = st.nextToken();
-			System.out.println(name);
+			System.out.println(name + " sheet loaded");
 			images.put(name,imageSet);
 		}
 	}
@@ -316,7 +316,6 @@ public class ImageLoader {
 	}
 	
 	 public int getSeriesCount(String name){
-		 System.out.println(name);
 	    ArrayList imgSet = (ArrayList) images.get(name);
 	    if (imgSet == null) {
 	      System.out.println("404 " + name + " not found! (ImageLoader.java)");  

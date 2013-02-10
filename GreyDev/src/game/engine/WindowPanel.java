@@ -35,7 +35,7 @@ public class WindowPanel extends JPanel{
 		setDoubleBuffered(false);
 		setVisible(true);
 		setBackground(Color.white);
-		setPreferredSize( new Dimension(1920, 1080));
+		setPreferredSize( new Dimension(900, 800));
 		
 		addKeyListener(parent.inHandle);
 		addMouseListener(parent.inHandle);

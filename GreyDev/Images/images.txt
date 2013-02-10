@@ -30,12 +30,14 @@ S Tile1,floor_template_small.png
 S Inv,fakeinv.png
 
 
+T WatchSheet.png,8,6,WatchmanWalkEast,WatchmanWalkNorth,WatchmanWalkNorthEast,WatchmanWalkNorthWest,WatchmanWalkSouth,WatchmanWalkSouthEast,WatchmanWalkSouthWest,WatchmanWalkWest
+
+
 S WatchmanStandSouth,Watchman_Stand_South.png
 S WatchmanStandNorth,Watchman_Stand_North.png
 S WatchmanStandEast,Watchman_Stand_East.png
 S WatchmanStandWest,Watchman_Stand_West.png
-
-G WatchmanWalkNorth,Watchman_Walk_North_1.png,Watchman_Walk_North_2.png,Watchman_Walk_North_3.png,Watchman_Walk_North_4.png,Watchman_Walk_North_5.png,Watchman_Walk_North_6.png
-G WatchmanWalkSouth,Watchman_Walk_South_1.png,Watchman_Walk_South_2.png,Watchman_Walk_South_3.png,Watchman_Walk_South_4.png,Watchman_Walk_South_5.png,Watchman_Walk_South_6.png
-G WatchmanWalkEast,Watchman_Walk_East_1.png,Watchman_Walk_East_2.png,Watchman_Walk_East_3.png,Watchman_Walk_East_4.png,Watchman_Walk_East_5.png,Watchman_Walk_East_6.png
-G WatchmanWalkWest,Watchman_Walk_West_1.png,Watchman_Walk_West_2.png,Watchman_Walk_West_3.png,Watchman_Walk_West_4.png,Watchman_Walk_West_5.png,Watchman_Walk_West_6.png
+//S WatchmanStandWest,Watchman_Stand_NorthEast.png
+//S WatchmanStandWest,Watchman_Stand_SouthEast.png
+//S WatchmanStandWest,Watchman_Stand_NorthWest.png
+//S WatchmanStandWest,Watchman_Stand_SouthWest.png

@@ -91,6 +91,13 @@ public class Tangible {
 	public void move(int x, int y){
 		xDest += x;
 		yDest += y;
+		
+		if(x == 0){
+			xDest = xPos;
+		}
+		if( y == 0){
+			yDest = yPos;
+		}
 	}
 
 	/**

@@ -84,18 +84,16 @@ public class Core extends Engine {
 	 * Allows user input on menu's
 	 */
 	protected void menuTick() {
-		InputHandler.getCommands();
+		InputHandler.tick();
 		m.update();
 	//	i.update();
-		InputHandler.resetCommands();
-
 	}
 
 	/**
 	 * Updates game state
 	 */
 	protected void gameTick(){
-		InputHandler.getCommands();
+		InputHandler.tick();
 		l.tick();
 	}
 

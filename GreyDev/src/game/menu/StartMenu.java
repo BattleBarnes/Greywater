@@ -12,7 +12,6 @@ import java.awt.Graphics;
 public class StartMenu{
 	String cursor = "";
 	String[] options = new String[]{"Start New Game", "Load Old Game", "Exit"};
-	int waitATick = 0;
 	
 	int option = 0;
 	
@@ -55,19 +54,13 @@ public class StartMenu{
 	}
 
 	public void update() {
-		if(waitATick < 3){
-			waitATick++;
-			InputHandler.resetCommands();
-			return;
-		}
-		waitATick = 0;
-		if(InputHandler.up && option > 0){
+		if(InputHandler.up.keyTapped && option > 0){
 			option--;
 		}
-		if(InputHandler.down && option < 2){
+		if(InputHandler.down.keyTapped && option < 2){
 			option++;
 		}
-		if(InputHandler.enter){
+		if(InputHandler.use.heldDown){
 			choose();
 		}
 

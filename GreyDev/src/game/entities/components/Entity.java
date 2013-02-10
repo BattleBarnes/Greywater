@@ -36,9 +36,9 @@
 
 package game.entities.components;
 
+import game.Globals;
 import game.engine.Camera;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -53,8 +53,13 @@ public abstract class Entity {
 	/* **** POSITIONING VARIABLES ******/
 	public int xPos;//current x
 	public int yPos;//current y
-	protected int xMoveBy; //how much the entity is moving in the x direction
+	
+	protected int xMoveBy; //how much the entity is moving in the x direction (DELTA)
 	protected int yMoveBy; //how much the entity is moving in the y direction
+	
+	protected int xDest; //where the entity should go in the x direction
+	protected int yDest;//where the entity should go in the y direction (absolute)
+	
 	public int xLast; //last valid (non colliding) x position
 	public int yLast; //last valid (non colliding) y position
 	
@@ -74,21 +79,27 @@ public abstract class Entity {
 		getInput();
 		xLast = xPos; //last location was valid or it would have been undone already
 		yLast = yPos;
-		physicsComponent.move(xMoveBy, yMoveBy); //move to new location
-		xPos = physicsComponent.xPos;
-		yPos = physicsComponent.yPos;
-		xMoveBy = 0;//no more movement needed
-		yMoveBy = 0;
+		
+//		physicsComponent.move(xMoveBy, yMoveBy); //move to new location
+//		xMoveBy = 0;//no more movement needed
+//		yMoveBy = 0;
+//		
+
 		physicsComponent.tick(); //update components
 		graphicsComponent.tick();
+		
+		xPos = physicsComponent.xPos;
+		yPos = physicsComponent.yPos;
+
 	}
+	
 	
 	/**
 	 * Draws the current sprite for this entity.
 	 * @param g - Graphics object
 	 */
 	public void render(Graphics g){
-		Point p = getIsoCoords(xPos + spriteXOff, yPos + spriteYOff);
+		Point p = Globals.getIsoCoords(xPos + spriteXOff, yPos + spriteYOff);
 		graphicsComponent.draw(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
 //		Rectangle r = this.getPhysicsShape();
 //		g.setColor(Color.RED); TODO REMOVE POST DEVELOPMENT
@@ -135,18 +146,7 @@ public abstract class Entity {
 		return physicsComponent.getPhysicsShape();
 	}
 	
-	/**
-	 * Convert the square co-ordinates into isometric co-ordinates
-	 * @param x - x location in square space
-	 * @param y - y location in square-space
-	 * @return a Point with the objects X and Y co-ordinates adjusted for Isometric Display
-	 */
-	public Point getIsoCoords(int x, int y) {
-		int X = x - y;
-		int Y = (x + y)/2;
-		return new Point(X, Y);
-	}
-	
+
 	public double getDepth(){
 		double x = physicsComponent.getPhysicsShape().getCenterX();
 		double y = physicsComponent.getPhysicsShape().getCenterY();

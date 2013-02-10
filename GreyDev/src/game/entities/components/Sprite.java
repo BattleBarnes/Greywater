@@ -126,7 +126,7 @@ public class Sprite {
 	 * @param ident - Images are loaded as name+ident (Tavish + _Walk_North)
 	 */
 	public void loopImg(double duration_seconds, String ident){
-		if(currImgName.contains(ident)){
+		if(currImgName.equalsIgnoreCase(name+ident)){
 			return;
 		}
 		
@@ -166,11 +166,12 @@ public class Sprite {
 	public void forceImage(String name){
 		sprite = imgLd.getSingleImage(name);
 		if(sprite == null)
-			System.out.println(name);
+			System.out.println(name + " null!");
 		currImgName = name;
 		isTicking = false;
 		isLooping = false;
 	}
+
 	
 	public int getWidth(){
 		return getCurrentImage().getWidth();		

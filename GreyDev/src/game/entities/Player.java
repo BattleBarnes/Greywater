@@ -11,6 +11,7 @@
 package game.entities;
 
 import game.Globals;
+import game.engine.Camera;
 import game.engine.ImageLoader;
 import game.engine.InputHandler;
 import game.engine.State;
@@ -18,7 +19,11 @@ import game.entities.components.Entity;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
 
+import java.awt.Point;
+
 public class Player extends Entity {
+	
+	String currDirection = "South";
 
 	/**
 	 * Constructor!
@@ -29,8 +34,8 @@ public class Player extends Entity {
 	 * @param ims - image loader (for the sprite)
 	 */
 	public Player(int x, int y, int anim_Per_Mil, ImageLoader ims){
-		this.graphicsComponent = new Sprite(ims, "Tavish", anim_Per_Mil, "TavishStandSouth");
-		this.physicsComponent  = new Tangible(x, y, 35, 35, 4);
+		this.graphicsComponent = new Sprite(ims, "Watchman", anim_Per_Mil, "WatchmanStandSouth");
+		this.physicsComponent  = new Tangible(x, y, 35, 35, 2);
 
 		spriteXOff = -graphicsComponent.getWidth()/2 - 65;
 		spriteYOff = -graphicsComponent.getHeight() + 65;
@@ -42,41 +47,77 @@ public class Player extends Entity {
 	 * and sets the graphics component accordingly.
 	 */
 	protected void getInput(){
-		if(InputHandler.up)
-			yMoveBy = -10;
-		if(InputHandler.down)
-			yMoveBy = 10;
-		if(InputHandler.left)
-			xMoveBy = -10;
-		if(InputHandler.right)
-			xMoveBy = 10;
-		if(InputHandler.mouseClicked){
-			//TODO fix mouse input
-			//			xMoveBy = InputHandler.mouseLocation.x - Camera.xOffset - xPos;
-			//			yMoveBy = InputHandler.mouseLocation.y + Camera.xOffset - yPos;
+		if(InputHandler.up.heldDown){
+			xMoveBy = -2;
+			yMoveBy = -2;
+
 		}
+		if(InputHandler.down.heldDown){
+			xMoveBy = 2;
+			yMoveBy = 2;
+		}
+		if(InputHandler.left.heldDown){
+			xMoveBy = -2;
+			yMoveBy =  2;
+
+		}
+		if(InputHandler.right.heldDown){
+			xMoveBy = 2;
+			yMoveBy = -2;
+		}
+		if(InputHandler.right.heldDown && InputHandler.up.heldDown){
+			xMoveBy = 0;
+			yMoveBy = -2;
+		}
+		if(InputHandler.right.heldDown && InputHandler.down.heldDown){
+			xMoveBy = 2;
+			yMoveBy = 0;
+		}
+		if(InputHandler.left.heldDown && InputHandler.up.heldDown){
+			xMoveBy = -2;
+			yMoveBy = 0;
+		}
+		if(InputHandler.left.heldDown && InputHandler.down.heldDown){
+			xMoveBy = 0;
+			yMoveBy = 2;
+		}
+
+		if(InputHandler.leftClick.heldDown){
+			Point p = Globals.isoToGrid(InputHandler.leftClick.xPos + Camera.xOffset,InputHandler.leftClick.yPos + Camera.yOffset);
+			Point r = Globals.findTile(p.x, p.y);
+		//	xMoveBy = -(xPos - Globals.tileWidth*r.x);
+		//	yMoveBy =-( yPos - Globals.tileHeight*r.y);
+		physicsComponent.moveTo(Globals.tileWidth*r.x, Globals.tileHeight*r.y ); //move to new location
+
+
+		}
+		System.out.println(yMoveBy);
 
 		direction = Globals.getIntDir(xMoveBy, yMoveBy);
 
-		if(!InputHandler.left && !InputHandler.right)
-			physicsComponent.stopXMovement();
-		if(!InputHandler.up && !InputHandler.down)
-			physicsComponent.stopYMovement();
-		//these methods make you animate in the direction of movement, the art assets don't exist yet.
-		//		if(yMoveBy != 0 || xMoveBy != 0 )
-		//		 	graphicsComponent.loopImg(.9, "Walk" +Globals.getStringDir(direction));
-		//		else
-		//			graphicsComponent.loopImg(.4, "Stand"+Globals.getStringDir(direction));
-		//TODO uncomment when images are ready
+	//	if(!InputHandler.left.heldDown && !InputHandler.right.heldDown && !InputHandler.leftClick.heldDown )
+	//		physicsComponent.stopXMovement();
+//		if(!InputHandler.up.heldDown && !InputHandler.down.heldDown && !InputHandler.leftClick.heldDown)
+	//		physicsComponent.stopYMovement();
+
+
 		
-		if(InputHandler.inv){
+//		if(yMoveBy != 0 || xMoveBy != 0 ){
+//			graphicsComponent.loopImg(.9, "Walk" +Globals.getStringDir(direction));
+//			currDirection = Globals.getStringDir(direction);
+//		}
+//		else
+//			graphicsComponent.forceImage("WatchmanStand"+currDirection);
+
+
+		if(InputHandler.menu.keyTapped){
 			if(!Globals.state.drawMenu)
 				Globals.state = State.gameMenu;
 			else
 				Globals.state = State.inGame;
-			
-			InputHandler.inv = false;
+
 		}
+
 	}
 
 }

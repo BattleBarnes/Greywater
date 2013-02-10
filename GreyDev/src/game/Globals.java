@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.Point;
+
 import game.engine.State;
 
 public class Globals {
@@ -16,8 +18,35 @@ public class Globals {
 	public static final int NORTHWEST = 7;
 	public static State state = State.mainMenu;
 	
+	public static int tileWidth;
+	public static int tileHeight;
+	
+	
+	public static Point findTile(int x, int y){
+		int xt = x / tileWidth;
+		int yt = y/tileHeight;
+		return new Point(xt,yt);
+	}
 	
 
+	public static Point isoToGrid(int x, int y) {
+		int X = x/2 + y;
+		int Y = y - x/2;
+		return new Point(X, Y);
+	}
+	
+	/**
+	 * Convert the square co-ordinates into isometric co-ordinates
+	 * @param x - x location in square space
+	 * @param y - y location in square-space
+	 * @return a Point with the objects X and Y co-ordinates adjusted for Isometric Display
+	 */
+	public static Point getIsoCoords(int x, int y) {
+		int X = x - y;
+		int Y = (x + y)/2;
+		return new Point(X, Y);
+	}
+	
 	
 	/**
 	 * Returns the text-representation of the direction the sprite is facing.
@@ -35,7 +64,7 @@ public class Globals {
 		case EAST: dirString = "East"; break;
 		case SOUTHEAST: dirString = "SouthEast"; break;
 		case SOUTH: dirString = "South"; break;
-		case SOUTHWEST: dirString = "South"; break;
+		case SOUTHWEST: dirString = "SouthWest"; break;
 		case WEST: dirString = "West"; break;
 		case NORTHWEST: dirString = "NorthWest"; break;
 		}
@@ -58,27 +87,27 @@ public class Globals {
 	 */
 	public static int getIntDir(int xMoveBy, int yMoveBy){
 		int dir = 0;
-		if(xMoveBy != 0 && yMoveBy != 0){ //if diagonal movement
+		if(xMoveBy != 0 && yMoveBy != 0){ //if cardinal movement
 			if(xMoveBy > 0 && yMoveBy > 0)//right and down
-				dir = SOUTHEAST;
+				return dir = SOUTH;
 			else if (xMoveBy > 0  && yMoveBy < 0) //right and up
-				dir = NORTHEAST;
+				return dir = EAST;
 			else if (xMoveBy < 0 && yMoveBy > 0)//left and down
-				dir = SOUTHWEST;
+				return dir = WEST;
 			else if (xMoveBy < 0 && yMoveBy < 0)//left and up
-				dir = NORTHWEST;
+				return dir = NORTH;
 		}
-		else if(xMoveBy != 0){//if horizontal movement
+		else if(xMoveBy != 0){//if ordinal movement
 			if(xMoveBy > 0)//right
-				dir = EAST;
+				return dir = SOUTHEAST;
 			else if(xMoveBy < 0)//left
-				dir = WEST;
+				return dir = NORTHWEST;
 		}
-		else if(yMoveBy != 0){//if vertical movement
+		else if(yMoveBy != 0){//if ordinal movement
 			if(yMoveBy > 0)//down
-				dir = SOUTH;
+				return dir = SOUTHWEST;
 			else if(yMoveBy < 0)//up
-				dir = NORTH;
+				return dir = NORTHEAST;
 		}
 		
 		return dir;
