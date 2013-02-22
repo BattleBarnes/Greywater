@@ -136,8 +136,23 @@ public class Tangible {
 		updateHitSpace(xPos, yPos);
 	}
 	
+	/**
+	 * @return the Rectangle used for collision detection.
+	 */
 	public Rectangle getPhysicsShape(){
 		return hitBox;
+	}
+	
+	/**
+	 * @return Whether or not the physicscomponent still has distance to traverse.
+	 */
+	public boolean isMoving(){
+		if(xDest != xPos)
+			return true;
+		else if(yDest != yPos)
+			return true;
+		else
+			return false;
 	}
 }
 	

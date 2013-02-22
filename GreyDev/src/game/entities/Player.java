@@ -33,8 +33,8 @@ public class Player extends Entity {
 	 * @param anim_Per_Mil - Period of animation in millis
 	 * @param ims - image loader (for the sprite)
 	 */
-	public Player(int x, int y, int anim_Per_Mil, ImageLoader ims){
-		this.graphicsComponent = new Sprite(ims, "Watchman", anim_Per_Mil, "WatchmanStandSouth");
+	public Player(int x, int y, int anim_Per_Mil){
+		this.graphicsComponent = new Sprite("Watchman", anim_Per_Mil, "WatchmanStandSouth");
 		this.physicsComponent  = new Tangible(x, y, 35, 35, 2);
 
 		spriteXOff = -graphicsComponent.getWidth()/2 - 65;
@@ -82,42 +82,38 @@ public class Player extends Entity {
 			yMoveBy = 2;
 		}
 
-		if(InputHandler.leftClick.heldDown){
+		if(InputHandler.leftClick.heldDown){ //sets player destination to the tile they clicked.
 			Point p = Globals.isoToGrid(InputHandler.leftClick.xPos + Camera.xOffset,InputHandler.leftClick.yPos + Camera.yOffset);
 			Point r = Globals.findTile(p.x, p.y);
-		//	xMoveBy = -(xPos - Globals.tileWidth*r.x);
-		//	yMoveBy =-( yPos - Globals.tileHeight*r.y);
-		physicsComponent.moveTo(Globals.tileWidth*r.x, Globals.tileHeight*r.y ); //move to new location
-
-
+			xMoveBy = Globals.tileWidth*r.x - xPos;
+			yMoveBy = Globals.tileHeight*r.y - yPos;
 		}
-		System.out.println(yMoveBy);
-
-		direction = Globals.getIntDir(xMoveBy, yMoveBy);
-
-	//	if(!InputHandler.left.heldDown && !InputHandler.right.heldDown && !InputHandler.leftClick.heldDown )
-	//		physicsComponent.stopXMovement();
-//		if(!InputHandler.up.heldDown && !InputHandler.down.heldDown && !InputHandler.leftClick.heldDown)
-	//		physicsComponent.stopYMovement();
-
-
 		
-//		if(yMoveBy != 0 || xMoveBy != 0 ){
-//			graphicsComponent.loopImg(.9, "Walk" +Globals.getStringDir(direction));
-//			currDirection = Globals.getStringDir(direction);
-//		}
+		if(xMoveBy != 0 || yMoveBy != 0){ //sets the physicsComponent moving
+			physicsComponent.moveTo(xPos + xMoveBy, yPos + yMoveBy);
+		}
+
+		direction = Globals.getIntDir(physicsComponent.xDest - xPos, physicsComponent.yDest - yPos);
+		
+
+		if(physicsComponent.isMoving()){ //display animation walk loop.
+			graphicsComponent.loopImg(.9, "Walk" +Globals.getStringDir(direction));
+			currDirection = Globals.getStringDir(direction);
+		}
 //		else
 //			graphicsComponent.forceImage("WatchmanStand"+currDirection);
 
 
-		if(InputHandler.menu.keyTapped){
+		if(InputHandler.menu.keyTapped){ //brings up the menu.
 			if(!Globals.state.drawMenu)
 				Globals.state = State.gameMenu;
 			else
 				Globals.state = State.inGame;
-
 		}
 
+		xMoveBy = 0;//Clear these out for the next input cycle.
+		yMoveBy = 0;
+		
 	}
 
 }

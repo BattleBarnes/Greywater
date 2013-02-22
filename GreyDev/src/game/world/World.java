@@ -10,6 +10,7 @@ import game.engine.Camera;
 import game.entities.Player;
 import game.entities.Wall;
 import game.entities.components.Entity;
+import game.entities.components.Item;
 import game.entities.components.Sprite;
 
 import java.awt.Graphics;
@@ -58,7 +59,7 @@ public class World {
 
 	};
 
-	public World(Sprite t, Sprite w, Sprite ow, Camera c, Player p){
+	public World(Sprite t, Sprite w, Sprite ow, Camera c, Player p, Item item){
 		
 		tileWidth = t.getWidth()/2;
 		tileHeight = t.getHeight();
@@ -70,10 +71,10 @@ public class World {
 		tile = t;
 		otherwall = ow;
 		
-		loadEnviro(9);
-		
 		cam = c;
 		player = p;
+		
+		loadEnviro(9);
 
 	}
 
@@ -98,16 +99,11 @@ public class World {
 		l.add(player);
 		for(int x = 0; x < xLength; x++){
 			for(int y  = 0; y < yHeight ; y++){
-				if(walls[x][y] != null){
+				if(walls[x][y] != null)
 					l.add(walls[x][y]);
-				}
 			}
 		}
-
-
 		Collections.sort(l, spriteSorter);
-
-
 		for(int i = 0; i < l.size(); i++){
 			l.get(i).render(g);
 		}
@@ -185,10 +181,10 @@ public class World {
 					if(line.charAt(x) == 'W'){
 						xCo = x*tileWidth;
 						yCo = y*tileHeight;
-						walls[x][y] = new Wall(xCo, yCo, wall, tileWidth*2.0/tileHeight, tileWidth, tileHeight);
+						walls[x][y] = new Wall(xCo, yCo, wall, tileWidth*2.0/tileHeight, tileWidth, tileHeight, player);
 					}
 					else if(line.charAt(x) == 'S'){
-						walls[x][y] = new Wall(xCo, yCo, otherwall, tileWidth*(2.0)/tileHeight, tileWidth, tileHeight);
+						walls[x][y] = new Wall(xCo, yCo, otherwall, tileWidth*(2.0)/tileHeight, tileWidth, tileHeight, player);
 					}
 				}
 			}

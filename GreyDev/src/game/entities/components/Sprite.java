@@ -20,9 +20,10 @@
  */
 package game.entities.components;
 
-import game.engine.Camera;
 import game.engine.ImageLoader;
 
+import java.awt.AlphaComposite;
+import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -30,7 +31,6 @@ import java.awt.image.BufferedImage;
 public class Sprite {
 	
 	//what it uses to represent itself visually
-	private ImageLoader imgLd;
 	private BufferedImage sprite;
 	
 	private boolean isLooping;
@@ -52,13 +52,11 @@ public class Sprite {
 	
 	/**Constructor for animated sprites.
 	 * 
-	 * @param ims - ImageLoader (IO class to get actual image data)
 	 * @param name - The name of the character/entity (Such as Tavish)
 	 * @param animPer - Period of animation in milliseconds
 	 * @param imgName - default image to start with.
 	 */
-	public Sprite(ImageLoader ims, String name, int animPer, String imgName){
-		imgLd = ims;
+	public Sprite(String name, int animPer, String imgName){
 		animPeriod_Millis = animPer;
 		this.name = name;
 		currImgName = imgName;
@@ -69,12 +67,10 @@ public class Sprite {
 	 * Constructor for static images (never animating sprites)
 	 * Like floor tiles!
 	 * 
-	 * @param ims - image loader
 	 * @param name - the name of the character/entity
 	 * @param imgName - the name of the image
 	 */
-	public Sprite(ImageLoader ims, String name, String imgName){
-		imgLd = ims;
+	public Sprite(String name, String imgName){
 		this.name = name;
 		currImgName = imgName;
 		forceImage(imgName);
@@ -93,6 +89,15 @@ public class Sprite {
 		BufferedImage rep = getCurrentImage();
 		g.drawImage(rep, x, y, rep.getWidth(), rep.getHeight(), null);
 
+	}
+	
+	public void drawTransparent(Graphics g, int x, int y, float opacity){
+		BufferedImage tranny = getCurrentImage();
+		Graphics2D g2d = ((Graphics2D) g);
+		Composite c = g2d.getComposite();
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+		g2d.drawImage(tranny, x,y, null);
+		g2d.setComposite(c);
 	}
 	
 	/**
@@ -115,7 +120,7 @@ public class Sprite {
 	 */
 	public BufferedImage getCurrentImage(){
 		if(isTicking)
-			return imgLd.getGroupedImage(currImgName, seriesPosition);
+			return ImageLoader.getGroupedImage(currImgName, seriesPosition);
 		return sprite;
 	}
 	
@@ -135,7 +140,7 @@ public class Sprite {
 		seriesPosition = 0;
 		totalAnimTime_Millis = 0;
 		sequenceDuration_Millis = duration_seconds * 1000;
-		seriesLength = imgLd.getSeriesCount(name + ident);
+		seriesLength = ImageLoader.getSeriesCount(name + ident);
 		cycleLength_Millis = sequenceDuration_Millis / seriesLength;
 		currImgName = name+ident;
 	}
@@ -151,7 +156,7 @@ public class Sprite {
 		seriesPosition = 0;
 		totalAnimTime_Millis = 0;
 		sequenceDuration_Millis = duration_seconds * 1000;
-		seriesLength = imgLd.getSeriesCount(name + ident);
+		seriesLength = ImageLoader.getSeriesCount(name + ident);
 		cycleLength_Millis = sequenceDuration_Millis / seriesLength;
 		currImgName = name+ident;
 	}
@@ -164,7 +169,7 @@ public class Sprite {
 	 * @param name - the image you want to set.
 	 */
 	public void forceImage(String name){
-		sprite = imgLd.getSingleImage(name);
+		sprite = ImageLoader.getSingleImage(name);
 		if(sprite == null)
 			System.out.println(name + " null!");
 		currImgName = name;

@@ -6,12 +6,14 @@ import game.engine.ImageLoader;
 import game.engine.InputHandler;
 import game.engine.State;
 import game.entities.Player;
+import game.entities.components.Item;
 import game.entities.components.Sprite;
 import game.menu.InventoryMenu;
 import game.menu.StartMenu;
 import game.world.World;
 
 import java.awt.Graphics;
+import java.util.Random;
 
 import javax.swing.JOptionPane;
 
@@ -69,6 +71,10 @@ public class Core extends Engine {
 			m.render(g);
 		else
 			i.render(g);
+		Random rand = new Random();
+		int r = rand.nextInt(10000);
+		if(r < 10)
+			i.addItem(1);
 	}
 
 	/**
@@ -101,21 +107,23 @@ public class Core extends Engine {
 	 * Initialize game and menu elements pre-game.
 	 */
 	protected void init() {
-		imgLd = new ImageLoader("images.txt");
+		ImageLoader.init("images.txt");
 		cam = super.cam;
 		
 		//Sprite s and test are just for testing, they are not good code and will go away.
-		Sprite s = new Sprite(imgLd, "Tile1", "Tile1");
+		Sprite s = new Sprite("Tile1", "Tile1");
 		
 		
 		//in game objects. Menu system might need to change to allow
 		//inventory screens and such.
-		p = new Player(0, 0, (int) (anim_period_nano/1000000), imgLd);
+		p = new Player(0, 0, (int) (anim_period_nano/1000000));
 		m = new StartMenu(this);
-		i = new InventoryMenu(this, new Sprite(imgLd, "Inv", "Inv"));
-		Sprite w = new Sprite(imgLd, "Wal2l", "Wal2l");
-		Sprite ow = new Sprite(imgLd, "Wall", "Wall");
-		l = new World(s,w,ow, cam, p);
+		i = new InventoryMenu(this);
+		Item item = new Item("GPOW");
+		
+		Sprite w = new Sprite("Wal2l", "Wal2l");
+		Sprite ow = new Sprite("Wall", "Wall");
+		l = new World(s,w,ow, cam, p, item);
 	}
 
 	/**

@@ -76,19 +76,14 @@ public abstract class Entity {
 	 * current trajectory, ticks the graphics component, moves the hitBox.
 	 */
 	public void update(){
-		getInput();
 		xLast = xPos; //last location was valid or it would have been undone already
 		yLast = yPos;
-		
-//		physicsComponent.move(xMoveBy, yMoveBy); //move to new location
-//		xMoveBy = 0;//no more movement needed
-//		yMoveBy = 0;
-//		
+		getInput(); //get input from AI or controls or whatever
 
 		physicsComponent.tick(); //update components
 		graphicsComponent.tick();
 		
-		xPos = physicsComponent.xPos;
+		xPos = physicsComponent.xPos; //entity position = physics position
 		yPos = physicsComponent.yPos;
 
 	}
@@ -101,9 +96,6 @@ public abstract class Entity {
 	public void render(Graphics g){
 		Point p = Globals.getIsoCoords(xPos + spriteXOff, yPos + spriteYOff);
 		graphicsComponent.draw(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
-//		Rectangle r = this.getPhysicsShape();
-//		g.setColor(Color.RED); TODO REMOVE POST DEVELOPMENT
-//		g.drawRect(r.x, r.y, r.width, r.height);
 	}
 	
 	/**
@@ -146,7 +138,9 @@ public abstract class Entity {
 		return physicsComponent.getPhysicsShape();
 	}
 	
-
+	/**
+	 * @return The approximate depth in Z space of the entity. Used for render sorting.
+	 */
 	public double getDepth(){
 		double x = physicsComponent.getPhysicsShape().getCenterX();
 		double y = physicsComponent.getPhysicsShape().getCenterY();

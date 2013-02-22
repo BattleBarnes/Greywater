@@ -55,9 +55,8 @@ import javax.imageio.ImageIO;
 
 public class ImageLoader {
 	
-	private String filePath;
-	GraphicsDevice vc;
-	private HashMap images = new HashMap();
+	private static String filePath;
+	private static HashMap images = new HashMap();
 	BufferedImage[] indivFiles;
 	
 	/**
@@ -67,7 +66,7 @@ public class ImageLoader {
 	 * 
 	 * @param filepath - the filepath of the text file with image names in
 	 */
-	public ImageLoader(String filepath) {
+	public static void init(String filepath) {
 		filePath = filepath;
 	
 		readFile(filePath);
@@ -86,7 +85,7 @@ public class ImageLoader {
 	 * 
 	 * 
 	 */
-	private void readFile(String filePath){
+	private static void readFile(String filePath){
 		try{
 			
 			File file = new File("Images/"+filePath);
@@ -125,7 +124,7 @@ public class ImageLoader {
 	 * @param lineData - the line of the text file with info - 
 	 * 					 S Name,FilePath
 	 */
-	private void loadSingle(String lineData) {
+	private static void loadSingle(String lineData) {
 		lineData = lineData.substring(2); //skip the line label (S)
 
 		StringTokenizer st = new StringTokenizer(lineData, ",");
@@ -140,7 +139,7 @@ public class ImageLoader {
 	 * @param lineData - the corresponding text file line-
 	 * 					 G Name,Fnm1,Fnm2...
 	 */
-	private void loadGroup(String lineData){
+	private static void loadGroup(String lineData){
 		lineData = lineData.substring(2); //skip line label (g)
 
 		StringTokenizer st = new StringTokenizer(lineData, ",");
@@ -166,7 +165,7 @@ public class ImageLoader {
 	 * @param lineData - the corresponding text file line-
 	 * 					 L Name,FilePath,Cols
 	 */
-	private void loadLine(String lineData){
+	private static void loadLine(String lineData){
 		lineData = lineData.substring(2); //skip line label (L)
 
 		StringTokenizer st = new StringTokenizer(lineData, ",");
@@ -193,7 +192,7 @@ public class ImageLoader {
 	 * @param lineData - the corresponding text file line- 
 	 * 					 T Filepath,number of rows, number of columns,RowName1, RowName2,...
 	 */
-	private void loadSheet(String lineData){
+	private static void loadSheet(String lineData){
 		lineData = lineData.substring(2); //skip line label (T)
 
 		StringTokenizer st = new StringTokenizer(lineData, ",");
@@ -226,7 +225,7 @@ public class ImageLoader {
 	 * @param lineData - the corresponding text file line- 
 	 * 					 A Filepath,number of rows, number of columns,Name1, Name2,...
 	 */
-	private void loadLonerSheet(String lineData){
+	private static void loadLonerSheet(String lineData){
 		lineData = lineData.substring(2); //skip line label (T)
 
 		StringTokenizer st = new StringTokenizer(lineData, ",");
@@ -258,7 +257,7 @@ public class ImageLoader {
 	 * @return Returns the drawable BufferedImage
 	 * @throws IOException if the Image isn't there, fuck you
 	 */
-	public BufferedImage loadImage(String imgPath){
+	public static BufferedImage loadImage(String imgPath){
 		BufferedImage I = null;
 		try {
 			I = ImageIO.read(new File("Images/"+imgPath));
@@ -280,7 +279,7 @@ public class ImageLoader {
 	 * @param name - the name of the image. First value on the images.txt line
 	 * @return The image as a BufferedImage or null if the image isn't there
 	 */
-	public BufferedImage getSingleImage(String name){
+	public static BufferedImage getSingleImage(String name){
 		BufferedImage im;
 		
 		try{//find the image
@@ -301,7 +300,7 @@ public class ImageLoader {
 	 * @param position - which image in the set to display
 	 * @return the image
 	 */
-	public BufferedImage getGroupedImage(String name, int position){
+	public static BufferedImage getGroupedImage(String name, int position){
 		BufferedImage im; //the image to be returned;
 
 		try{//get the image set out of the Hashmap
@@ -315,7 +314,7 @@ public class ImageLoader {
 		return im;
 	}
 	
-	 public int getSeriesCount(String name){
+	 public static int getSeriesCount(String name){
 	    ArrayList imgSet = (ArrayList) images.get(name);
 	    if (imgSet == null) {
 	      System.out.println("404 " + name + " not found! (ImageLoader.java)");  

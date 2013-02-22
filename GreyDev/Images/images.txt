@@ -29,6 +29,10 @@ S Tile1,floor_template_small.png
 
 S Inv,fakeinv.png
 
+S clion,gpow.png
+
+S invslot,invslot.png
+
 
 T WatchSheet.png,8,6,WatchmanWalkEast,WatchmanWalkNorth,WatchmanWalkNorthEast,WatchmanWalkNorthWest,WatchmanWalkSouth,WatchmanWalkSouthEast,WatchmanWalkSouthWest,WatchmanWalkWest
 
