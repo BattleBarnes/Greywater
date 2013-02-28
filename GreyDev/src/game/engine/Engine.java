@@ -229,6 +229,7 @@ public abstract class Engine extends JFrame implements Runnable {
 				screenUpdate(g);
 			} else {
 				windowedPanel.windowRender(g);
+
 			}
 
 			endTime = System.nanoTime();

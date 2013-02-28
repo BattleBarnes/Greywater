@@ -35,6 +35,8 @@ public class InventoryMenu{
 			fm = g.getFontMetrics(menuFont);
 		}
 		
+		System.out.println("lol");
+		
 		Rectangle vp = Camera.viewPort;
 	
 		for(int i = 0; i < 40; i++){

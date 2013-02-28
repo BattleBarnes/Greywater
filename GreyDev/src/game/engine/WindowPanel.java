@@ -62,7 +62,7 @@ public class WindowPanel extends JPanel{
 		
 		if(Globals.state.gameRunning)
 			parent.gameRender(dgb);
-		else
+		if(Globals.state.drawMenu)
 			parent.menuRender(dgb);
 	}
 
