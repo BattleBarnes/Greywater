@@ -39,7 +39,7 @@ public abstract class Engine extends JFrame implements Runnable {
 
 	private Thread animator; // the thread that performs the animation
 
-	protected long anim_period_nano; // period between drawing in nanoseconds
+	public static long animPeriodNano; // period between drawing in nanoseconds
 
 	// used for windowing
 	protected boolean windowed;
@@ -63,9 +63,9 @@ public abstract class Engine extends JFrame implements Runnable {
 	 * @param anim_period_ns - period of animation in nanoseconds
 	 * @param w - Whether or not the game is to be played in a window (vs FSEM)
 	 */
-	public Engine(long anim_period_ns, boolean w) {
+	public Engine(long animPeriod_ns, boolean w) {
 		this.windowed = w;
-		this.anim_period_nano = anim_period_ns;
+		animPeriodNano = animPeriod_ns;
 
 		Globals.state = State.mainMenu;
 
@@ -236,7 +236,7 @@ public abstract class Engine extends JFrame implements Runnable {
 
 			spareTime = startTime - endTime;
 			
-			sleepTime = (anim_period_nano - spareTime) - overSleepTime;
+			sleepTime = (animPeriodNano - spareTime) - overSleepTime;
 
 			if (sleepTime > 0) { // some time left in this cycle
 				try {
@@ -258,8 +258,8 @@ public abstract class Engine extends JFrame implements Runnable {
 			 // If frame animation is too slow, update the game logic
 			 // without rendering
 			int skips = 0;
-			while ((excess > anim_period_nano) && (skips < MAX_FRAME_SKIPS)) {
-				excess -= anim_period_nano;
+			while ((excess > animPeriodNano) && (skips < MAX_FRAME_SKIPS)) {
+				excess -= animPeriodNano;
 				tickCount++;
 				gameUpdate(); // update state but don't render
 				skips++;

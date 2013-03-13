@@ -15,12 +15,12 @@ import game.entities.components.Sprite;
 
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
 
 public class World {
@@ -31,7 +31,6 @@ public class World {
 	int xLength;
 	int yHeight;
 	
-	Camera cam;
 	
 	
 	Tile[][] tileMap;
@@ -42,6 +41,9 @@ public class World {
 	Sprite wall;
 	Sprite otherwall;
 	Player player;
+	
+	public ArrayList<Entity> mobList;
+	public ArrayList<Entity> floorItems;
 	
 
 
@@ -59,7 +61,7 @@ public class World {
 
 	};
 
-	public World(Sprite t, Sprite w, Sprite ow, Camera c, Player p, Item item){
+	public World(Sprite t, Sprite w, Sprite ow, List<Entity> mobs, List<Entity> items, Player p){
 		
 		tileWidth = t.getWidth()/2;
 		tileHeight = t.getHeight();
@@ -71,7 +73,9 @@ public class World {
 		tile = t;
 		otherwall = ow;
 		
-		cam = c;
+		
+		mobList = (ArrayList<Entity>) mobs;
+		floorItems = (ArrayList<Entity>) items;
 		player = p;
 		
 		loadEnviro(9);
@@ -83,37 +87,50 @@ public class World {
 		Point origin = Globals.findTile(player.xPos - 1250, player.yPos - 1200);
 		Point bottomRight = Globals.findTile(player.xPos + 1250, player.yPos + 1250);
 
-		for(int x = origin.x; x < bottomRight.x; x++){
-		for(int y  = bottomRight.y; y >=origin.y ; y--){
-			
-			try{
-			if(tileMap[x][y] != null){
-				tileMap[x][y].render(g);
+		for (int x = origin.x; x < bottomRight.x; x++) {
+			for (int y = bottomRight.y; y >= origin.y; y--) {
+
+				try {
+					if (tileMap[x][y] != null) {
+						tileMap[x][y].render(g);
+					}
+				} catch (Exception e) {};
 			}
-			}catch(Exception e){};
 		}
-	}
 
-		ArrayList<Entity> l = new ArrayList<Entity>();
+		for(Entity e:floorItems){
+			e.render(g);
+		}
+		
+		ArrayList<Entity> sortList = new ArrayList<Entity>();
 
-		l.add(player);
+		for(Entity e:mobList){
+			sortList.add(e);
+		}
+		
 		for(int x = 0; x < xLength; x++){
 			for(int y  = 0; y < yHeight ; y++){
 				if(walls[x][y] != null)
-					l.add(walls[x][y]);
+					sortList.add(walls[x][y]);
 			}
 		}
-		Collections.sort(l, spriteSorter);
-		for(int i = 0; i < l.size(); i++){
-			l.get(i).render(g);
+		
+		Collections.sort(sortList, spriteSorter);
+		
+		for(Entity e:sortList){
+			e.render(g);
 		}
+		
 		
 	
 	}
 
 	public void tick(){
 		
-		player.update();
+		for(Entity e:mobList){
+			e.update();
+		}
+		
 		for(int x = 0; x < walls.length; x++){
 			for(int y = 0; y < walls[x].length; y++){	
 				if(walls[x][y] == null)
@@ -124,9 +141,20 @@ public class World {
 		}
 		
 		Point p = Globals.getIsoCoords(player.xPos, player.yPos);
-		cam.moveTo(p.x, p.y);
+		Camera.moveTo(p.x, p.y);
 		
 		
+	}
+	
+	public Entity floorItemCheck(int x, int y){
+		for(Entity e:floorItems){
+			if(e.getPhysicsShape().contains(x, y)){
+				Entity ee = e;
+				floorItems.remove(e);
+				return ee;
+			}
+		}
+		return null;
 	}
 
 

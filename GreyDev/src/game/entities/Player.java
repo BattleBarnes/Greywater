@@ -12,18 +12,20 @@ package game.entities;
 
 import game.Globals;
 import game.engine.Camera;
-import game.engine.ImageLoader;
 import game.engine.InputHandler;
 import game.engine.State;
 import game.entities.components.Entity;
+import game.entities.components.Item;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
+import game.world.World;
 
 import java.awt.Point;
 
 public class Player extends Entity {
 	
 	String currDirection = "South";
+	World world;
 
 	/**
 	 * Constructor!
@@ -33,12 +35,16 @@ public class Player extends Entity {
 	 * @param anim_Per_Mil - Period of animation in millis
 	 * @param ims - image loader (for the sprite)
 	 */
-	public Player(int x, int y, int anim_Per_Mil){
-		this.graphicsComponent = new Sprite("Watchman", anim_Per_Mil, "WatchmanStandSouth");
+	public Player(int x, int y){
+		this.graphicsComponent = new Sprite("Watchman", "WatchmanStandSouth");
 		this.physicsComponent  = new Tangible(x, y, 35, 35, 2);
 
 		spriteXOff = -graphicsComponent.getWidth()/2 - 65;
 		spriteYOff = -graphicsComponent.getHeight() + 65;
+	}
+	
+	public void setWorld(World w){
+		world = w;
 	}
 
 	/**
@@ -82,13 +88,25 @@ public class Player extends Entity {
 			yMoveBy = 2;
 		}
 
-		if(InputHandler.leftClick.heldDown){ //sets player destination to the tile they clicked.
-			Point p = Globals.isoToGrid(InputHandler.leftClick.xPos + Camera.xOffset,InputHandler.leftClick.yPos + Camera.yOffset);
-			Point r = Globals.findTile(p.x, p.y);
-			xMoveBy = Globals.tileWidth*r.x - xPos;
-			yMoveBy = Globals.tileHeight*r.y - yPos;
+		if (InputHandler.leftClick.heldDown) { // sets player destination to the
+												// tile they clicked.
+			Point isoClick = Globals.isoToGrid(InputHandler.leftClick.xPos+ Camera.xOffset, InputHandler.leftClick.yPos+ Camera.yOffset);
+			Point clickedTile = Globals.findTile(isoClick.x, isoClick.y);
+			xMoveBy = Globals.tileWidth * clickedTile.x - xPos;
+			yMoveBy = Globals.tileHeight * clickedTile.y - yPos;
+
+			Point isoPlayer = Globals.isoToGrid(xPos, yPos);
+			
+			if (isoClick.x - isoPlayer.x < 5 && isoClick.x - isoPlayer.x > -5) {
+				Item i = (Item) world.floorItemCheck(isoClick.x, isoClick.y);
+				if (i != null) {
+					System.out.println(i);
+				}
+			}
+			System.out.println((isoClick.x - isoPlayer.x) + " ");
+
 		}
-		
+
 		if(xMoveBy != 0 || yMoveBy != 0){ //sets the physicsComponent moving
 			physicsComponent.moveTo(xPos + xMoveBy, yPos + yMoveBy);
 		}

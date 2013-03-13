@@ -16,12 +16,10 @@ public class InventoryMenu{
 	Core parent;
 	ArrayList<Integer> inv = new ArrayList<>(40);
 	Sprite slot;
-	Sprite gpow;
 	
 	public InventoryMenu(Core parent){
 		this.parent = parent;
 		slot = new Sprite("invslot", "invslot");
-		gpow = new Sprite("clion", "clion");
 		for(int i = 0; i < 40; i++){
 			inv.add(0);
 		}
@@ -34,17 +32,15 @@ public class InventoryMenu{
 		if(fm == null){
 			fm = g.getFontMetrics(menuFont);
 		}
-		
-		System.out.println("lol");
-		
+				
 		Rectangle vp = Camera.viewPort;
 	
 		for(int i = 0; i < 40; i++){
 			int col = i%5;
 			int row = 5 - i/5;
 			slot.draw(g,  (vp.width - slot.getWidth() * 5) + slot.getWidth()*col, row*slot.getHeight());
-				if(inv.get(i) ==1)
-					gpow.draw(g,  (vp.width - slot.getWidth() * 5) + slot.getWidth()*col, row*slot.getHeight());
+			//	if(inv.get(i) ==1)
+					//gpow.draw(g,  (vp.width - slot.getWidth() * 5) + slot.getWidth()*col, row*slot.getHeight());
 			}
 	}
 	

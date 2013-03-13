@@ -67,12 +67,12 @@ public class Camera  {
 	 * @param x
 	 * @param y
 	 */
-	public void moveTo(int x, int y) {
+	public static void moveTo(int x, int y) {
 		if(x  + xOffset == xPos && y + yOffset == yPos)
 			return;
 
-		yOffset = y - this.height/3;
-		xOffset = x - this.width/2 + 50;
+		yOffset = y - height/3;
+		xOffset = x - width/2 + 50;
 		viewPort.setLocation(xPos + xOffset, yPos + yOffset);
 	}
 	

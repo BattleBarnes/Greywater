@@ -20,6 +20,7 @@
  */
 package game.entities.components;
 
+import game.Core;
 import game.engine.ImageLoader;
 
 import java.awt.AlphaComposite;
@@ -50,35 +51,20 @@ public class Sprite {
 	private int seriesLength;
 		
 	
-	/**Constructor for animated sprites.
+	/**Constructor for sprites.
 	 * 
 	 * @param name - The name of the character/entity (Such as Tavish)
-	 * @param animPer - Period of animation in milliseconds
 	 * @param imgName - default image to start with.
 	 */
-	public Sprite(String name, int animPer, String imgName){
-		animPeriod_Millis = animPer;
-		this.name = name;
-		currImgName = imgName;
-		forceImage(imgName);
-	}
-	
-	/**
-	 * Constructor for static images (never animating sprites)
-	 * Like floor tiles!
-	 * 
-	 * @param name - the name of the character/entity
-	 * @param imgName - the name of the image
-	 */
 	public Sprite(String name, String imgName){
+		animPeriod_Millis = (int) (Core.animPeriodNano/1000000);
 		this.name = name;
 		currImgName = imgName;
 		forceImage(imgName);
 	}
-	
-	
+		
 	/**
-	 * Draws the sprite at the proper scale (auto scaling!)
+	 * Draws the sprite
 	 * 
 	 * @param g - graphics object for rendering
 	 * @param x - x co-ordinate to render at

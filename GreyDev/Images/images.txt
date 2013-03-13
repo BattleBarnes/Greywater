@@ -13,23 +13,22 @@
 //A format: A Filepath,number of rows, number of columns, (1,1) name, (1,2) name........
 
 
-G TavishWalkSouth,Tavish_Walk_South_1.png,Tavish_Walk_South_2.png,Tavish_Walk_South_3.png,Tavish_Walk_South_4.png,Tavish_Walk_South_5.png,Tavish_Walk_South_6.png
+//G TavishWalkSouth,Tavish_Walk_South_1.png,Tavish_Walk_South_2.png,Tavish_Walk_South_3.png,Tavish_Walk_South_4.png,Tavish_Walk_South_5.png,Tavish_Walk_South_6.png
 
-G TavishWalkNorth,Tavish_Walk_North_1.png,Tavish_Walk_North_2.png,Tavish_Walk_North_3.png,Tavish_Walk_North_4.png,Tavish_Walk_North_5.png,Tavish_Walk_North_6.png
+//G TavishWalkNorth,Tavish_Walk_North_1.png,Tavish_Walk_North_2.png,Tavish_Walk_North_3.png,Tavish_Walk_North_4.png,Tavish_Walk_North_5.png,Tavish_Walk_North_6.png
 
-S TavishStandSouth,Tavish_Stand_South_1.png
+//S TavishStandSouth,Tavish_Stand_South_1.png
 
 
 S Wal2l,wall_template_small.png
 
 S Wall,wall_template_small_reverse.png
 
-
 S Tile1,floor_template_small.png
 
-S Inv,fakeinv.png
+S GodlyPlateoftheWhaleInventory,GodlyPlateoftheWhaleInventory.png
 
-S clion,gpow.png
+S GodlyPlateoftheWhaleFloor,GodlyPlateoftheWhaleFloor.png
 
 S invslot,invslot.png
 

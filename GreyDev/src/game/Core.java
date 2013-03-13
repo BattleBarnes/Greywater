@@ -6,6 +6,7 @@ import game.engine.ImageLoader;
 import game.engine.InputHandler;
 import game.engine.State;
 import game.entities.Player;
+import game.entities.components.Entity;
 import game.entities.components.Item;
 import game.entities.components.Sprite;
 import game.menu.InventoryMenu;
@@ -13,6 +14,7 @@ import game.menu.StartMenu;
 import game.world.World;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
@@ -110,20 +112,29 @@ public class Core extends Engine {
 		ImageLoader.init("images.txt");
 		cam = super.cam;
 		
-		//Sprite s and test are just for testing, they are not good code and will go away.
-		Sprite s = new Sprite("Tile1", "Tile1");
-		
 		
 		//in game objects. Menu system might need to change to allow
 		//inventory screens and such.
-		p = new Player(0, 0, (int) (anim_period_nano/1000000));
 		m = new StartMenu(this);
 		i = new InventoryMenu(this);
-		Item item = new Item("GPOW");
 		
+		p = new Player(1000, 0);
+		ArrayList<Entity> mobs = new ArrayList();
+		mobs.add(p);
+		
+		
+		Item item = new Item("GodlyPlateoftheWhale", 1000, 600);
+		ArrayList<Entity> floorItems = new ArrayList<>();
+		floorItems.add(item);
+		
+		//item elements, will be replaced with proper tilesets later TODO 
 		Sprite w = new Sprite("Wal2l", "Wal2l");
 		Sprite ow = new Sprite("Wall", "Wall");
-		l = new World(s,w,ow, cam, p, item);
+		Sprite s = new Sprite("Tile1", "Tile1");
+		
+		
+		l = new World(s,w,ow, mobs, floorItems, p);
+		p.setWorld(l);
 	}
 
 	/**
