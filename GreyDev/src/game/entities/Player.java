@@ -95,15 +95,16 @@ public class Player extends Entity {
 			xMoveBy = Globals.tileWidth * clickedTile.x - xPos;
 			yMoveBy = Globals.tileHeight * clickedTile.y - yPos;
 
-			Point isoPlayer = Globals.isoToGrid(xPos, yPos);
+			//Point isoPlayer = Globals.isoToGrid(xPos, yPos);
 			
-			if (isoClick.x - isoPlayer.x < 5 && isoClick.x - isoPlayer.x > -5) {
+			if (isoClick.x - xPos <= 15 && isoClick.x - xPos >= -15) {
 				Item i = (Item) world.floorItemCheck(isoClick.x, isoClick.y);
 				if (i != null) {
 					System.out.println(i);
 				}
 			}
-			System.out.println((isoClick.x - isoPlayer.x) + " ");
+			System.out.println((isoClick.x) + "Click");
+			System.out.println(xPos + "Player");
 
 		}
 
