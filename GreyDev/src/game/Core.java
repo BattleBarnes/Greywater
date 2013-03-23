@@ -112,9 +112,11 @@ public class Core extends Engine {
 		//in game objects. Menu system might need to change to allow
 		//inventory screens and such.
 		m = new StartMenu(this);
-		i = new InventoryMenu(this);
 		
+		i = new InventoryMenu();
 		p = new Player(1000, 0, i);
+		i.setOwner(p);
+		
 		ArrayList<Entity> mobs = new ArrayList();
 		mobs.add(p);
 		
@@ -122,6 +124,21 @@ public class Core extends Engine {
 		Item item = new Item("GodlyPlateoftheWhale", 1000, 600);
 		ArrayList<Entity> floorItems = new ArrayList<>();
 		floorItems.add(item);
+		floorItems.add(new Item("GodlyPlateoftheWhale", 900, 500));
+		floorItems.add(new Item("GodlyPlateoftheWhale", 900, 300));
+		floorItems.add(new Item("GodlyPlateoftheWhale", 900, 100));
+		floorItems.add(new Item("GodlyPlateoftheWhale", 500, 500));
+		floorItems.add(new Item("GodlyPlateoftheWhale", 200, 500));
+		floorItems.add(new Item("GodlyPlateoftheWhale", 300, 500));
+		floorItems.add(new Item("GodlyPlateoftheWhale", 600, 500));
+		floorItems.add(new Item("GodlyPlateoftheWhale", 900, 50));
+		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 5));
+		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 15));
+		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 95));
+		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 105));
+
+		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 1000));
+		
 		
 		//item elements, will be replaced with proper tilesets later TODO 
 		Sprite w = new Sprite("Wal2l", "Wal2l");

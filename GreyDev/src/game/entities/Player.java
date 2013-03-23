@@ -26,9 +26,9 @@ import java.awt.Rectangle;
 
 public class Player extends Entity {
 	
-	String currDirection = "South";
-	World world;
-	InventoryMenu inv;
+	private String currDirection = "South";
+	public World world;
+	private InventoryMenu inv;
 
 	/**
 	 * Constructor!
@@ -90,7 +90,7 @@ public class Player extends Entity {
 			yMoveBy = 2;
 		}
 
-		if (InputHandler.leftClick.heldDown) { 
+		if (InputHandler.leftClick.heldDown) {
 			// sets player destination to the tile they clicked.
 			Point isoClick = Globals.isoToGrid(InputHandler.leftClick.xPos
 					+ Camera.xOffset, InputHandler.leftClick.yPos
@@ -108,9 +108,8 @@ public class Player extends Entity {
 			double distance = Math.sqrt(Math.pow(xCenter - isoClick.x, 2)+ Math.pow(yCenter - isoClick.y, 2));
 
 			if (distance < 80) {
-				Item i = (Item) world.floorItemCheck(isoClick.x, isoClick.y);
+				Item i = (Item) world.getFloorItem(isoClick.x, isoClick.y);
 				if (i != null) {
-					System.out.println(i);
 					inv.addItem(i);
 				}
 			}
@@ -143,7 +142,7 @@ public class Player extends Entity {
 		
 		inv.update();
 
-		
 	}
+
 
 }

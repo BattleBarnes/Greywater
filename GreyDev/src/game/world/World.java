@@ -99,8 +99,6 @@ public class World {
 				} catch (Exception e) {};
 			}
 		}
-	//	System.out.println(loopcount + " loops");
-	//	System.out.println(rendercount + " ops");
 
 		for(Entity e:floorItems){
 			e.render(g);
@@ -150,7 +148,7 @@ public class World {
 		
 	}
 	
-	public Entity floorItemCheck(int x, int y){
+	public Entity getFloorItem(int x, int y){
 		for(Entity e:floorItems){
 			if(e.getPhysicsShape().contains(x, y)){
 				Entity ee = e;
@@ -161,7 +159,9 @@ public class World {
 		return null;
 	}
 
-
+	public void setFloorItem(Item i){
+		floorItems.add(i);
+	}
 
 	private void loadEnviro(int lvlno){
 		try {
