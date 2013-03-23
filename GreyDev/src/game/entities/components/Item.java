@@ -1,5 +1,7 @@
 package game.entities.components;
 
+import game.engine.Camera;
+
 import java.awt.Graphics;
 
 public class Item extends Entity {
@@ -27,22 +29,20 @@ public class Item extends Entity {
 		return;//do nothing
 	}
 	
-	protected void pickUp(int x, int y){
+	public void pickUp(int x, int y){
 		graphicsComponent = invSprite; 		
 		onFloor = false;
 		xPos = x;
 		yPos = y;
-		physicsComponent.xPos = x;
-		physicsComponent.yPos = y;
+		physicsComponent.updateHitSpace(x, y);
 	}
 	
-	protected void drop(int x, int y){
+	public void drop(int x, int y){
 		graphicsComponent = floorSprite;
 		onFloor = true;
 		this.xPos = x;
 		this.yPos = y;
-		physicsComponent.xPos = x;
-		physicsComponent.yPos = y;
+		physicsComponent.updateHitSpace(x, y);
 	}
 	
 	public void render(Graphics g){
@@ -50,6 +50,12 @@ public class Item extends Entity {
 			super.render(g);
 		else
 			graphicsComponent.draw(g, xPos, yPos);
+	}
+	
+	public void move(int x, int y){
+		this.xPos = x;
+		this.yPos = y;
+		physicsComponent.updateHitSpace(x, y);
 	}
 
 }

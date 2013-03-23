@@ -27,7 +27,7 @@ import javax.swing.JFrame;
 public abstract class Engine extends JFrame implements Runnable {
 	private static final long serialVersionUID = 1863596360846514344L;
 
-	private static final int NUM_BUFFERS = 4; // used for page flipping
+	private static final int NUM_BUFFERS = 2; // used for page flipping
 
 	/*Number of frames with a delay of 0 ms before the animation thread yields
 	 * to other running threads.
@@ -82,7 +82,7 @@ public abstract class Engine extends JFrame implements Runnable {
 	} // end of constructor
 
 	/**
-	 * Defaults too 800x600, creates a non-full screen window
+	 * Defaults too 1920x1080, creates a non-full screen window
 	 * and sets up the graphics object.
 	 */
 	private void initWindowMode() {
@@ -269,7 +269,7 @@ public abstract class Engine extends JFrame implements Runnable {
 			
 			secondselapsed += (endTime - startTime) / 1000000000.0;
 			
-			if(secondselapsed >= 1){
+			if(secondselapsed >= 25){
 				System.out.println("Ticks per sec:" + tickCount/secondselapsed);
 				System.out.println("Time elapsed: " + secondselapsed);
 				System.out.println("Ticks total " + tickCount );

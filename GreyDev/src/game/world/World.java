@@ -83,20 +83,24 @@ public class World {
 	}
 
 	public void render(Graphics g){
-
-		Point origin = Globals.findTile(player.xPos - 1250, player.yPos - 1200);
+		int loopcount = 0;
+		int rendercount = 0;
+		Point origin = Globals.findTile(player.xPos - 750, player.yPos - 750);
 		Point bottomRight = Globals.findTile(player.xPos + 1250, player.yPos + 1250);
-
+		//points used for render culling
 		for (int x = origin.x; x < bottomRight.x; x++) {
 			for (int y = bottomRight.y; y >= origin.y; y--) {
-
+				loopcount++;
 				try {
 					if (tileMap[x][y] != null) {
 						tileMap[x][y].render(g);
+						rendercount++;
 					}
 				} catch (Exception e) {};
 			}
 		}
+	//	System.out.println(loopcount + " loops");
+	//	System.out.println(rendercount + " ops");
 
 		for(Entity e:floorItems){
 			e.render(g);

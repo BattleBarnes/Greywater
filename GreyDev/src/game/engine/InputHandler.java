@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -73,6 +74,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 	public static Trigger menu;
 	public static Trigger use;
 	public static Trigger leftClick;
+	public static Point2D mouseLoc;
 	
 	public static boolean mouseClicked;
 	public static double wheelScrolled;
@@ -105,6 +107,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		mouseLoc = e.getPoint();
 	}
 
 	@Override

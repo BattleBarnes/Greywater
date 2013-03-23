@@ -27,8 +27,8 @@ import java.awt.Rectangle;
 public class Tangible {
 
 	/* ****** POSITIONAL VARIABLES *******/
-	public int xPos; //current x
-	public int yPos; //current y
+	protected int xPos; //current x
+	protected int yPos; //current y
 	public int xDest;//future x
 	public int yDest;//future y
 	public int speed = 0; // how fast it goes from xPos to xDest. Default - 0;

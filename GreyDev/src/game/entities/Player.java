@@ -18,29 +18,31 @@ import game.entities.components.Entity;
 import game.entities.components.Item;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
+import game.menu.InventoryMenu;
 import game.world.World;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 
 public class Player extends Entity {
 	
 	String currDirection = "South";
 	World world;
+	InventoryMenu inv;
 
 	/**
 	 * Constructor!
 	 * 
 	 * @param x - Starting x location
 	 * @param y - Starting y location
-	 * @param anim_Per_Mil - Period of animation in millis
-	 * @param ims - image loader (for the sprite)
 	 */
-	public Player(int x, int y){
+	public Player(int x, int y, InventoryMenu m){
 		this.graphicsComponent = new Sprite("Watchman", "WatchmanStandSouth");
 		this.physicsComponent  = new Tangible(x, y, 35, 35, 2);
 
 		spriteXOff = -graphicsComponent.getWidth()/2 - 65;
 		spriteYOff = -graphicsComponent.getHeight() + 65;
+		inv = m;
 	}
 	
 	public void setWorld(World w){
@@ -88,24 +90,30 @@ public class Player extends Entity {
 			yMoveBy = 2;
 		}
 
-		if (InputHandler.leftClick.heldDown) { // sets player destination to the
-												// tile they clicked.
-			Point isoClick = Globals.isoToGrid(InputHandler.leftClick.xPos+ Camera.xOffset, InputHandler.leftClick.yPos+ Camera.yOffset);
-			Point clickedTile = Globals.findTile(isoClick.x, isoClick.y);
-			xMoveBy = Globals.tileWidth * clickedTile.x - xPos;
-			yMoveBy = Globals.tileHeight * clickedTile.y - yPos;
+		if (InputHandler.leftClick.heldDown) { 
+			// sets player destination to the tile they clicked.
+			Point isoClick = Globals.isoToGrid(InputHandler.leftClick.xPos
+					+ Camera.xOffset, InputHandler.leftClick.yPos
+					+ Camera.yOffset);
 
-			//Point isoPlayer = Globals.isoToGrid(xPos, yPos);
-			
-			if (isoClick.x - xPos <= 15 && isoClick.x - xPos >= -15) {
+			// xMoveBy = Globals.tileWidth * clickedTile.x - xPos;
+			// yMoveBy = Globals.tileHeight * clickedTile.y - yPos;
+
+			// Point isoPlayer = Globals.isoToGrid(xPos, yPos);
+
+			Rectangle player = physicsComponent.getPhysicsShape();
+			double xCenter = player.getCenterX();
+			double yCenter = player.getCenterY();
+
+			double distance = Math.sqrt(Math.pow(xCenter - isoClick.x, 2)+ Math.pow(yCenter - isoClick.y, 2));
+
+			if (distance < 80) {
 				Item i = (Item) world.floorItemCheck(isoClick.x, isoClick.y);
 				if (i != null) {
 					System.out.println(i);
+					inv.addItem(i);
 				}
 			}
-			System.out.println((isoClick.x) + "Click");
-			System.out.println(xPos + "Player");
-
 		}
 
 		if(xMoveBy != 0 || yMoveBy != 0){ //sets the physicsComponent moving
@@ -132,6 +140,9 @@ public class Player extends Entity {
 
 		xMoveBy = 0;//Clear these out for the next input cycle.
 		yMoveBy = 0;
+		
+		inv.update();
+
 		
 	}
 

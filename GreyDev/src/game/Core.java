@@ -73,10 +73,7 @@ public class Core extends Engine {
 			m.render(g);
 		else
 			i.render(g);
-		Random rand = new Random();
-		int r = rand.nextInt(10000);
-		if(r < 10)
-			i.addItem(1);
+		
 	}
 
 	/**
@@ -94,7 +91,6 @@ public class Core extends Engine {
 	protected void menuTick() {
 		InputHandler.tick();
 		m.update();
-	//	i.update();
 	}
 
 	/**
@@ -118,7 +114,7 @@ public class Core extends Engine {
 		m = new StartMenu(this);
 		i = new InventoryMenu(this);
 		
-		p = new Player(1000, 0);
+		p = new Player(1000, 0, i);
 		ArrayList<Entity> mobs = new ArrayList();
 		mobs.add(p);
 		

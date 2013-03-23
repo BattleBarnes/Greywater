@@ -28,7 +28,7 @@ S Tile1,floor_template_small.png
 
 S GodlyPlateoftheWhaleInventory,GodlyPlateoftheWhaleInventory.png
 
-S GodlyPlateoftheWhaleFloor,GodlyPlateoftheWhaleFloor.png
+S GodlyPlateoftheWhaleFloor,GodlyPlateoftheWhaleFloor1.png
 
 S invslot,invslot.png
 
