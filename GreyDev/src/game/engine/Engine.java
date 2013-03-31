@@ -1,5 +1,5 @@
 /**
- * Central Framework (Engine.class)
+ * Central Framework (Engine.java)
  * This class is the skeleton on which the rest of the program hangs. It is called by the Core
  * class because Core allows the programmer to focus on game design, not subsystem building.
  * This Engine provides a camera, a windowed mode, FSEM mode, and the main game loop. These
@@ -292,7 +292,7 @@ public abstract class Engine extends JFrame implements Runnable {
 	 */
 	public void fullScreenRender(Graphics g) {
 		// clear the background
-		g.setColor(Color.white);
+		g.setColor(Color.black);
 		g.fillRect(0, 0, cam.width, cam.height);
 
 		if(Globals.state.gameRunning)

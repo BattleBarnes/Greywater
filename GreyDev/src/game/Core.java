@@ -5,6 +5,7 @@ import game.engine.Engine;
 import game.engine.ImageLoader;
 import game.engine.InputHandler;
 import game.engine.State;
+import game.engine.audio.AudioLoader;
 import game.entities.Player;
 import game.entities.components.Entity;
 import game.entities.components.Item;
@@ -14,8 +15,8 @@ import game.menu.StartMenu;
 import game.world.World;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.Random;
 
 import javax.swing.JOptionPane;
 
@@ -28,6 +29,8 @@ public class Core extends Engine {
 	Player p;
 	ImageLoader imgLd;
 	World l;
+	
+	Sprite light = new Sprite("light", "light");
 	
 	public Core(long anim_period, boolean windowed) {
 		super(anim_period, windowed);
@@ -81,6 +84,11 @@ public class Core extends Engine {
 	 */
 	protected void gameRender(Graphics g){
 		l.render(g); //all game objects are in the level
+		Graphics2D g2 = (Graphics2D) g;
+		g2.scale(Camera.width*1.0/light.getWidth(), Camera.height*1.0/light.getHeight());
+		light.draw(g2, 0, 0);
+		g2.scale(light.getWidth()*1.0/Camera.width, light.getHeight()*1.0/Camera.height);
+
 	}
 
 
@@ -106,6 +114,8 @@ public class Core extends Engine {
 	 */
 	protected void init() {
 		ImageLoader.init("images.txt");
+		AudioLoader.init("audio.txt");
+		
 		cam = super.cam;
 		
 		
@@ -114,7 +124,7 @@ public class Core extends Engine {
 		m = new StartMenu(this);
 		
 		i = new InventoryMenu();
-		p = new Player(1000, 0, i);
+		p = new Player(1000, 500, i);
 		i.setOwner(p);
 		
 		ArrayList<Entity> mobs = new ArrayList();
@@ -136,6 +146,8 @@ public class Core extends Engine {
 		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 15));
 		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 95));
 		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 105));
+		floorItems.add(new Item("GodlyPlateoftheWhale", 700, 105));
+		floorItems.add(new Item("GodlyPlateoftheWhale", 60, 55));
 
 		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 1000));
 		

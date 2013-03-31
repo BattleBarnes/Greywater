@@ -1,0 +1,11 @@
+//This file and the associated parser are a lot like the image loading process
+//
+//There are a few different styles of loading in sound, and they are as denoted as follows:
+//
+//S - group of sounds intended to be used for the same purpose, randomly (like different footsteps)
+//S seriesname,file1.ext,file2.ext,...
+//
+//S - single sound file, used all by itself (perhaps dialogue)
+//S - name,file.ext
+
+G footstep,fs.wav

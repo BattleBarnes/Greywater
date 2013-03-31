@@ -17,7 +17,7 @@ public class Item extends Entity {
 		floorSprite = new Sprite(name+"Floor", name+"Floor");
 		invSprite = new Sprite(name+"Inventory", name+"Inventory");
 		graphicsComponent = floorSprite;
-		physicsComponent = new Tangible(x, y, floorSprite.getWidth(), floorSprite.getHeight(), 0);
+		physicsComponent = new Tangible(x, y, invSprite.getWidth(), invSprite.getHeight(), 0);
 		onFloor = true;
 		this.xPos = x;
 		this.yPos = y;

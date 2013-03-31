@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class InventoryMenu {
 	public final int COLUMNS = 2;
-	public final int ROWS = 7;
+	public final int ROWS = 3;
 	
 	ArrayList<Item> inv = new ArrayList<Item>((ROWS + 1) * COLUMNS);
 
@@ -94,14 +94,14 @@ public class InventoryMenu {
 	 * in the inventory (or drop it, depending on location). If no item is selected, it will try to select one.
 	 */
 	public void update() {
-		if (objectSelected) {
+		if (objectSelected) {//make selection follow the mouse
 			selectedItem.move((int) InputHandler.mouseLoc.getX(), (int) InputHandler.mouseLoc.getY());
 			
 			if (InputHandler.leftClick.keyTapped) 
-				placeItem(calcSlot(InputHandler.mouseLoc));
+				placeItem(calcSlot(InputHandler.mouseLoc)); //place it if mouse click
 			
 		} else if (InputHandler.leftClick.keyTapped && Globals.state == State.gameMenu) {
-			grabItem(InputHandler.mouseLoc);
+			grabItem(InputHandler.mouseLoc); //pick up item from inventory
 		}
 	}
 
@@ -155,7 +155,8 @@ public class InventoryMenu {
 				if (i.getPhysicsShape().contains(mouse)) { //if collides
 					selectedItem = i; //it is selected
 					objectSelected = true;
-					i = null;
+					int j = inv.indexOf(i);
+					inv.set(j, null);
 					return selectedItem;
 				}
 			}

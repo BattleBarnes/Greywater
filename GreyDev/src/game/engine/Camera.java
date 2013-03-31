@@ -1,4 +1,4 @@
-/**
+/** Camera.java
  *This class is primarily a holder for co-ordinate data to simulate a moving camera.
  * Sprites are rendered at the offset of the camera, allowing them to appear to maintain their original
  * positions. The camera "follows" the player.

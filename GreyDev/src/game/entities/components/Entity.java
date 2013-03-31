@@ -48,7 +48,7 @@ public abstract class Entity {
 	/* **** All entities have a physics component for collisions and position, and a graphics component to render on screen ****/
 	protected Tangible physicsComponent; //hitbox
 	protected Sprite graphicsComponent; //sprite
-
+	protected AudioComponent audioComponent;
 	
 	/* **** POSITIONING VARIABLES ******/
 	public int xPos;//current x
@@ -82,6 +82,7 @@ public abstract class Entity {
 
 		physicsComponent.tick(); //update components
 		graphicsComponent.tick();
+		audioComponent.tick();
 		
 		xPos = physicsComponent.xPos; //entity position = physics position
 		yPos = physicsComponent.yPos;
@@ -96,6 +97,8 @@ public abstract class Entity {
 	public void render(Graphics g){
 		Point p = Globals.getIsoCoords(xPos + spriteXOff, yPos + spriteYOff);
 		graphicsComponent.draw(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
+		if(audioComponent != null)
+			audioComponent.play();
 	}
 	
 	/**

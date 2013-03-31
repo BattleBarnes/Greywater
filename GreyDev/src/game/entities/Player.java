@@ -14,6 +14,8 @@ import game.Globals;
 import game.engine.Camera;
 import game.engine.InputHandler;
 import game.engine.State;
+import game.engine.audio.AudioLoader;
+import game.entities.components.AudioComponent;
 import game.entities.components.Entity;
 import game.entities.components.Item;
 import game.entities.components.Sprite;
@@ -39,6 +41,7 @@ public class Player extends Entity {
 	public Player(int x, int y, InventoryMenu m){
 		this.graphicsComponent = new Sprite("Watchman", "WatchmanStandSouth");
 		this.physicsComponent  = new Tangible(x, y, 35, 35, 2);
+		this.audioComponent = new AudioComponent("");
 
 		spriteXOff = -graphicsComponent.getWidth()/2 - 65;
 		spriteYOff = -graphicsComponent.getHeight() + 65;
@@ -91,7 +94,7 @@ public class Player extends Entity {
 		}
 
 		if (InputHandler.leftClick.heldDown) {
-			// sets player destination to the tile they clicked.
+			//determine grid location of click
 			Point isoClick = Globals.isoToGrid(InputHandler.leftClick.xPos
 					+ Camera.xOffset, InputHandler.leftClick.yPos
 					+ Camera.yOffset);
@@ -124,11 +127,13 @@ public class Player extends Entity {
 
 		if(physicsComponent.isMoving()){ //display animation walk loop.
 			graphicsComponent.loopImg(.9, "Walk" +Globals.getStringDir(direction));
+			audioComponent.loopSound(.9/6, "footstep", true);
 			currDirection = Globals.getStringDir(direction);
 		}
-//		else
-//			graphicsComponent.forceImage("WatchmanStand"+currDirection);
-
+		else{
+			graphicsComponent.forceImage("WatchmanStand"+currDirection);
+			audioComponent.stopRepeat();
+		}
 
 		if(InputHandler.menu.keyTapped){ //brings up the menu.
 			if(!Globals.state.drawMenu)

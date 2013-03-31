@@ -24,13 +24,15 @@ S Wal2l,wall_template_small.png
 
 S Wall,wall_template_small_reverse.png
 
-S Tile1,floor_template_small.png
+S Tile1,text.png
 
 S GodlyPlateoftheWhaleInventory,GodlyPlateoftheWhaleInventory.png
 
 S GodlyPlateoftheWhaleFloor,GodlyPlateoftheWhaleFloor1.png
 
 S invslot,invslot.png
+
+S light,light.png
 
 
 T WatchSheet.png,8,6,WatchmanWalkEast,WatchmanWalkNorth,WatchmanWalkNorthEast,WatchmanWalkNorthWest,WatchmanWalkSouth,WatchmanWalkSouthEast,WatchmanWalkSouthWest,WatchmanWalkWest
@@ -40,7 +42,7 @@ S WatchmanStandSouth,Watchman_Stand_South.png
 S WatchmanStandNorth,Watchman_Stand_North.png
 S WatchmanStandEast,Watchman_Stand_East.png
 S WatchmanStandWest,Watchman_Stand_West.png
-//S WatchmanStandWest,Watchman_Stand_NorthEast.png
-//S WatchmanStandWest,Watchman_Stand_SouthEast.png
-//S WatchmanStandWest,Watchman_Stand_NorthWest.png
-//S WatchmanStandWest,Watchman_Stand_SouthWest.png
+S WatchmanStandNorthEast,Watchman_Stand_NorthEast.png
+S WatchmanStandSouthEast,Watchman_Stand_SouthEast.png
+S WatchmanStandNorthWest,Watchman_Stand_NorthWest.png
+S WatchmanStandSouthWest,Watchman_Stand_SouthWest.png

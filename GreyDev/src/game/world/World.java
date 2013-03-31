@@ -194,18 +194,19 @@ public class World {
 			filer.close();
 			filer = null;
 			line = "";
+			
 			readFile = new File("Walls" + lvlno + ".txt");
 			filer= new Scanner(readFile);
 
 
-			for(int y = 0; y < 6; y++){
+			for(int y = 0; y < yHeight; y++){
 				line = filer.nextLine();
 				if(line.contains("//")){
 					y--;
 					continue;
 				}
 
-				for(int x  = 0; x < 20 ; x++){
+				for(int x  = 0; x < xLength ; x++){
 
 					int xCo = x*tileWidth;
 					int yCo = y*tileHeight;

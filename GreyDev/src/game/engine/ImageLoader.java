@@ -39,9 +39,6 @@
  */
 package game.engine;
 
-import java.awt.GraphicsDevice;
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -57,10 +54,9 @@ public class ImageLoader {
 	
 	private static String filePath;
 	private static HashMap images = new HashMap();
-	BufferedImage[] indivFiles;
 	
 	/**
-	 * Constructor, calls readFile on the text file provided to load images into memory from disk.
+	 * Calls readFile on the text file provided to load images into memory from disk.
 	 * IMPORTANT NOTE: Do not provide individual files or call this constructor for multiple sprites.
 	 * Each sprite uses the same ImageLoader, they all call getter methods within this.
 	 * 
