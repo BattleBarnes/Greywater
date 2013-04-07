@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 
 import game.engine.State;
 
@@ -111,6 +112,12 @@ public class Globals {
 		}
 		
 		return dir;
+	}
+	
+	public static double distance(Point2D p1, Point2D p2){
+		double dist = 0.;
+		dist = Math.sqrt(Math.pow((p1.getX()*1.0 - p2.getX()),2) + Math.pow((p1.getY()*1.0 - p2.getY()),2));
+		return dist;
 	}
 
 }

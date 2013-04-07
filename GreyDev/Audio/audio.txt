@@ -8,4 +8,4 @@
 //S - single sound file, used all by itself (perhaps dialogue)
 //S - name,file.ext
 
-G footstep,fs.wav
+G footstep,a.wav,b.wav,c.wav,d.wav

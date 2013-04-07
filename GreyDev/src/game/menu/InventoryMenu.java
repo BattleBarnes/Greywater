@@ -4,8 +4,8 @@ import game.Globals;
 import game.engine.Camera;
 import game.engine.InputHandler;
 import game.engine.State;
+import game.entities.Item;
 import game.entities.Player;
-import game.entities.components.Item;
 import game.entities.components.Sprite;
 
 import java.awt.Graphics;
@@ -32,6 +32,7 @@ public class InventoryMenu {
 		for (int i = 0; i < COLUMNS*(ROWS+1); i++) {
 			inv.add(null);
 		}
+		this.addItem(new Item("GodlyPlateoftheWhale", 0, 0));
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class InventoryMenu {
 			int col = i % COLUMNS; //because inventory is a 1D arraylist, the 2D grid effect
 			int row = ROWS - i / COLUMNS; //is achieved via math.
 			
-			slot.draw(g, (Camera.width - slot.getWidth() * COLUMNS) + slot.getWidth()* col, row * slot.getHeight());
+			slot.render(g, (Camera.width - slot.getWidth() * COLUMNS) + slot.getWidth()* col, row * slot.getHeight());
 			if (inv.get(i) != null) {
 				inv.get(i).render(g);
 			}
@@ -124,15 +125,9 @@ public class InventoryMenu {
 	}
 
 	/**
-	 * Puts the selected item on the ground near the player.
+	 * Destroys the selected item.
 	 */
-	private void dropItem(){
-		int x = owner.xPos;
-		int y = owner.yPos;
-		
-		selectedItem.drop(x, y); //set it to the "floor" version
-		
-		owner.world.setFloorItem(selectedItem); //re-add to the floor item list.
+	private void dropItem(){		
 		
 		//if the item was in inventory previously, remove it and set it to null.
 		if(inv.indexOf(selectedItem) > 0 && inv.indexOf(selectedItem) < COLUMNS*(ROWS+1))
@@ -177,7 +172,7 @@ public class InventoryMenu {
 		int row = ROWS - loc / COLUMNS;
 		for(Item e:inv){//check each slot
 			//if the slot is full
-			if(e!= null && e.xPos == (Camera.width - slot.getWidth() * COLUMNS) + slot.getWidth() * col && e.yPos == row * slot.getHeight())
+			if(e!= null && e.getX() == (Camera.width - slot.getWidth() * COLUMNS) + slot.getWidth() * col && e.getY() == row * slot.getHeight())
 				return; //abort!
 		}
 		//otherwise, place it in the slot.

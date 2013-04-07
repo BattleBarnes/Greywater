@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Point2D;
 
 public class Wall extends Entity{
 	
@@ -36,6 +37,8 @@ public class Wall extends Entity{
 	double isoAngle;
 	
 	Player player;
+	
+	boolean west;
 
 
 	/**
@@ -48,8 +51,8 @@ public class Wall extends Entity{
 	 * @param isoAngle - the slope of the wall
 	 * @param tileWidth - used for aligning it to the floor grid.
 	 */
-	public Wall(int x, int y, Sprite wall, double isoAngle, int tileWidth, int tileHeight, Player p) {
-
+	public Wall(int x, int y, Sprite wall, double isoAngle, int tileWidth, int tileHeight, Player p, boolean west) {
+		this.west = west;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.graphicsComponent = wall;
@@ -64,12 +67,8 @@ public class Wall extends Entity{
 
 		physicsComponent = new Tangible(x,y, tileWidth, tileHeight, 0);
 
-		super.xPos = x;
-		super.yPos = y;
-		
-
-			spriteXOff =  -(4*tileWidth) - xDepth/2 - 10;
-			spriteYOff = -(4*tileHeight) - xDepth - 3;
+		spriteXOff =  -(4*tileWidth) - xDepth/2 - 10;
+		spriteYOff = -(4*tileHeight) - xDepth - 3;
 
 	}
 
@@ -79,28 +78,55 @@ public class Wall extends Entity{
 	 * @param pDepth - Depth of the player from Entity.getDepth();
 	 */
 	public void render(Graphics g){		
+		
+		
+		
 		graphicsComponent.tick(); //maybe walls are animated
-		Point p = Globals.getIsoCoords(xPos + spriteXOff, yPos + spriteYOff);
-		if(this.yPos - 5 < player.yPos){
-			graphicsComponent.draw(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
+		
+		//if player is in front of wall, render normally
+		Point p = Globals.getIsoCoords(getX() + spriteXOff, getY() + spriteYOff);
+		
+		if(true){
+			graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.3f);
 			return;
 		}
 		
-		int distance = (int) Math.sqrt((player.xPos-this.xPos)*(player.xPos-this.xPos) + (player.yPos-this.yPos)*(player.yPos-this.yPos));       
+		if(!west){
+			if(this.getY() < player.getY()){
+				graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
+				return;
+			}
+			
+		}else{
+			if(getX() < player.getX()){
+				graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
+				return;
+			}
+
+		}
+			
+		
+		Point2D plgrid = new Point2D.Double(player.getX(), player.getY());
+		Point2D pwgrid = new Point2D.Double(getX(), getY());
+		int distance = (int)Globals.distance(plgrid,pwgrid);
 		distance = distance/Globals.tileHeight;
+		
+		if(distance > 20){
+			graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
+		}
+
+		//otherwise, render with some transparency
 		switch(distance){
-		case 4: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.4f); break;
-		case 3:graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.35f); break;
-		case 2: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.25f); break;
-		case 1: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.2f); break;
-		case 0: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.2f); break;
-		default:graphicsComponent.draw(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
+		case 6: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.60f); break;
+		case 5: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.55f); break;
+		case 4: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.5f); break;
+		case 3: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.45f); break;
+		case 2: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.4f); break;
+		case 1: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.3f); break;
+		case 0: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.3f); break;
+		default:graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
 		}
 	}
 	
-
-	@Override
-	protected void getInput() {return;} //walls, also, don't need input.
-
 	
 }

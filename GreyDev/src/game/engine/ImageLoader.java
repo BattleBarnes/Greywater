@@ -304,14 +304,20 @@ public class ImageLoader {
 			im = (BufferedImage) imgSet.get(position);
 		}
 		catch(Exception e){//if it isn't there, fuck you!
-			System.out.println("That image doesn't exist! Image name: " + name + " and position: " + position);
-			im = null;
+			return (BufferedImage) images.get(name);
 		}
 		return im;
 	}
 	
 	 public static int getSeriesCount(String name){
-	    ArrayList imgSet = (ArrayList) images.get(name);
+		 ArrayList imgSet = new ArrayList<>();
+		try{
+			imgSet = (ArrayList) images.get(name);
+		}catch(ClassCastException e){
+			if (images.get(name) instanceof BufferedImage)
+				return 1;
+			System.out.println();
+		}
 	    if (imgSet == null) {
 	      System.out.println("404 " + name + " not found! (ImageLoader.java)");  
 	      return 0;

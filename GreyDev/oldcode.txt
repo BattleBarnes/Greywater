@@ -32,3 +32,15 @@ int[] e11 = e2.getPhysics().getBottomLine();
 		else
 			return 0;//indicates colinearity
 	}
+	
+	
+	CLICK BASED MOVEMENT
+			if (InputHandler.leftClick.heldDown) {
+			//determine grid location of click
+			Point isoClick = Globals.isoToGrid(InputHandler.leftClick.xPos + Camera.xOffset, InputHandler.leftClick.yPos + Camera.yOffset);
+		
+				// xMoveBy = Globals.tileWidth * clickedTile.x - xPos;
+			// yMoveBy = Globals.tileHeight * clickedTile.y - yPos;
+			// Point isoPlayer = Globals.isoToGrid(xPos, yPos);
+			
+			}

@@ -27,8 +27,6 @@ import java.awt.Rectangle;
 public class Tangible {
 
 	/* ****** POSITIONAL VARIABLES *******/
-	protected int xPos; //current x
-	protected int yPos; //current y
 	public int xDest;//future x
 	public int yDest;//future y
 	public int speed = 0; // how fast it goes from xPos to xDest. Default - 0;
@@ -47,12 +45,10 @@ public class Tangible {
 	 * @param hitHeight - height of hitBox
 	 */
 	public Tangible(int x, int y, int hitWidth, int hitHeight, int speed){
-		xPos = x;
-		yPos = y;
 		xDest = x;
 		yDest = y;
 		this.speed = speed;
-		hitBox = new Rectangle(xPos, yPos, hitWidth, hitHeight);
+		hitBox = new Rectangle(x, y, hitWidth, hitHeight);
 	}
 
 
@@ -62,6 +58,8 @@ public class Tangible {
 	 * Used to move the object if it has a destination. If not, does nothing.
 	 */
 	public void tick(){
+		int xPos = hitBox.x;
+		int yPos = hitBox.y;
 		if(xPos != xDest)
 			xPos += Integer.signum(xDest - xPos)*speed;
 		if(yPos != yDest)
@@ -76,7 +74,7 @@ public class Tangible {
 	 * @param x - new x co-ordinate
 	 * @param y - new y co-ordinate
 	 */
-	protected void updateHitSpace(int x, int y){
+	public void updateHitSpace(int x, int y){
 			hitBox.setLocation(x, y);
 	}
 
@@ -93,15 +91,15 @@ public class Tangible {
 		yDest += y;
 		
 		if(x == 0){
-			xDest = xPos;
+			xDest = hitBox.x;
 		}
 		if( y == 0){
-			yDest = yPos;
+			yDest = hitBox.y;
 		}
 	}
 
 	/**
-	 * Moves character to X,Y
+	 * Sets character destination to X,Y
 	 * 
 	 * @param x - where to go in the x direction
 	 * @param y - where to go in the y direction
@@ -115,25 +113,25 @@ public class Tangible {
 	 * Stops all movement immediately.
 	 */
 	public void stopMovement(){
-		xDest = xPos;
-		yDest = yPos;
-		updateHitSpace(xPos, yPos);
+		xDest = hitBox.x;
+		yDest = hitBox.y;
+		updateHitSpace(xDest, yDest);
 	}
 	
 	/**
 	 * Stops X movement immediately
 	 */
 	public void stopXMovement(){
-		xDest = xPos;
-		updateHitSpace(xPos, yPos);
+		xDest = hitBox.x;
+		updateHitSpace(xDest, hitBox.y);
 	}
 	
 	/**
 	 * Stops Y movement immediately
 	 */
 	public void stopYMovement(){
-		yDest = yPos;
-		updateHitSpace(xPos, yPos);
+		yDest = hitBox.y;
+		updateHitSpace(hitBox.x, yDest);
 	}
 	
 	/**
@@ -147,6 +145,8 @@ public class Tangible {
 	 * @return Whether or not the physicscomponent still has distance to traverse.
 	 */
 	public boolean isMoving(){
+		int xPos = hitBox.x;
+		int yPos = hitBox.y;
 		if(xDest != xPos)
 			return true;
 		else if(yDest != yPos)

@@ -32,7 +32,11 @@ S GodlyPlateoftheWhaleFloor,GodlyPlateoftheWhaleFloor1.png
 
 S invslot,invslot.png
 
+//overlays
 S light,light.png
+S hud,HUD_Body2.png
+S hps,Health_Space.png
+S hu,Health_Unit2.png
 
 
 T WatchSheet.png,8,6,WatchmanWalkEast,WatchmanWalkNorth,WatchmanWalkNorthEast,WatchmanWalkNorthWest,WatchmanWalkSouth,WatchmanWalkSouthEast,WatchmanWalkSouthWest,WatchmanWalkWest

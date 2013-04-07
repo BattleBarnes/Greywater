@@ -11,26 +11,19 @@
 package game.entities;
 
 import game.Globals;
-import game.engine.Camera;
 import game.engine.InputHandler;
 import game.engine.State;
 import game.engine.audio.AudioLoader;
-import game.entities.components.AudioComponent;
-import game.entities.components.Entity;
-import game.entities.components.Item;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
 import game.menu.InventoryMenu;
-import game.world.World;
 
-import java.awt.Point;
-import java.awt.Rectangle;
-
-public class Player extends Entity {
+public class Player extends Mob {
 	
-	private String currDirection = "South";
-	public World world;
 	private InventoryMenu inv;
+	
+	int lastPos = 0;
+	public boolean notPlayed = true;
 
 	/**
 	 * Constructor!
@@ -39,18 +32,16 @@ public class Player extends Entity {
 	 * @param y - Starting y location
 	 */
 	public Player(int x, int y, InventoryMenu m){
-		this.graphicsComponent = new Sprite("Watchman", "WatchmanStandSouth");
+		name = "Watchman";
+		currDirection = "South";
+		this.graphicsComponent = new Sprite(name, name+"StandSouth");
 		this.physicsComponent  = new Tangible(x, y, 35, 35, 2);
-		this.audioComponent = new AudioComponent("");
 
 		spriteXOff = -graphicsComponent.getWidth()/2 - 65;
 		spriteYOff = -graphicsComponent.getHeight() + 65;
 		inv = m;
 	}
 	
-	public void setWorld(World w){
-		world = w;
-	}
 
 	/**
 	 * Gets player input from the InputHandler class (static calls).
@@ -58,10 +49,21 @@ public class Player extends Entity {
 	 * and sets the graphics component accordingly.
 	 */
 	protected void getInput(){
+		
+		if(graphicsComponent.isAnimating()){
+			lastPos =graphicsComponent.seriesPosition;
+			if(lastPos == 0 || lastPos == 3){
+				if(notPlayed){
+					notPlayed = false;
+					AudioLoader.playGrouped("footstep");
+				}
+			}else if (lastPos != 0 && lastPos != 3)
+				notPlayed = true;
+		}
+		
 		if(InputHandler.up.heldDown){
 			xMoveBy = -2;
 			yMoveBy = -2;
-
 		}
 		if(InputHandler.down.heldDown){
 			xMoveBy = 2;
@@ -70,7 +72,6 @@ public class Player extends Entity {
 		if(InputHandler.left.heldDown){
 			xMoveBy = -2;
 			yMoveBy =  2;
-
 		}
 		if(InputHandler.right.heldDown){
 			xMoveBy = 2;
@@ -92,48 +93,7 @@ public class Player extends Entity {
 			xMoveBy = 0;
 			yMoveBy = 2;
 		}
-
-		if (InputHandler.leftClick.heldDown) {
-			//determine grid location of click
-			Point isoClick = Globals.isoToGrid(InputHandler.leftClick.xPos
-					+ Camera.xOffset, InputHandler.leftClick.yPos
-					+ Camera.yOffset);
-
-			// xMoveBy = Globals.tileWidth * clickedTile.x - xPos;
-			// yMoveBy = Globals.tileHeight * clickedTile.y - yPos;
-
-			// Point isoPlayer = Globals.isoToGrid(xPos, yPos);
-
-			Rectangle player = physicsComponent.getPhysicsShape();
-			double xCenter = player.getCenterX();
-			double yCenter = player.getCenterY();
-
-			double distance = Math.sqrt(Math.pow(xCenter - isoClick.x, 2)+ Math.pow(yCenter - isoClick.y, 2));
-
-			if (distance < 80) {
-				Item i = (Item) world.getFloorItem(isoClick.x, isoClick.y);
-				if (i != null) {
-					inv.addItem(i);
-				}
-			}
-		}
-
-		if(xMoveBy != 0 || yMoveBy != 0){ //sets the physicsComponent moving
-			physicsComponent.moveTo(xPos + xMoveBy, yPos + yMoveBy);
-		}
-
-		direction = Globals.getIntDir(physicsComponent.xDest - xPos, physicsComponent.yDest - yPos);
 		
-
-		if(physicsComponent.isMoving()){ //display animation walk loop.
-			graphicsComponent.loopImg(.9, "Walk" +Globals.getStringDir(direction));
-			audioComponent.loopSound(.9/6, "footstep", true);
-			currDirection = Globals.getStringDir(direction);
-		}
-		else{
-			graphicsComponent.forceImage("WatchmanStand"+currDirection);
-			audioComponent.stopRepeat();
-		}
 
 		if(InputHandler.menu.keyTapped){ //brings up the menu.
 			if(!Globals.state.drawMenu)
@@ -142,11 +102,22 @@ public class Player extends Entity {
 				Globals.state = State.inGame;
 		}
 
-		xMoveBy = 0;//Clear these out for the next input cycle.
-		yMoveBy = 0;
-		
 		inv.update();
 
+	}
+
+
+	@Override
+	protected void attack(Mob enemy) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	protected void takeDamage(int damage) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

@@ -50,13 +50,9 @@ public class Camera  {
 		width = w;
 		height = h;
 		
-		yScale = (100 - 1080.0/height) / 100.0;
-		xScale = (100 - 1920.0/width) / 100.0;
-		
-		if(width == 1920 && height == 1080){
-			xScale = 1.0; 
-			yScale = 1.0;
-		}
+		//yScale = (height/1080.);
+		yScale = width/1920.;
+		xScale = yScale;
 		
 		viewPort = new Rectangle(xPos, yPos, width, height);
 

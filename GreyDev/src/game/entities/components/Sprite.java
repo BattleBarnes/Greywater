@@ -47,7 +47,7 @@ public class Sprite {
 	private int animPeriod_Millis;
 	
 	//series length and position trackers (not time, image-count)
-	private int seriesPosition;
+	public int seriesPosition;
 	private int seriesLength;
 		
 	
@@ -70,7 +70,7 @@ public class Sprite {
 	 * @param x - x co-ordinate to render at
 	 * @param y - y co-ordinate to render at
 	 */
-	public void draw(Graphics g, int x, int y){
+	public void render(Graphics g, int x, int y){
 		tick();
 		BufferedImage rep = getCurrentImage();
 		g.drawImage(rep, x, y, rep.getWidth(), rep.getHeight(), null);

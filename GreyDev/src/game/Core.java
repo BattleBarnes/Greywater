@@ -6,9 +6,9 @@ import game.engine.ImageLoader;
 import game.engine.InputHandler;
 import game.engine.State;
 import game.engine.audio.AudioLoader;
+import game.entities.Mob;
 import game.entities.Player;
-import game.entities.components.Entity;
-import game.entities.components.Item;
+import game.entities.Watchman;
 import game.entities.components.Sprite;
 import game.menu.InventoryMenu;
 import game.menu.StartMenu;
@@ -31,6 +31,9 @@ public class Core extends Engine {
 	World l;
 	
 	Sprite light = new Sprite("light", "light");
+	Sprite hud = new Sprite("hud", "hud");
+	Sprite hud2 = new Sprite("hps", "hps");
+	Sprite hpoint = new Sprite("hu", "hu");
 	
 	public Core(long anim_period, boolean windowed) {
 		super(anim_period, windowed);
@@ -83,11 +86,23 @@ public class Core extends Engine {
 	 * Renders the game world
 	 */
 	protected void gameRender(Graphics g){
+		
 		l.render(g); //all game objects are in the level
 		Graphics2D g2 = (Graphics2D) g;
 		g2.scale(Camera.width*1.0/light.getWidth(), Camera.height*1.0/light.getHeight());
-		light.draw(g2, 0, 0);
+		light.render(g2, 0, 0);
 		g2.scale(light.getWidth()*1.0/Camera.width, light.getHeight()*1.0/Camera.height);
+		System.out.println(Camera.xScale);
+		
+		g2.scale(Camera.xScale, Camera.yScale);
+		hud.render(g2, 0, (int) (Camera.height/Camera.xScale - hud.getHeight()) );
+		hud2.render(g2, (int) (Camera.width/Camera.xScale/2 - hud2.getWidth()/2) ,  (int) (Camera.height/Camera.xScale-hud.getHeight()/2-hud2.getHeight()/2));
+		
+		System.out.println(Camera.width + " " + Camera.height);
+		
+		for(int i = 0; i < 10; i++){
+			hpoint.render(g2, (int) (Camera.width/Camera.yScale/2 - hud2.getWidth()/2 + 2 +  i*hud2.getWidth()/10), (int) (Camera.height/Camera.xScale-hud.getHeight()/2-hud2.getHeight()/2 + 10));
+		}
 
 	}
 
@@ -125,31 +140,13 @@ public class Core extends Engine {
 		
 		i = new InventoryMenu();
 		p = new Player(1000, 500, i);
+		Watchman w1 = new Watchman(500, 500, p);
 		i.setOwner(p);
 		
-		ArrayList<Entity> mobs = new ArrayList();
+		ArrayList<Mob> mobs = new ArrayList();
 		mobs.add(p);
-		
-		
-		Item item = new Item("GodlyPlateoftheWhale", 1000, 600);
-		ArrayList<Entity> floorItems = new ArrayList<>();
-		floorItems.add(item);
-		floorItems.add(new Item("GodlyPlateoftheWhale", 900, 500));
-		floorItems.add(new Item("GodlyPlateoftheWhale", 900, 300));
-		floorItems.add(new Item("GodlyPlateoftheWhale", 900, 100));
-		floorItems.add(new Item("GodlyPlateoftheWhale", 500, 500));
-		floorItems.add(new Item("GodlyPlateoftheWhale", 200, 500));
-		floorItems.add(new Item("GodlyPlateoftheWhale", 300, 500));
-		floorItems.add(new Item("GodlyPlateoftheWhale", 600, 500));
-		floorItems.add(new Item("GodlyPlateoftheWhale", 900, 50));
-		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 5));
-		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 15));
-		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 95));
-		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 105));
-		floorItems.add(new Item("GodlyPlateoftheWhale", 700, 105));
-		floorItems.add(new Item("GodlyPlateoftheWhale", 60, 55));
+		mobs.add(w1);
 
-		floorItems.add(new Item("GodlyPlateoftheWhale", 800, 1000));
 		
 		
 		//item elements, will be replaced with proper tilesets later TODO 
@@ -158,8 +155,8 @@ public class Core extends Engine {
 		Sprite s = new Sprite("Tile1", "Tile1");
 		
 		
-		l = new World(s,w,ow, mobs, floorItems, p);
-		p.setWorld(l);
+		l = new World(s,w,ow, mobs, p);
+		w1.addPathFinder(l);
 	}
 
 	/**

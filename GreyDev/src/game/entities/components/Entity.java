@@ -48,22 +48,8 @@ public abstract class Entity {
 	/* **** All entities have a physics component for collisions and position, and a graphics component to render on screen ****/
 	protected Tangible physicsComponent; //hitbox
 	protected Sprite graphicsComponent; //sprite
-	protected AudioComponent audioComponent;
 	
-	/* **** POSITIONING VARIABLES ******/
-	public int xPos;//current x
-	public int yPos;//current y
 	
-	protected int xMoveBy; //how much the entity is moving in the x direction (DELTA)
-	protected int yMoveBy; //how much the entity is moving in the y direction
-	
-	protected int xDest; //where the entity should go in the x direction
-	protected int yDest;//where the entity should go in the y direction (absolute)
-	
-	public int xLast; //last valid (non colliding) x position
-	public int yLast; //last valid (non colliding) y position
-	
-	public int direction; //current direction (N,S,E,W....) see Globals.java
 	
 	/* *** Position is determined by the hitbox, so offsets are tracked to draw in relation to the hitbox. Subclasses must set. ***/
 	protected int spriteXOff; //horizontal distance from (0,0) on hitbox to (0,0) on sprite
@@ -71,22 +57,11 @@ public abstract class Entity {
 	
 
 	/**
-	 * Generic method for moving entities:
-	 * Saves last valid position, moves the entity on its
-	 * current trajectory, ticks the graphics component, moves the hitBox.
+	 * Ticks components (graphics and physics)
 	 */
-	public void update(){
-		xLast = xPos; //last location was valid or it would have been undone already
-		yLast = yPos;
-		getInput(); //get input from AI or controls or whatever
-
+	public void tick(){
 		physicsComponent.tick(); //update components
 		graphicsComponent.tick();
-		audioComponent.tick();
-		
-		xPos = physicsComponent.xPos; //entity position = physics position
-		yPos = physicsComponent.yPos;
-
 	}
 	
 	
@@ -95,38 +70,19 @@ public abstract class Entity {
 	 * @param g - Graphics object
 	 */
 	public void render(Graphics g){
+		int xPos = getX() + 2*Integer.signum(getX());
+		int yPos = getY();
 		Point p = Globals.getIsoCoords(xPos + spriteXOff, yPos + spriteYOff);
-		graphicsComponent.draw(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
-		if(audioComponent != null)
-			audioComponent.play();
+		graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
 	}
 	
-	/**
-	 * Stops movement (for collisions)
-	 * 
-	 * @param x - if true, stop movement in the x direction
-	 * @param y - if true, stop movement in the y direction
-	 */
-	public void undoMove(boolean x, boolean y){
+	
+	public void setLocation(int x, int y){
 
-		if(x){
-			xPos = xLast;
-			physicsComponent.xPos = xLast;
-			physicsComponent.stopXMovement();
-			xMoveBy = 0;
-		}
-		if(y){
-			yPos = yLast;
-			physicsComponent.yPos = yLast;
-			physicsComponent.stopYMovement();
-			yMoveBy = 0;
-		}
-		
-		getInput();
-		physicsComponent.move(xMoveBy, yMoveBy);
-		physicsComponent.tick();
+		physicsComponent.updateHitSpace(x, y);
+		physicsComponent.stopMovement();
 	}
-	
+
 	/**
 	 * @return the Tangible used for collisions and positioning
 	 */
@@ -134,11 +90,20 @@ public abstract class Entity {
 		return physicsComponent;
 	}
 
+	
 	/**
 	 * @return the Shape used for collision detection
 	 */
 	public Rectangle getPhysicsShape(){
 		return physicsComponent.getPhysicsShape();
+	}
+	
+	public int getX(){
+		return physicsComponent.getPhysicsShape().x;
+	}
+	
+	public int getY(){
+		return physicsComponent.getPhysicsShape().y;
 	}
 	
 	/**
@@ -149,11 +114,6 @@ public abstract class Entity {
 		double y = physicsComponent.getPhysicsShape().getCenterY();
 		return (x+y) * .866;
 	}
-	
-	/**
-	 * Can be AI algorithms or player keypresses. I don't care, but all must implement.
-	 */
-	protected abstract void getInput();
 		
 }
 	

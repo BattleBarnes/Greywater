@@ -17,6 +17,7 @@ import game.Globals;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Window;
@@ -87,12 +88,12 @@ public abstract class Engine extends JFrame implements Runnable {
 	 */
 	private void initWindowMode() {
 		windowedPanel = new WindowPanel(this);
-		this.setSize(1920, 1080);
+		this.setSize(1000, 800);
 		this.add(windowedPanel);
 		this.setVisible(true);
 		this.pack();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		cam = new Camera(0,0,getBounds().width, getBounds().height);
+		cam = new Camera(0,0,windowedPanel.getBounds().width, windowedPanel.getBounds().height);
 
 	}
 
@@ -228,6 +229,7 @@ public abstract class Engine extends JFrame implements Runnable {
 			if (!windowed) {
 				screenUpdate(g);
 			} else {
+				Graphics g = this.getGraphics();
 				windowedPanel.windowRender(g);
 
 			}
@@ -313,9 +315,14 @@ public abstract class Engine extends JFrame implements Runnable {
 		try {
 
 			g = bufferStrategy.getDrawGraphics();
-		//	((Graphics2D) g).scale(Camera.xScale, Camera.yScale);
 			g.setColor(Color.BLACK);
+			
+			g.fillRect(0, 0, 3*Camera.height, 3*Camera.width);
+			
+		
+			
 			fullScreenRender(g);
+
 			g.dispose();
 			if (!bufferStrategy.contentsLost())
 				bufferStrategy.show();

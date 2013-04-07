@@ -27,14 +27,11 @@ public class Tile extends Entity {
 	 * @param xPos -y location in 2D flatspace
 	 * @param yPos -x location in 2D flatspace
 	 */
-	public Tile(Sprite graphicsComponent, int xPos, int yPos, boolean interactive) {
+	public Tile(Sprite graphicsComponent, int xPos, int yPos) {
 		this.graphicsComponent = graphicsComponent;
-		this.xPos = xPos;
-		this.yPos = yPos;
 		//width is half because graphics component is isometric - 2:1 W:H ratio, needs fixing for square flatspace
 		//speed is 0 because tiles don't move, silly
-		if(interactive)
-			this.physicsComponent = new Tangible(xPos, yPos, graphicsComponent.getWidth()/2, graphicsComponent.getHeight(), 0); 
+		this.physicsComponent = new Tangible(xPos, yPos, graphicsComponent.getWidth()/2, graphicsComponent.getHeight(), 0); 
 		
 	}
 
@@ -49,8 +46,7 @@ public class Tile extends Entity {
 		super.render(g);
 	}
 
-	@Override
-	protected void getInput() {return;} //Tiles do not need input. No matter what their superclass thinks.
+	
 
 
 
