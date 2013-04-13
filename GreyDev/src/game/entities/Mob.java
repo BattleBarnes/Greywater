@@ -20,7 +20,7 @@ public abstract class Mob extends Entity {
 	PathFinder p;
 
 	
-	private int HP;
+	private int HP = 100;
 	protected double walkRate = .59; //used to determine how fast a mob's walk animation cycle is
 	protected Line2D sight;
 	protected boolean validSight;
@@ -32,6 +32,7 @@ public abstract class Mob extends Entity {
 	
 	public int xLast; //last valid (non colliding) x position
 	public int yLast; //last valid (non colliding) y position
+	boolean override = false;
 
 	/**
 	 * Generic method for moving entities:
@@ -60,7 +61,7 @@ public abstract class Mob extends Entity {
 			graphicsComponent.loopImg(walkRate, "Walk" +Globals.getStringDir(direction));
 			currDirection = Globals.getStringDir(direction);
 		}
-		else{
+		else if(!override){
 			graphicsComponent.loopImg(.5, "Stand" + currDirection);
 		}
 		
@@ -124,6 +125,14 @@ public abstract class Mob extends Entity {
 	
 	public void addPathFinder(World l){
 		p = new PathFinder(l);
+	}
+	
+	public void damage(int damage){
+		HP -= damage;
+	}
+	
+	public int getHP(){
+		return HP;
 	}
 	
 

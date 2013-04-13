@@ -18,6 +18,9 @@ import game.entities.components.Sprite;
 import game.entities.components.Tangible;
 import game.menu.InventoryMenu;
 
+import java.awt.Graphics;
+import java.awt.Rectangle;
+
 public class Player extends Mob {
 	
 	private InventoryMenu inv;
@@ -105,6 +108,13 @@ public class Player extends Mob {
 		inv.update();
 
 	}
+	
+	
+//	public void render(Graphics g){
+//		super.render(g);
+//		Rectangle r = this.getPhysicsShape();
+//		g.drawRect(r.x, r.y, r.width, r.height);
+//	}
 
 
 	@Override

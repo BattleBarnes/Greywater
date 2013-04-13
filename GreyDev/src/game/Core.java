@@ -92,13 +92,11 @@ public class Core extends Engine {
 		g2.scale(Camera.width*1.0/light.getWidth(), Camera.height*1.0/light.getHeight());
 		light.render(g2, 0, 0);
 		g2.scale(light.getWidth()*1.0/Camera.width, light.getHeight()*1.0/Camera.height);
-		System.out.println(Camera.xScale);
 		
 		g2.scale(Camera.xScale, Camera.yScale);
 		hud.render(g2, 0, (int) (Camera.height/Camera.xScale - hud.getHeight()) );
 		hud2.render(g2, (int) (Camera.width/Camera.xScale/2 - hud2.getWidth()/2) ,  (int) (Camera.height/Camera.xScale-hud.getHeight()/2-hud2.getHeight()/2));
 		
-		System.out.println(Camera.width + " " + Camera.height);
 		
 		for(int i = 0; i < 10; i++){
 			hpoint.render(g2, (int) (Camera.width/Camera.yScale/2 - hud2.getWidth()/2 + 2 +  i*hud2.getWidth()/10), (int) (Camera.height/Camera.xScale-hud.getHeight()/2-hud2.getHeight()/2 + 10));

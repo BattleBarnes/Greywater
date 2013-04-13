@@ -80,16 +80,24 @@ public class World {
 
 	public void render(Graphics g) {
 		// points used for render culling
-		Point origin = Globals.findTile(player.getX() - Camera.width,player.getY() - Camera.height);
-		Point bottomRight = Globals.findTile(player.getX() + Camera.width,player.getY() + 2 * Camera.height);
+		Point origin = Globals.findTile(player.getX() - Camera.width, player.getY() - Camera.height);
+		Point bottomRight = Globals.findTile(player.getX() + Camera.width, player.getY() + 2 * Camera.height);
+		if(origin.x < 0)
+			origin.setLocation(0, origin.y);
+		if(origin.y < 0)
+			origin.setLocation(origin.x, 0);
+		
+		if(bottomRight.x > xLength)
+			bottomRight.setLocation(xLength, bottomRight.y);
+		if(bottomRight.y > yHeight)
+			bottomRight.setLocation(bottomRight.x, yHeight);
 
 		// render loop
 		for (int x = origin.x; x < bottomRight.x; x++) {
 			for (int y = bottomRight.y; y >= origin.y; y--) {
 				try {
-					if (tileMap[x][y] != null) {
+					if (tileMap[x][y] != null) 
 						tileMap[x][y].render(g);
-					}
 				} catch (Exception e) {
 				}
 				;
@@ -102,10 +110,12 @@ public class World {
 			sortList.add(e);
 		}
 
-		for (int x = 0; x < xLength; x++) {
-			for (int y = 0; y < yHeight; y++) {
-				if (walls[x][y] != null)
-					sortList.add(walls[x][y]);
+		for (int x = origin.x; x < bottomRight.x; x++) {
+			for (int y = bottomRight.y; y >= origin.y; y--) {
+				try {
+					if (walls[x][y] != null)
+						sortList.add(walls[x][y]);
+				} catch (Exception e) {};
 			}
 		}
 
@@ -123,43 +133,42 @@ public class World {
 		// visible to them
 		for (Mob e : mobList) {
 			e.tick();
-			
+
 			Line2D l = e.getSight();
-			if (l != null &&Globals.distance(l.getP1(), l.getP2()) < e.sightRange && !checkWorldCollision(l)) {
+			if (l != null && Globals.distance(l.getP1(), l.getP2()) < e.sightRange && !checkWorldCollision(l)) {
 				e.validateSight(true);
 			} else
 				e.validateSight(false);
-			
-		//	if(e.target!= null)
-			//	if(Globals.distance(new Point(e.target.getX(),e.target.getY()), new Point(e.getX(), e.getY())) > 100)
+
+			// if(e.target!= null)
+			// if(Globals.distance(new Point(e.target.getX(),e.target.getY()),
+			// new Point(e.getX(), e.getY())) > 100)
 
 		}
 
 		// collision detection
-		for (int x = 0; x < walls.length; x++) {
-			for (int y = 0; y < walls[x].length; y++) {
-				if (walls[x][y] == null)
-					continue;
+	
 				for (Mob m : mobList) {
-					if (m.getPhysicsShape().intersects(walls[x][y].getPhysicsShape())) {
-						Rectangle2D r = m.getPhysicsShape(); 
+					if(checkWorldCollision(m.getPhysicsShape())){
+						Rectangle2D r = m.getPhysicsShape();
 						// physics shape, renamed for convenience
 
 						// these rectangles use old x and y coords, respectively, to see which direction the collision is in.
 						Rectangle2D xRect = new Rectangle2D.Double(((double) m.xLast), r.getY(), r.getWidth(), r.getHeight());
 						Rectangle2D yRect = new Rectangle2D.Double(r.getX(), ((double) m.yLast), r.getWidth(), r.getHeight());
 
-						if (xRect.intersects(walls[x][y].getPhysicsShape()))
+						//if (xRect.intersects(walls[x][y].getPhysicsShape()))
+						if(checkWorldCollision(xRect))
 							m.undoMove(true, false);
-						else if (yRect
-								.intersects(walls[x][y].getPhysicsShape()))
+					//	else if (yRect.intersects(walls[x][y].getPhysicsShape()))
+						else if(checkWorldCollision(yRect))
 							m.undoMove(false, true);
 						else
 							m.undoMove(true, true);
 					}
 				}
-			}
-		}
+		//	}
+	//	}
 
 		// move the camera to follow the player
 		Point p = Globals.getIsoCoords(player.getX(), player.getY());
@@ -168,8 +177,16 @@ public class World {
 	}
 
 	public boolean checkWorldCollision(Shape s) {
-		for (int x = 0; x < walls.length; x++) {
-			for (int y = 0; y < walls[x].length; y++) {
+		Point area = Globals.findTile(s.getBounds().x, s.getBounds().y);
+		int areaX = area.x;
+		int areaY = area.y;
+		if(areaX < 0 )
+			areaX = 0;
+		if(areaY < 0 )
+			areaY = 0;
+		
+		for (int x = areaX; x < areaX + 10; x++) {
+			for (int y = areaY; y < areaY + 10; y++) {
 				if (walls[x][y] == null)
 					continue;
 				if (s != null && s.intersects(walls[x][y].getPhysicsShape()))
@@ -178,20 +195,26 @@ public class World {
 		}
 		return false;
 	}
+	
+	
+	public boolean checkEntityCollision(Shape s){
+		for(Entity e:mobList){
+			if(s.intersects(e.getPhysicsShape()))
+				return true;
+		}
+		return false;
+	}
 
 	public boolean checkValidTile(int x, int y) {
-
 		if (x < 0 || y < 0)
 			return false;
-		Point p = new Point(x, y);
-		Rectangle r = new Rectangle(x, y, 10, 10);
+		Rectangle r = new Rectangle(x, y, 45, 45);
 		if (checkWorldCollision(r))
 			return false;
 
 		for (int i = 0; i < tileWidth; i++) {
 			for (int j = 0; j < tileHeight; j++) {
-				if (tileMap[i][j] != null
-						&& tileMap[i][j].getPhysicsShape().contains(x, y))
+				if (tileMap[i][j] != null && tileMap[i][j].getPhysicsShape().contains(x, y))
 					return true;
 			}
 		}
@@ -250,13 +273,9 @@ public class World {
 					if (line.charAt(x) == 'W') {
 						xCo = x * tileWidth;
 						yCo = y * tileHeight;
-						walls[x][y] = new Wall(xCo, yCo, wall, tileWidth * 2.0
-								/ tileHeight, tileWidth, tileHeight, player,
-								true);
+						walls[x][y] = new Wall(xCo, yCo, wall, tileWidth * 2.0 / tileHeight, tileWidth, tileHeight, player, true);
 					} else if (line.charAt(x) == 'S') {
-						walls[x][y] = new Wall(xCo, yCo, otherwall, tileWidth
-								* (2.0) / tileHeight, tileWidth, tileHeight,
-								player, false);
+						walls[x][y] = new Wall(xCo, yCo, otherwall, tileWidth * (2.0) / tileHeight, tileWidth, tileHeight, player, false);
 					}
 				}
 			}

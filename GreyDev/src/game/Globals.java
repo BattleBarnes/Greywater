@@ -1,9 +1,10 @@
 package game;
 
+import game.engine.State;
+
 import java.awt.Point;
 import java.awt.geom.Point2D;
-
-import game.engine.State;
+import java.util.Random;
 
 public class Globals {
 	
@@ -21,6 +22,7 @@ public class Globals {
 	
 	public static int tileWidth;
 	public static int tileHeight;
+	public static Random rand = new Random();
 	
 	
 	public static Point findTile(int x, int y){
@@ -114,10 +116,48 @@ public class Globals {
 		return dir;
 	}
 	
+	/**
+	 * Gives the degree-integer value of the entity's direction using angles
+	 * instead of move-by's. 
+	 * 
+	 * @param xDiff - TargetX - CurrentX
+	 * @param yDiff - TargetY - CurrentY
+	 * @return integer representing direction. It corresponds to the public static final ints
+	 * 			in this class, but when used in conjunction with the getStringDir method, 
+	 * 			you need not concern yourself with them.
+	 */
+	public static int getIntDir(double xDiff, double yDiff){
+		double angle =(-1)* Math.toDegrees(Math.atan2(xDiff, yDiff)) - 45;
+		if(angle < 0)
+			angle += 360;
+		if(angle >= 337.5 || angle < 22.5 )
+			return EAST;
+		else if(angle >= 22.5 && angle < 67.5  )
+			return NORTHEAST;
+		else if(angle >= 67.5 && angle < 112.5 )
+			return NORTH;
+		else if(angle >= 112.5 && angle < 157.5)
+			return NORTHWEST;
+		else if(angle >=  157.5 && angle < 202.5)
+			return WEST;
+		else if(angle >= 202.5 && angle < 247.50)
+			return SOUTHWEST;
+		else if(angle >= 247.5 && angle < 292.5)
+			return SOUTH;
+		else if(angle >= 292.5 && angle < 337.5 )
+			return SOUTHEAST;
+		return 99;
+	}
+	
+	
 	public static double distance(Point2D p1, Point2D p2){
 		double dist = 0.;
 		dist = Math.sqrt(Math.pow((p1.getX()*1.0 - p2.getX()),2) + Math.pow((p1.getY()*1.0 - p2.getY()),2));
 		return dist;
+	}
+	
+	public static int D(int dice){
+		return rand.nextInt(dice) + 1;
 	}
 
 }

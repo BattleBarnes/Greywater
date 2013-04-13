@@ -45,7 +45,7 @@ public class PathFinder {
 		while (open.size() != 0) { // while some node still left to investigate
 			bestNode = open.pop();
 		
-			if (Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight+10){ // reached the goal
+			if (Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight+20 || Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight-20 ){ // reached the goal
 				return bestNode.buildPath(); // return a path to that goal
 			}
 			else {

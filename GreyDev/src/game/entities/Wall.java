@@ -86,8 +86,8 @@ public class Wall extends Entity{
 		//if player is in front of wall, render normally
 		Point p = Globals.getIsoCoords(getX() + spriteXOff, getY() + spriteYOff);
 		
-		if(true){
-			graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.3f);
+		if(getX() == 0 || getY() == 0){
+			graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
 			return;
 		}
 		
@@ -111,21 +111,12 @@ public class Wall extends Entity{
 		int distance = (int)Globals.distance(plgrid,pwgrid);
 		distance = distance/Globals.tileHeight;
 		
-		if(distance > 20){
+		if(distance > 20)
 			graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
-		}
+		else
+			graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.54f);
 
-		//otherwise, render with some transparency
-		switch(distance){
-		case 6: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.60f); break;
-		case 5: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.55f); break;
-		case 4: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.5f); break;
-		case 3: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.45f); break;
-		case 2: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.4f); break;
-		case 1: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.3f); break;
-		case 0: graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.3f); break;
-		default:graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
-		}
+
 	}
 	
 	

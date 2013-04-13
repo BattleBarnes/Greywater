@@ -34,10 +34,11 @@ S invslot,invslot.png
 
 //overlays
 S light,light.png
-S hud,HUD_Body2.png
+S hud,HUD_Body.png
 S hps,Health_Space.png
 S hu,Health_Unit2.png
 
+G WatchmanAttack,WatchmanAttack.png,WatchmanAttack2.png,WatchmanAttack3.png
 
 T WatchSheet.png,8,6,WatchmanWalkEast,WatchmanWalkNorth,WatchmanWalkNorthEast,WatchmanWalkNorthWest,WatchmanWalkSouth,WatchmanWalkSouthEast,WatchmanWalkSouthWest,WatchmanWalkWest
 

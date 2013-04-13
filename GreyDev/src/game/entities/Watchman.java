@@ -1,6 +1,7 @@
 package game.entities;
 
 import game.Globals;
+import game.engine.audio.AudioLoader;
 import game.entities.components.Entity;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
@@ -12,6 +13,9 @@ import java.awt.geom.Line2D;
 import java.util.Random;
 
 public class Watchman extends Mob{
+	
+	int lastPos;
+	boolean attacking;
 	
 	public Watchman(int x, int y, Player p){
 		name = "Watchman";
@@ -28,26 +32,67 @@ public class Watchman extends Mob{
 	
 	public void addPathFinder(World l){
 		p = new PathFinder(l);
+		destination = null;
 	}
 
 	@Override
 	protected void getInput() {
 		
+		
+
+		
+		if(Globals.distance(new Point(getX(), getY()), new Point(target.getX(),target.getY()) ) < 90){
+			attack((Mob)target);
+			return;
+		}
+		
 
 		Random rand = new Random();
 		rand.nextInt(100);
 		
-		if(destination == null || this.getX() == destination.x)
-			xMoveBy = rand.nextInt();
-		
-		//pathFind();
+		if(destination != null){ 
+			if(System.nanoTime()%47 == 0 || (this.getX() == destination.x && this.getY() == destination.y )){
+
+				destination = null;
+				pathFind();
+				System.out.println("Prime time");
+			}
+		}
+			pathFind();
 	}
 	
 
 	@Override
 	protected void attack(Mob enemy) {
-		// TODO Auto-generated method stub
+		double targX = enemy.getPhysicsShape().getCenterX();
+		double targY = enemy.getPhysicsShape().getCenterY();
+		double x = getPhysicsShape().getCenterX();
+		double y = getPhysicsShape().getCenterY();
 		
+		if(graphicsComponent.isAnimating()){
+			lastPos =graphicsComponent.seriesPosition;
+			if(lastPos == 2){
+				if(attacking){
+					attacking = false;
+					int chance = Globals.D(20);
+					if(chance > 8){
+						int dmg = 2*Globals.D(6);
+						enemy.damage(dmg);
+						System.out.println(dmg);
+					}
+					System.out.println(enemy.getHP());
+				}
+			}else if (lastPos != 3){
+				attacking = true;
+				graphicsComponent.loopImg(0.8, "Attack");
+				override = true;
+			}
+		}
+
+		
+		
+		this.direction = Globals.getIntDir((targY - y),(targX - x));
+		this.currDirection = Globals.getStringDir(direction);
 	}
 
 	@Override
@@ -60,7 +105,7 @@ public class Watchman extends Mob{
 		
 		sight = new Line2D.Double(target.getX(),target.getY(), getX(), getY());
 		
-		if(destination == null && validSight){
+		if(destination == null && validSight || Globals.distance(sight.getP1(), sight.getP2()) < 600){
 
 			p.setNewPath(new Point(getX(), getY()), new Point(target.getX(), target.getY()));
 			destination = p.getNextLoc();
@@ -78,5 +123,6 @@ public class Watchman extends Mob{
 		yMoveBy =  destination.y - getY();
 		
 	}
+	
 
 }
