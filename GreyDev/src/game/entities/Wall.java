@@ -78,11 +78,15 @@ public class Wall extends Entity{
 	 * @param pDepth - Depth of the player from Entity.getDepth();
 	 */
 	public void render(Graphics g){		
-		
+
 		graphicsComponent.tick(); //maybe walls are animated
 		
 		//if player is in front of wall, render normally
 		Point p = Globals.getIsoCoords(getX() + spriteXOff, getY() + spriteYOff);
+		
+		
+		graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.54f);
+if(true)return;
 		
 		if(getX() == 0 || getY() == 0){
 			graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);

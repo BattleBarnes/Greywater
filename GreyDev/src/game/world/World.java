@@ -142,6 +142,7 @@ public class World {
 		// collision detection
 	
 		for (Mob m : mobList) {
+		//Mob m = player;
 			if (checkWorldCollision(m.getPhysicsShape())) {
 				Rectangle2D r = m.getPhysicsShape();
 				// physics shape, renamed for convenience
@@ -168,14 +169,15 @@ public class World {
 
 	public boolean checkWorldCollision(Shape s) {
 		Point area = Globals.findTile(s.getBounds().x, s.getBounds().y);
+		
 		int areaX = area.x;
 		int areaY = area.y;
 		if(areaX < 0 )
 			areaX = 0;
 		if(areaY < 0 )
 			areaY = 0;
-		int areaXEnd = areaX+10;
-		int areaYEnd = areaY+10;
+		int areaXEnd = areaX + 20;
+		int areaYEnd = areaY + 20;
 		if(areaXEnd > xLength)
 			areaXEnd = xLength;
 		if(areaYEnd > yHeight)
@@ -204,16 +206,22 @@ public class World {
 	public boolean checkValidTile(int x, int y) {
 		if (x < 0 || y < 0)
 			return false;
-		Rectangle r = new Rectangle(x, y, 45, 45);
+		Point p = Globals.findTile(x, y);
+		if(p.x < 0 && p.x > xLength && p.y < 0 && p.y > yHeight)
+			return false;
+		
+		Rectangle r = new Rectangle(x, y, 1, 1);
 		if (checkWorldCollision(r))
 			return false;
-
-		for (int i = 0; i < tileWidth; i++) {
-			for (int j = 0; j < tileHeight; j++) {
-				if (tileMap[i][j] != null && tileMap[i][j].getPhysicsShape().contains(x, y))
-					return true;
-			}
-		}
+		if(p.x > 0 && p.x < xLength && p.y > 0 && p.y < yHeight)
+			return true;
+		
+//		for (int i = 0; i < xLength; i++) {
+//			for (int j = 0; j < yHeight; j++) {
+//				if (tileMap[i][j] != null && tileMap[i][j].getPhysicsShape().contains(x, y))
+//					return true;
+//			}
+//		}
 
 		return false;
 

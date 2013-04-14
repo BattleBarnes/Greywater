@@ -91,7 +91,7 @@ public class Core extends Engine {
 		l.render(g); //all game objects are in the level
 		Graphics2D g2 = (Graphics2D) g;
 		g2.scale(Camera.width*1.0/light.getWidth(), Camera.height*1.0/light.getHeight());
-		light.render(g2, 0, 0);
+		//light.render(g2, 0, 0);
 		g2.scale(light.getWidth()*1.0/Camera.width, light.getHeight()*1.0/Camera.height);
 		
 		g2.scale(Camera.xScale, Camera.yScale);
@@ -139,14 +139,14 @@ public class Core extends Engine {
 		
 		i = new InventoryMenu();
 		//p = new Player(17000, 4000, i);
-		p = new Player(100, 100, i);
-		Watchman w1 = new Watchman(500, 500, p);
+		p = new Player(100, 90, i);
+		Watchman w1 = new Watchman(100, 400, p);
 		i.setOwner(p);
 		
 		ArrayList<Mob> mobs = new ArrayList();
 		mobs.add(p);
 		mobs.add(w1);
-		mobs.add(new Sweepy(900,300,p));
+	//	mobs.add(new Sweepy(900,300,p));
 
 		
 		

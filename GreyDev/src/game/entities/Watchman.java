@@ -40,21 +40,19 @@ public class Watchman extends Mob{
 		
 
 		
-		if(Globals.distance(new Point(getX(), getY()), new Point(target.getX(),target.getY()) ) < 90){
+		if(Globals.distance(new Point(getX(), getY()), new Point(target.getX(),target.getY()) ) < 90 && validSight){
 			attack((Mob)target);
 			return;
 		}
 		attacking = false;
 
-		Random rand = new Random();
-		rand.nextInt(100);
 		
-		if(destination != null){ 
-			if(System.nanoTime()%47 == 0 || (this.getX() == destination.x && this.getY() == destination.y )){
-				destination = null;
-				pathFind();
-			}
-		}
+	//	if(destination != null){ 
+	//		if(System.nanoTime()%47 == 0 || (this.getX() == destination.x && this.getY() == destination.y )){
+	//			destination = null;
+		//		pathFind();
+		//	}
+		//}
 			pathFind();
 	}
 	
@@ -103,18 +101,22 @@ public class Watchman extends Mob{
 		
 		sight = new Line2D.Double(target.getX(),target.getY(), getX(), getY());
 		
-		if(destination == null && validSight || Globals.distance(sight.getP1(), sight.getP2()) < 600){
+		if(((destination == null /*&& validSight*/ )||( Globals.distance(sight.getP1(), sight.getP2()) < 900 ))&& System.nanoTime()%47 == 0){
 			System.out.println("New path");
 			p.setNewPath(new Point(getX(), getY()), new Point(target.getX(), target.getY()));
 			destination = p.getNextLoc();
+			System.out.println(destination);
 			
 		}
 		if(destination != null && getX() == destination.x && getY() == destination.y )
 			destination = p.getNextLoc();
 		
 		
-		if(destination == null)
+		if(destination == null){
+			p.setNewPath(new Point(getX(), getY()), new Point(target.getX(), target.getY()));
+			System.out.println("ERROR");
 			return;
+		}
 
 
 		xMoveBy =  destination.x - getX();

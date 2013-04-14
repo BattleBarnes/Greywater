@@ -54,8 +54,9 @@ public abstract class Mob extends Entity {
 
 		if (xMoveBy != 0 || yMoveBy != 0) { // sets the physicsComponent moving
 			physicsComponent.moveTo(getX() + xMoveBy, getY() + yMoveBy);
-			if (destination == null || destination.x != xMoveBy + getX() || destination.y != yMoveBy + getY())
+			if (destination == null || destination.x != xMoveBy + getX() || destination.y != yMoveBy + getY()){
 				destination = new Point(xMoveBy + getX(), yMoveBy + getY());
+			}
 		}
 
 		direction = Globals.getIntDir(physicsComponent.xDest - getX(), physicsComponent.yDest - getY());
@@ -81,7 +82,6 @@ public abstract class Mob extends Entity {
 	 *            - if true, stop movement in the y direction
 	 */
 	public void undoMove(boolean x, boolean y) {
-		System.out.println("COLLIDES" + x + "  " + y);
 		if (x && y) {
 			physicsComponent.updateHitSpace(xLast, yLast);
 			physicsComponent.stopMovement();
