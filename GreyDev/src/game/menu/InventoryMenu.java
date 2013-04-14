@@ -4,24 +4,29 @@ import game.Globals;
 import game.engine.Camera;
 import game.engine.InputHandler;
 import game.engine.State;
-import game.entities.Item;
 import game.entities.Player;
 import game.entities.components.Sprite;
+import game.entities.items.Item;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class InventoryMenu {
-	public final int COLUMNS = 2;
-	public final int ROWS = 3;
+	public final int COLUMNS = 4;
+	public final int ROWS = 9;
 	
 	ArrayList<Item> inv = new ArrayList<Item>((ROWS + 1) * COLUMNS);
+	
 
 	private boolean objectSelected = false;
 	private Player owner;
 	private Item selectedItem;
 	private Sprite slot;
+	private Sprite craft;
+	private Sprite weap;
+	private Sprite area;
 
 	/**
 	 * Constructor, sets up the inventory slot image, and fills the inventory
@@ -29,6 +34,10 @@ public class InventoryMenu {
 	 */
 	public InventoryMenu() {
 		slot = new Sprite("invslot", "invslot");
+		weap = new Sprite("WeaponSlot", "WeaponSlot");
+		craft = new Sprite("Crafting", "Crafting");
+		area = new Sprite("area", "area");
+		
 		for (int i = 0; i < COLUMNS*(ROWS+1); i++) {
 			inv.add(null);
 		}
@@ -71,6 +80,14 @@ public class InventoryMenu {
 			if (inv.get(i) != null) {
 				inv.get(i).render(g);
 			}
+		}
+		
+		area.render(g, Camera.width -area.getWidth() - slot.getWidth()*COLUMNS, 0);
+		weap.render(g,Camera.width -area.getWidth() - slot.getWidth()*COLUMNS + (area.getWidth()/2 - weap.getWidth()/2), 50 );
+		for(int i = 0; i < 4; i++){
+			int col = i % 2; //because inventory is a 1D arraylist, the 2D grid effect
+			int row = 2 - i/2; //is achieved via math.
+			craft.render(g, Camera.width -slot.getWidth()*COLUMNS + craft.getWidth()* col - area.getWidth()/2 - craft.getWidth(), 300+ row * craft.getHeight());
 		}
 		
 		if (selectedItem != null) {

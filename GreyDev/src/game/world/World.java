@@ -64,8 +64,7 @@ public class World {
 		tileHeight = t.getHeight();
 
 		Globals.tileHeight = tileHeight;
-		Globals.tileWidth = t.getWidth() / 2; // same as tileHeight
-												// (square/flatspace)
+		Globals.tileWidth = t.getWidth() / 2; // same as tileHeight (square/flatspace)
 
 		wall = w;
 		tile = t;
@@ -129,8 +128,7 @@ public class World {
 
 	public void tick() {
 
-		// update mobs and if they are using AI, check to see if the player is
-		// visible to them
+		// update mobs and if they are using AI, check to see if the player is visible to them
 		for (Mob e : mobList) {
 			e.tick();
 
@@ -139,36 +137,28 @@ public class World {
 				e.validateSight(true);
 			} else
 				e.validateSight(false);
-
-			// if(e.target!= null)
-			// if(Globals.distance(new Point(e.target.getX(),e.target.getY()),
-			// new Point(e.getX(), e.getY())) > 100)
-
 		}
 
 		// collision detection
 	
-				for (Mob m : mobList) {
-					if(checkWorldCollision(m.getPhysicsShape())){
-						Rectangle2D r = m.getPhysicsShape();
-						// physics shape, renamed for convenience
+		for (Mob m : mobList) {
+			if (checkWorldCollision(m.getPhysicsShape())) {
+				Rectangle2D r = m.getPhysicsShape();
+				// physics shape, renamed for convenience
 
-						// these rectangles use old x and y coords, respectively, to see which direction the collision is in.
-						Rectangle2D xRect = new Rectangle2D.Double(((double) m.xLast), r.getY(), r.getWidth(), r.getHeight());
-						Rectangle2D yRect = new Rectangle2D.Double(r.getX(), ((double) m.yLast), r.getWidth(), r.getHeight());
+				// these rectangles use old x and y coords, respectively, to see
+				// which direction the collision is in.
+				Rectangle2D xRect = new Rectangle2D.Double(((double) m.xLast), r.getY(), r.getWidth(), r.getHeight());
+				Rectangle2D yRect = new Rectangle2D.Double(r.getX(), ((double) m.yLast), r.getWidth(), r.getHeight());
 
-						//if (xRect.intersects(walls[x][y].getPhysicsShape()))
-						if(checkWorldCollision(xRect))
-							m.undoMove(true, false);
-					//	else if (yRect.intersects(walls[x][y].getPhysicsShape()))
-						else if(checkWorldCollision(yRect))
-							m.undoMove(false, true);
-						else
-							m.undoMove(true, true);
-					}
-				}
-		//	}
-	//	}
+				if (checkWorldCollision(xRect))
+					m.undoMove(true, false);
+				else if (checkWorldCollision(yRect))
+					m.undoMove(false, true);
+				else
+					m.undoMove(true, true);
+			}
+		}
 
 		// move the camera to follow the player
 		Point p = Globals.getIsoCoords(player.getX(), player.getY());
@@ -184,9 +174,15 @@ public class World {
 			areaX = 0;
 		if(areaY < 0 )
 			areaY = 0;
+		int areaXEnd = areaX+10;
+		int areaYEnd = areaY+10;
+		if(areaXEnd > xLength)
+			areaXEnd = xLength;
+		if(areaYEnd > yHeight)
+			areaYEnd = yHeight ;
 		
-		for (int x = areaX; x < areaX + 10; x++) {
-			for (int y = areaY; y < areaY + 10; y++) {
+		for (int x = areaX; x < areaXEnd; x++) {
+			for (int y = areaY; y < areaYEnd; y++) {
 				if (walls[x][y] == null)
 					continue;
 				if (s != null && s.intersects(walls[x][y].getPhysicsShape()))

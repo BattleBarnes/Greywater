@@ -39,6 +39,7 @@ package game.entities.components;
 import game.Globals;
 import game.engine.Camera;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -70,7 +71,10 @@ public abstract class Entity {
 	 * @param g - Graphics object
 	 */
 	public void render(Graphics g){
-		int xPos = getX() + 2*Integer.signum(getX());
+		//g.setColor(Color.PINK);
+		//Rectangle r = this.getPhysicsShape();
+		//g.drawRect(r.x, r.y, r.width, r.height);
+		int xPos = getX();
 		int yPos = getY();
 		Point p = Globals.getIsoCoords(xPos + spriteXOff, yPos + spriteYOff);
 		graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);

@@ -1,7 +1,7 @@
 /** FSEM and Windowed mode handle rendering in such a radically different manner that a separate class is needed.
  * Primarily- JFrames without FSEM need a JPanel to do the actual rendering.
  * This class facilitates windowed mode, and controls behind the scenes rendering when in windowed mode.
- * This doesn't render the Engine Class obsolete, but it does override its rendering methods. like ScreenUpdate and fullScreen render
+ * This doesn't render the Engine Class obsolete, but it does attacking its rendering methods. like ScreenUpdate and fullScreen render
  * 
  * @author Jeremy Barnes
  */

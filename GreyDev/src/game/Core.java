@@ -8,6 +8,7 @@ import game.engine.State;
 import game.engine.audio.AudioLoader;
 import game.entities.Mob;
 import game.entities.Player;
+import game.entities.Sweepy;
 import game.entities.Watchman;
 import game.entities.components.Sprite;
 import game.menu.InventoryMenu;
@@ -137,13 +138,15 @@ public class Core extends Engine {
 		m = new StartMenu(this);
 		
 		i = new InventoryMenu();
-		p = new Player(1000, 500, i);
+		//p = new Player(17000, 4000, i);
+		p = new Player(100, 100, i);
 		Watchman w1 = new Watchman(500, 500, p);
 		i.setOwner(p);
 		
 		ArrayList<Mob> mobs = new ArrayList();
 		mobs.add(p);
 		mobs.add(w1);
+		mobs.add(new Sweepy(900,300,p));
 
 		
 		

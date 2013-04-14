@@ -15,13 +15,12 @@ import java.util.Random;
 public class Watchman extends Mob{
 	
 	int lastPos;
-	boolean attacking;
 	
 	public Watchman(int x, int y, Player p){
 		name = "Watchman";
 		currDirection = "South";
 		this.graphicsComponent = new Sprite(name, name + "StandSouth");
-		this.physicsComponent = new Tangible(x, y, 35, 35, 1);
+		this.physicsComponent = new Tangible(x, y, 30, 30, 1);
 
 		spriteXOff = -graphicsComponent.getWidth() / 2 - 65;
 		spriteYOff = -graphicsComponent.getHeight() + 65;
@@ -45,17 +44,15 @@ public class Watchman extends Mob{
 			attack((Mob)target);
 			return;
 		}
-		
+		attacking = false;
 
 		Random rand = new Random();
 		rand.nextInt(100);
 		
 		if(destination != null){ 
 			if(System.nanoTime()%47 == 0 || (this.getX() == destination.x && this.getY() == destination.y )){
-
 				destination = null;
 				pathFind();
-				System.out.println("Prime time");
 			}
 		}
 			pathFind();
@@ -69,6 +66,9 @@ public class Watchman extends Mob{
 		double x = getPhysicsShape().getCenterX();
 		double y = getPhysicsShape().getCenterY();
 		
+		this.physicsComponent.stopMovement();
+		xMoveBy = 0;
+		yMoveBy= 0;
 		if(graphicsComponent.isAnimating()){
 			lastPos =graphicsComponent.seriesPosition;
 			if(lastPos == 2){
@@ -78,14 +78,12 @@ public class Watchman extends Mob{
 					if(chance > 8){
 						int dmg = 2*Globals.D(6);
 						enemy.damage(dmg);
-						System.out.println(dmg);
+
 					}
-					System.out.println(enemy.getHP());
 				}
 			}else if (lastPos != 3){
 				attacking = true;
 				graphicsComponent.loopImg(0.8, "Attack");
-				override = true;
 			}
 		}
 
@@ -106,7 +104,7 @@ public class Watchman extends Mob{
 		sight = new Line2D.Double(target.getX(),target.getY(), getX(), getY());
 		
 		if(destination == null && validSight || Globals.distance(sight.getP1(), sight.getP2()) < 600){
-
+			System.out.println("New path");
 			p.setNewPath(new Point(getX(), getY()), new Point(target.getX(), target.getY()));
 			destination = p.getNextLoc();
 			

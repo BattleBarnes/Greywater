@@ -79,8 +79,6 @@ public class Wall extends Entity{
 	 */
 	public void render(Graphics g){		
 		
-		
-		
 		graphicsComponent.tick(); //maybe walls are animated
 		
 		//if player is in front of wall, render normally

@@ -257,7 +257,7 @@ public class ImageLoader {
 		BufferedImage I = null;
 		try {
 			I = ImageIO.read(new File("Images/"+imgPath));
-		} catch (IOException e) {e.printStackTrace();}
+		} catch (IOException e) {e.printStackTrace(); System.out.println(imgPath);}
 		
 		return I;
 	}

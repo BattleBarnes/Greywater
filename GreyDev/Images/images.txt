@@ -28,8 +28,6 @@ S Tile1,text.png
 
 S GodlyPlateoftheWhaleInventory,GodlyPlateoftheWhaleInventory.png
 
-S GodlyPlateoftheWhaleFloor,GodlyPlateoftheWhaleFloor1.png
-
 S invslot,invslot.png
 
 //overlays
@@ -38,10 +36,15 @@ S hud,HUD_Body.png
 S hps,Health_Space.png
 S hu,Health_Unit2.png
 
+S area,area.png
+S WeaponSlot,weap.png
+S Crafting,craft.png
+
 G WatchmanAttack,WatchmanAttack.png,WatchmanAttack2.png,WatchmanAttack3.png
 
 T WatchSheet.png,8,6,WatchmanWalkEast,WatchmanWalkNorth,WatchmanWalkNorthEast,WatchmanWalkNorthWest,WatchmanWalkSouth,WatchmanWalkSouthEast,WatchmanWalkSouthWest,WatchmanWalkWest
 
+S Sweepy,sweep.png
 
 S WatchmanStandSouth,Watchman_Stand_South.png
 S WatchmanStandNorth,Watchman_Stand_North.png

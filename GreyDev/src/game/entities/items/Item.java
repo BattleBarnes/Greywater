@@ -1,4 +1,4 @@
-package game.entities;
+package game.entities.items;
 
 import game.engine.Camera;
 import game.entities.components.Entity;
