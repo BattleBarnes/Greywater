@@ -44,22 +44,26 @@ public class PathFinder {
 
 		while (open.size() != 0) { // while some node still left to investigate
 			bestNode = open.pop();
-		
-			if (Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight+20 || Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight-20 ){ // reached the goal
+
+			if (Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight || Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight - 20) { // goal!
+
 				return bestNode.buildPath(); // return a path to that goal
-			}
-			else {
+			} else {
 				for (int i = 0; i < 8; i++) { // try every direction
 					if ((newNode = bestNode.makeNeighbour(i, world)) != null) {
 						newCost = newNode.getCostFromStart();
 						PathNode oldVer = open.findNode(newNode.getPoint());
-						// if this tile already has a cheaper open or closed node then ignore the new node
-						
-						if ((oldVer != null) && (oldVer.getCostFromStart() <= newCost))
+						// if this tile already has a cheaper open or closed
+						// node then ignore the new node
+
+						if ((oldVer != null)
+								&& (oldVer.getCostFromStart() <= newCost))
 							continue;
-						else if (((oldVer = closed.findNode(newNode.getPoint())) != null) && (oldVer.getCostFromStart() <= newCost))
+						else if (((oldVer = closed.findNode(newNode.getPoint())) != null)
+								&& (oldVer.getCostFromStart() <= newCost))
 							continue;
-						else { // store the new/improved node, removing the old one
+						else { // store the new/improved node, removing the old
+								// one
 							newNode.costToGoal(goalLoc);
 							// delete the old details (if they exist)
 							closed.delete(newNode.getPoint()); // may do nothing

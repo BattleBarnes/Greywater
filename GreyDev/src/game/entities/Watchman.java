@@ -1,8 +1,6 @@
 package game.entities;
 
 import game.Globals;
-import game.engine.audio.AudioLoader;
-import game.entities.components.Entity;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
 import game.entities.components.ai.PathFinder;
@@ -10,17 +8,18 @@ import game.world.World;
 
 import java.awt.Point;
 import java.awt.geom.Line2D;
-import java.util.Random;
+import java.util.ArrayList;
 
 public class Watchman extends Mob{
 	
 	int lastPos;
+	ArrayList <Point> targetTrail;
 	
 	public Watchman(int x, int y, Player p){
 		name = "Watchman";
 		currDirection = "South";
 		this.graphicsComponent = new Sprite(name, name + "StandSouth");
-		this.physicsComponent = new Tangible(x, y, 30, 30, 1);
+		this.physicsComponent = new Tangible(x, y, 20, 20, 1);
 
 		spriteXOff = -graphicsComponent.getWidth() / 2 - 65;
 		spriteYOff = -graphicsComponent.getHeight() + 65;
@@ -37,7 +36,7 @@ public class Watchman extends Mob{
 	@Override
 	protected void getInput() {
 		
-		
+		targetTrail.add(new Point(target.getX(), target.getY()));
 
 		
 		if(Globals.distance(new Point(getX(), getY()), new Point(target.getX(),target.getY()) ) < 90 && validSight){
@@ -114,7 +113,6 @@ public class Watchman extends Mob{
 		
 		if(destination == null){
 			p.setNewPath(new Point(getX(), getY()), new Point(target.getX(), target.getY()));
-			System.out.println("ERROR");
 			return;
 		}
 
@@ -124,5 +122,8 @@ public class Watchman extends Mob{
 		
 	}
 	
+	private void findNearestPoint(){
+		
+	}
 
 }

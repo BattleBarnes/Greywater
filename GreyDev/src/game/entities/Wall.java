@@ -67,8 +67,8 @@ public class Wall extends Entity{
 
 		physicsComponent = new Tangible(x,y, tileWidth, tileHeight, 0);
 
-		spriteXOff =  -(4*tileWidth) - xDepth/2 - 10;
-		spriteYOff = -(4*tileHeight) - xDepth - 3;
+		spriteXOff =  -(4*tileWidth) - xDepth/2 + 5;
+		spriteYOff = -(4*tileHeight) - xDepth + 10;
 
 	}
 
@@ -85,8 +85,8 @@ public class Wall extends Entity{
 		Point p = Globals.getIsoCoords(getX() + spriteXOff, getY() + spriteYOff);
 		
 		
-		graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.54f);
-if(true)return;
+	//	graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.54f);
+		//if(true)return;
 		
 		if(getX() == 0 || getY() == 0){
 			graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
