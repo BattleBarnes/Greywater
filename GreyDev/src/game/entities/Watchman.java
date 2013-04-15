@@ -13,7 +13,6 @@ import java.util.ArrayList;
 public class Watchman extends Mob{
 	
 	int lastPos;
-	ArrayList <Point> targetTrail;
 	
 	public Watchman(int x, int y, Player p){
 		name = "Watchman";
@@ -35,23 +34,19 @@ public class Watchman extends Mob{
 
 	@Override
 	protected void getInput() {
-		
-		targetTrail.add(new Point(target.getX(), target.getY()));
-
+		sight = new Line2D.Double(target.getX(),target.getY(), getX(), getY());
 		
 		if(Globals.distance(new Point(getX(), getY()), new Point(target.getX(),target.getY()) ) < 90 && validSight){
 			attack((Mob)target);
 			return;
 		}
+
 		attacking = false;
 
+		xMoveBy = 1;
+		yMoveBy = 0;
 		
-	//	if(destination != null){ 
-	//		if(System.nanoTime()%47 == 0 || (this.getX() == destination.x && this.getY() == destination.y )){
-	//			destination = null;
-		//		pathFind();
-		//	}
-		//}
+
 			pathFind();
 	}
 	
@@ -62,6 +57,7 @@ public class Watchman extends Mob{
 		double targY = enemy.getPhysicsShape().getCenterY();
 		double x = getPhysicsShape().getCenterX();
 		double y = getPhysicsShape().getCenterY();
+		destination = null;
 		
 		this.physicsComponent.stopMovement();
 		xMoveBy = 0;
@@ -98,14 +94,11 @@ public class Watchman extends Mob{
 	
 	private void pathFind(){
 		
-		sight = new Line2D.Double(target.getX(),target.getY(), getX(), getY());
 		
-		if(((destination == null /*&& validSight*/ )||( Globals.distance(sight.getP1(), sight.getP2()) < 900 ))&& System.nanoTime()%47 == 0){
+		if(((destination == null && validSight )||( Globals.distance(sight.getP1(), sight.getP2()) < 900 ))&& System.nanoTime()%47 == 0){
 			System.out.println("New path");
 			p.setNewPath(new Point(getX(), getY()), new Point(target.getX(), target.getY()));
 			destination = p.getNextLoc();
-			System.out.println(destination);
-			
 		}
 		if(destination != null && getX() == destination.x && getY() == destination.y )
 			destination = p.getNextLoc();
@@ -115,7 +108,6 @@ public class Watchman extends Mob{
 			p.setNewPath(new Point(getX(), getY()), new Point(target.getX(), target.getY()));
 			return;
 		}
-
 
 		xMoveBy =  destination.x - getX();
 		yMoveBy =  destination.y - getY();

@@ -65,14 +65,14 @@ public class PathNode {
 		int y = coord.y;
 		
 		switch(direction){
-		case Globals.NORTH: newNode = makeNode(x, y - Globals.tileHeight/2, wd, direction); break;
-		case Globals.NORTHEAST: newNode = makeNode(x + Globals.tileWidth/2, y - Globals.tileHeight/2, wd, direction); break;
-		case Globals.EAST: newNode = makeNode(x + Globals.tileWidth/2, y, wd, direction); break;
-		case Globals.SOUTHEAST: newNode = makeNode(x + Globals.tileWidth/2, y + Globals.tileHeight/2, wd, direction); break;
-		case Globals.SOUTH: newNode = makeNode(x, y+Globals.tileHeight/2, wd, direction); break;
-		case Globals.SOUTHWEST: newNode = makeNode(x - Globals.tileWidth/2, y + Globals.tileHeight/2, wd, direction); break;
-		case Globals.WEST: newNode = makeNode(x - Globals.tileWidth/2, y, wd, direction); break;
-		case Globals.NORTHWEST: newNode = makeNode(x - Globals.tileWidth/2,  y - Globals.tileHeight/2 , wd, direction); break;
+		case Globals.NORTH: newNode = makeNode(x, y - Globals.tileHeight, wd, direction); break;
+		case Globals.NORTHEAST: newNode = makeNode(x + Globals.tileWidth, y - Globals.tileHeight, wd, direction); break;
+		case Globals.EAST: newNode = makeNode(x + Globals.tileWidth, y, wd, direction); break;
+		case Globals.SOUTHEAST: newNode = makeNode(x + Globals.tileWidth, y + Globals.tileHeight, wd, direction); break;
+		case Globals.SOUTH: newNode = makeNode(x, y+Globals.tileHeight, wd, direction); break;
+		case Globals.SOUTHWEST: newNode = makeNode(x - Globals.tileWidth, y + Globals.tileHeight, wd, direction); break;
+		case Globals.WEST: newNode = makeNode(x - Globals.tileWidth, y, wd, direction); break;
+		case Globals.NORTHWEST: newNode = makeNode(x - Globals.tileWidth,  y - Globals.tileHeight , wd, direction); break;
 		default:System.out.println("makeNeighbour() error");
 			newNode = null;
 			break;
@@ -90,12 +90,11 @@ public class PathNode {
 	private PathNode makeNode(int x, int y, World wd, int direction){
 		if (!wd.checkValidTile(x, y))
 			return null;
-	//	if(direction == Globals.SOUTH || direction == Globals.NORTH || direction == Globals.EAST || direction == Globals.WEST){
-			if(wd.checkWorldCollision(new Rectangle(coord.x, coord.y,2*(x - coord.x) ,(y - coord.y) *2)))
+			if(wd.checkWorldCollision(new Rectangle(coord.x +10, coord.y +10 ,2*(x - coord.x) ,(y - coord.y) *2))){
 				return null;
-	//	}
+			}
 		PathNode newNode = new PathNode(new Point(x, y));
-		newNode.setCostFromStart(getCostFromStart() + Globals.distance(newNode.getPoint(), this.getPoint()));
+		newNode.setCostFromStart(getCostFromStart() + Math.pow(Globals.distance(newNode.getPoint(), this.getPoint()),2));
 		newNode.setParent(this);
 		return newNode;
 	} // end of makeNode()

@@ -32,7 +32,7 @@ S invslot,invslot.png
 
 //overlays
 S light,light.png
-S hud,HUD_Body.png
+S hud,HUD.png
 S hps,Health_Space.png
 S hu,Health_Unit2.png
 
