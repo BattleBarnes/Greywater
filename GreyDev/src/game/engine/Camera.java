@@ -24,9 +24,8 @@ public class Camera  {
 	public static int yOffset;
 	
 	//Sprites were designed for display at 1920 x 1080
-	//But these numbers rescale when the resolution changes.
-	public static double yScale;
-	public static double xScale;
+	//rescale when the resolution changes.
+	public static double scale;
 	
 	//screen dimensions
 	public static int width;
@@ -51,8 +50,8 @@ public class Camera  {
 		height = h;
 		
 		//yScale = (height/1080.);
-		yScale = width/1920.;
-		xScale = yScale;
+		scale = width/1920.;
+	
 		
 		viewPort = new Rectangle(xPos, yPos, width, height);
 

@@ -32,4 +32,10 @@ public class Item extends Entity {
 		physicsComponent.updateHitSpace(x, y);
 	}
 
+
+	public void renderScaled(Graphics g) {
+		graphicsComponent.renderScaled(g, getX(), getY());
+		
+	}
+
 }

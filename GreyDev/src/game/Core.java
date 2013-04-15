@@ -87,22 +87,16 @@ public class Core extends Engine {
 	 * Renders the game world
 	 */
 	protected void gameRender(Graphics g){
-		
 		l.render(g); //all game objects are in the level
 		Graphics2D g2 = (Graphics2D) g;
 		g2.scale(Camera.width*1.0/light.getWidth(), Camera.height*1.0/light.getHeight());
 		light.render(g2, 0, 0);
 		g2.scale(light.getWidth()*1.0/Camera.width, light.getHeight()*1.0/Camera.height);
 		
-		g2.scale(Camera.xScale, Camera.yScale);
-		hud.render(g2, 0, (int) (Camera.height/Camera.xScale - hud.getHeight()) );
-	//	hud2.render(g2, (int) (Camera.width/Camera.xScale/2 - hud2.getWidth()/2) ,  (int) (Camera.height/Camera.xScale-hud.getHeight()/2-hud2.getHeight()/2));
-		
-		
-//		for(int i = 0; i < 10; i++){
-//			hpoint.render(g2, (int) (Camera.width/Camera.yScale/2 - hud2.getWidth()/2 + 2 +  i*hud2.getWidth()/10), (int) (Camera.height/Camera.xScale-hud.getHeight()/2-hud2.getHeight()/2 + 10));
-//		}
+		g2.scale(Camera.scale, Camera.scale);
+		hud.render(g2, 0, (int) (Camera.height/Camera.scale - hud.getHeight()) );
 
+		g2.scale(1/Camera.scale, 1/Camera.scale);
 	}
 
 

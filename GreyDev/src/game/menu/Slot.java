@@ -1,17 +1,20 @@
 package game.menu;
 
+import game.Globals;
+import game.engine.Camera;
 import game.entities.components.Entity;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
 import game.entities.items.Item;
 
 import java.awt.Graphics;
+import java.awt.Point;
 
 public class Slot extends Entity {
 	private Item held;
 	
 	public Slot(Sprite slot, int x, int y){
-		physicsComponent = new Tangible(x, y, slot.getWidth(), slot.getHeight(), 0);
+		physicsComponent = new Tangible(x, y, ((int)(Camera.scale * slot.getWidth())),((int)( Camera.scale* slot.getHeight())), 0);
 		graphicsComponent = slot;
 	}
 	
@@ -35,6 +38,13 @@ public class Slot extends Entity {
 		graphicsComponent.render(g, getX(), getY());
 		if(held!=null)
 			held.render(g);
+	}
+	
+	
+	public void renderScaled(Graphics g){
+			graphicsComponent.renderScaled(g, getX(), getY());
+			if(held!=null)
+				held.renderScaled(g);
 	}
 	
 	public boolean isEmpty(){

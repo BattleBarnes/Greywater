@@ -21,6 +21,7 @@
 package game.entities.components;
 
 import game.Core;
+import game.engine.Camera;
 import game.engine.ImageLoader;
 
 import java.awt.AlphaComposite;
@@ -75,6 +76,15 @@ public class Sprite {
 		BufferedImage rep = getCurrentImage();
 		g.drawImage(rep, x, y, rep.getWidth(), rep.getHeight(), null);
 
+	}
+	
+	public void renderScaled(Graphics g, int x, int y){
+		tick();
+		BufferedImage rep = getCurrentImage();
+		//g.drawImage(rep, x, y, rep.getWidth(), rep.getHeight(), null);
+	//	((Graphics2D)g).scale(Camera.scale, Camera.scale);
+		g.drawImage(rep, x, y,(int)Math.round(rep.getWidth()*Camera.scale), (int)Math.round(rep.getWidth()*Camera.scale), null);
+	//	((Graphics2D)g).scale(1/Camera.scale, 1/Camera.scale);
 	}
 	
 	public void drawTransparent(Graphics g, int x, int y, float opacity){

@@ -4,11 +4,13 @@ import game.Globals;
 import game.engine.Camera;
 import game.engine.InputHandler;
 import game.engine.State;
-import game.entities.Player;
 import game.entities.components.Sprite;
 import game.entities.items.Item;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -41,20 +43,19 @@ public class InventoryMenu {
 			int col = i % COLUMNS; // because inventory is a 1D arraylist, the
 									// 2D grid effect
 			int row = ROWS - i / COLUMNS; // is achieved via math.
-			inv.add(new Slot(slot, (Camera.width - slot.getWidth() * COLUMNS) + slot.getWidth() * col, row * slot.getHeight()));
+			inv.add(new Slot(slot,(int) ((Camera.width - slot.getWidth()*Camera.scale * COLUMNS) + slot.getWidth()*Camera.scale * col),(int)( row * slot.getHeight()*Camera.scale)));
 		}
 		this.addItem(new Item("GodlyPlateoftheWhale", 0, 0));
 
-		// weap.render(g,Camera.width -area.getWidth() - slot.getWidth()*COLUMNS
-		// + (area.getWidth()/2 - weap.getWidth()/2), 50 );
+
 		for (int i = 0; i < 4; i++) {
 			int col = i % 2; // because inventory is a 1D arraylist, the 2D grid
 								// effect
 			int row = 2 - i / 2; // is achieved via math.
-			craftarea.add(new Slot(craft, Camera.width - slot.getWidth() * COLUMNS + craft.getWidth() * col - area.getWidth() / 2 - craft.getWidth(), 300 + row * craft.getHeight()));
+			craftarea.add(new Slot(craft, (Camera.width - slot.getWidth() * COLUMNS + craft.getWidth() * col - area.getWidth() / 2 - craft.getWidth()), (300 + row * craft.getHeight())));
 		}
 
-		equip.add(new Slot(weap, Camera.width - area.getWidth() - slot.getWidth() * COLUMNS + (area.getWidth() / 2 - weap.getWidth() / 2), 50));
+		equip.add(new Slot(weap, Camera.width - area.getWidth() - slot.getWidth() * COLUMNS + (area.getWidth() / 2 - weap.getWidth() / 2), ( 50)));
 	}
 
 	/**
@@ -92,15 +93,19 @@ public class InventoryMenu {
 	 *            - Graphics object
 	 */
 	public void render(Graphics g) {
-		area.render(g, Camera.width - area.getWidth() - slot.getWidth() * COLUMNS, 0);
+		//area.render(g, (Camera.width - area.getWidth() - slot.getWidth() * COLUMNS),0);
 		for (int i = 0; i < COLUMNS * (ROWS + 1); i++) {
-			inv.get(i).render(g);
+			inv.get(i).renderScaled(g);
+			Rectangle r = inv.get(i).getPhysicsShape();
+			
+			g.setColor(Color.PINK);
+			g.drawRect(r.x, r.y, r.width, r.height);
 		}
-		for (Slot s : craftarea)
-			s.render(g);
-
-		for (Slot s : equip)
-			s.render(g);
+//		for (Slot s : craftarea)
+//			s.renderScaled(g);
+//
+//		for (Slot s : equip)
+//			s.renderScaled(g);
 
 		if (selectedItem != null) {
 			selectedItem.render(g); // dragged item
