@@ -297,10 +297,8 @@ public abstract class Engine extends JFrame implements Runnable {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, cam.width, cam.height);
 
-		if(Globals.state.gameRunning)
 			gameRender(g);
-		if(Globals.state.drawMenu)
-			menuRender(g);
+		
 
 	} // end of gameRender()
 
@@ -339,12 +337,7 @@ public abstract class Engine extends JFrame implements Runnable {
 	 * Updates the game logic
 	 */
 	private void gameUpdate() {
-		if (Globals.state.gameRunning)
 			gameTick();
-		else{
-			menuTick();
-		}
-
 	} // end of gameUpdate()
 
 
@@ -352,11 +345,9 @@ public abstract class Engine extends JFrame implements Runnable {
 
 	protected abstract void gameRender(Graphics g);
 	
-	protected abstract void menuRender(Graphics g);
 
 	protected abstract void gameTick();
 
-	protected abstract void menuTick();
 
 	protected abstract void init();
 

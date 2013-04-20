@@ -9,7 +9,8 @@ import java.awt.Graphics;
 
 public class Item extends Entity {
 	
-	public String name = "GodlyPlateoftheWhale";
+	public String name = "GodlyPlateoftheGlitch";
+	public int itemID = 00;
 	
 	
 	public Item(String name, int x, int y){
@@ -36,6 +37,10 @@ public class Item extends Entity {
 	public void renderScaled(Graphics g) {
 		graphicsComponent.renderScaled(g, getX(), getY());
 		
+	}
+	
+	public String showText(){
+		return name;
 	}
 
 }

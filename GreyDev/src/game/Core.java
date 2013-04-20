@@ -6,17 +6,19 @@ import game.engine.ImageLoader;
 import game.engine.InputHandler;
 import game.engine.State;
 import game.engine.audio.AudioLoader;
+import game.engine.audio.BGMusicPlayer;
 import game.entities.Mob;
 import game.entities.Player;
-import game.entities.Sweepy;
 import game.entities.Watchman;
 import game.entities.components.Sprite;
-import game.menu.InventoryMenu;
-import game.menu.StartMenu;
+import game.overlay.InventoryMenu;
+import game.overlay.OverlayManager;
+import game.overlay.StartMenu;
 import game.world.World;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -24,17 +26,16 @@ import javax.swing.JOptionPane;
 
 public class Core extends Engine {
 	
-	StartMenu m;
-	InventoryMenu i;
 	Camera cam;
 	Player p;
-	ImageLoader imgLd;
 	World l;
 	
-	Sprite light = new Sprite("light", "light");
+	BGMusicPlayer bgp;
+	OverlayManager overLayer;
+	
+	
 	Sprite hud = new Sprite("hud", "hud");
-	Sprite hud2 = new Sprite("hps", "hps");
-	Sprite hpoint = new Sprite("hu", "hu");
+
 	
 	public Core(long anim_period, boolean windowed) {
 		super(anim_period, windowed);
@@ -73,40 +74,14 @@ public class Core extends Engine {
 	
 
 	/**
-	 * Draws the menu
-	 */
-	protected void menuRender(Graphics g) {
-		if(Globals.state == State.mainMenu)
-			m.render(g);
-		else
-			i.render(g);
-		
-	}
-
-	/**
 	 * Renders the game world
 	 */
 	protected void gameRender(Graphics g){
-		l.render(g); //all game objects are in the level
-		Graphics2D g2 = (Graphics2D) g;
-		g2.scale(Camera.width*1.0/light.getWidth(), Camera.height*1.0/light.getHeight());
-		light.render(g2, 0, 0);
-		g2.scale(light.getWidth()*1.0/Camera.width, light.getHeight()*1.0/Camera.height);
-		
-		g2.scale(Camera.scale, Camera.scale);
-		hud.render(g2, 0, (int) (Camera.height/Camera.scale - hud.getHeight()) );
+		if(Globals.state.gameRunning){
+			l.render(g); //all game objects are in the level
+		}
+		overLayer.render(g);
 
-		g2.scale(1/Camera.scale, 1/Camera.scale);
-	}
-
-
-
-	/**
-	 * Allows user input on menu's
-	 */
-	protected void menuTick() {
-		InputHandler.tick();
-		m.update();
 	}
 
 	/**
@@ -114,6 +89,7 @@ public class Core extends Engine {
 	 */
 	protected void gameTick(){
 		InputHandler.tick();
+		overLayer.tick();
 		l.tick();
 	}
 
@@ -129,16 +105,15 @@ public class Core extends Engine {
 		
 		//in game objects. Menu system might need to change to allow
 		//inventory screens and such.
-		m = new StartMenu(this);
 		
-		i = new InventoryMenu();
+		InventoryMenu i = new InventoryMenu();
+		overLayer = new OverlayManager(this, i);
 		//p = new Player(17000, 4000, i);
 		p = new Player(100, 90, i);
-	//	Watchman w1 = new Watchman(100, 400, p);
-		
+		Watchman w1 = new Watchman(100, 400, p);
 		ArrayList<Mob> mobs = new ArrayList();
 		mobs.add(p);
-	//	mobs.add(w1);
+		mobs.add(w1);
 	//	mobs.add(new Sweepy(900,300,p));
 
 		
@@ -150,7 +125,7 @@ public class Core extends Engine {
 		
 		
 		l = new World(s,w,ow, mobs, p);
-	//	w1.addPathFinder(l);
+		w1.addPathFinder(l);
 	}
 
 	/**
@@ -158,6 +133,8 @@ public class Core extends Engine {
 	 */
 	public void initNewGame() {
 		Globals.state = State.inGame;
+		bgp = new BGMusicPlayer(new File("Audio/s1.wav"));
+		bgp.start();
 	}
 	
 	/**

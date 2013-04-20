@@ -1,4 +1,4 @@
-package game.menu;
+package game.overlay;
 
 import game.Core;
 import game.engine.Camera;
@@ -67,6 +67,7 @@ public class StartMenu{
 	}
 	
 	public void choose(){
+		System.out.println(option);
 		switch(option){
 		case(0): parent.initNewGame(); break;
 		case(1): parent.loadGame(); break;

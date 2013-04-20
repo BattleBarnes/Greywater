@@ -16,7 +16,7 @@ import game.engine.State;
 import game.engine.audio.AudioLoader;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
-import game.menu.InventoryMenu;
+import game.overlay.InventoryMenu;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;

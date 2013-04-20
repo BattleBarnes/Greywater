@@ -83,7 +83,11 @@ public class Sprite {
 		BufferedImage rep = getCurrentImage();
 		//g.drawImage(rep, x, y, rep.getWidth(), rep.getHeight(), null);
 	//	((Graphics2D)g).scale(Camera.scale, Camera.scale);
-		g.drawImage(rep, x, y,(int)Math.round(rep.getWidth()*Camera.scale), (int)Math.round(rep.getWidth()*Camera.scale), null);
+		if(Camera.scale == 1.0){
+			render(g,x,y);
+			return;
+		}
+		g.drawImage(rep, x, y,(int)Math.round(rep.getWidth()*Camera.scale), (int)Math.round(rep.getHeight()*Camera.scale), null);
 	//	((Graphics2D)g).scale(1/Camera.scale, 1/Camera.scale);
 	}
 	

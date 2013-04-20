@@ -60,10 +60,7 @@ public class WindowPanel extends JPanel{
 		dgb.setColor(Color.white);
 	//	dgb.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
-		if(Globals.state.gameRunning)
 			parent.gameRender(dgb);
-		if(Globals.state.drawMenu)
-			parent.menuRender(dgb);
 	}
 
 	/**
