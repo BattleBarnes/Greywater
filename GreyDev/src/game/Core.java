@@ -23,62 +23,62 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-
 public class Core extends Engine {
-	
+
 	Camera cam;
 	Player p;
 	World l;
-	
+
 	BGMusicPlayer bgp;
 	OverlayManager overLayer;
-	
-	
-	Sprite hud = new Sprite("hud", "hud");
 
-	
 	public Core(long anim_period, boolean windowed) {
 		super(anim_period, windowed);
-		
+
 		System.setProperty("sun.java2d.translaccel", "true");
 		System.setProperty("sun.java2d.ddforcevram", "true");
-		System.setProperty("sun.java2d.opengl", "true");		
+		System.setProperty("sun.java2d.opengl", "true");
 	}
 
-	public static void main(String[] args){
-		
-		//I hope to allow both windowed and FSEM mode, so this prompts the user to decide at runtime. This makes things harder, but its worth it
-		int choice =JOptionPane.showConfirmDialog(null, "Fullscreen Mode?");
+	public static void main(String[] args) {
+
+		// I hope to allow both windowed and FSEM mode, so this prompts the user
+		// to decide at runtime. This makes things harder, but its worth it
+		int choice = JOptionPane.showConfirmDialog(null, "Fullscreen Mode?");
 		boolean windowed = false;
-		
-		//0 = yes, 1 = no, 2 = cancel, so if they cancel out, abort the program.
-		if(choice == 0){
+
+		// 0 = yes, 1 = no, 2 = cancel, so if they cancel out, abort the
+		// program.
+		if (choice == 0) {
 			windowed = false;
 		}
-		if(choice == 1)
+		if (choice == 1)
 			windowed = true;
-		else if(choice == 2)
+		else if (choice == 2)
 			System.exit(0);
-		
-		
-		//set up the fps and period of animation.
-		//I stole these from the cs3023 examples, because I'm not sure what the anim period should be, we can tinker with it.
+
+		// set up the fps and period of animation.
+		// I stole these from the cs3023 examples, because I'm not sure what the
+		// anim period should be, we can tinker with it.
 		int frames_per_second = 120;
-		if(windowed)
+		if (windowed)
 			frames_per_second = 120;
-		long anim_period = (long) (1000.0/ frames_per_second); //period of anim in millisecond
-		System.out.println("fps: " + frames_per_second + " period: " + anim_period);
-		
-		new Core(anim_period * 1000000L, windowed); //milliseconds -> nanoseconds
+		long anim_period = (long) (1000.0 / frames_per_second); // period of
+																// anim in
+																// millisecond
+		System.out.println("fps: " + frames_per_second + " period: "
+				+ anim_period);
+
+		new Core(anim_period * 1000000L, windowed); // milliseconds ->
+													// nanoseconds
 	}
-	
 
 	/**
 	 * Renders the game world
 	 */
-	protected void gameRender(Graphics g){
-		if(Globals.state.gameRunning){
-			l.render(g); //all game objects are in the level
+	protected void gameRender(Graphics g) {
+		if (Globals.state.gameRunning) {
+			l.render(g); // all game objects are in the level
 		}
 		overLayer.render(g);
 
@@ -87,10 +87,12 @@ public class Core extends Engine {
 	/**
 	 * Updates game state
 	 */
-	protected void gameTick(){
-		InputHandler.tick();
+	protected void gameTick() {
 		overLayer.tick();
-		l.tick();
+		InputHandler.tick();
+		if (Globals.state == State.inGame)
+			l.tick();
+
 	}
 
 	/**
@@ -99,32 +101,28 @@ public class Core extends Engine {
 	protected void init() {
 		ImageLoader.init("images.txt");
 		AudioLoader.init("audio.txt");
-		
+
 		cam = super.cam;
-		
-		
-		//in game objects. Menu system might need to change to allow
-		//inventory screens and such.
-		
+
+		// in game objects. Menu system might need to change to allow
+		// inventory screens and such.
+
 		InventoryMenu i = new InventoryMenu();
 		overLayer = new OverlayManager(this, i);
-		//p = new Player(17000, 4000, i);
+		// p = new Player(17000, 4000, i);
 		p = new Player(100, 90, i);
 		Watchman w1 = new Watchman(100, 400, p);
 		ArrayList<Mob> mobs = new ArrayList();
 		mobs.add(p);
 		mobs.add(w1);
-	//	mobs.add(new Sweepy(900,300,p));
+		// mobs.add(new Sweepy(900,300,p));
 
-		
-		
-		//item elements, will be replaced with proper tilesets later TODO 
+		// item elements, will be replaced with proper tilesets later TODO
 		Sprite w = new Sprite("Wal2l", "Wal2l");
 		Sprite ow = new Sprite("Wall", "Wall");
 		Sprite s = new Sprite("Tile1", "Tile1");
-		
-		
-		l = new World(s,w,ow, mobs, p);
+
+		l = new World(s, w, ow, mobs, p);
 		w1.addPathFinder(l);
 	}
 
@@ -133,21 +131,21 @@ public class Core extends Engine {
 	 */
 	public void initNewGame() {
 		Globals.state = State.inGame;
-		bgp = new BGMusicPlayer(new File("Audio/s1.wav"));
-		bgp.start();
+		// bgp = new BGMusicPlayer(new File("Audio/s1.wav"));
+		// bgp.start();
 	}
-	
+
 	/**
 	 * Load an old game from file
 	 */
-	public void loadGame(){
-		//TODO add loading and saving function
+	public void loadGame() {
+		// TODO add loading and saving function
 	}
-	
+
 	/**
 	 * Make the game go away.
 	 */
-	public void exitGame(){
+	public void exitGame() {
 		Globals.state = State.gameEnding;
 	}
 }

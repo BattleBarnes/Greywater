@@ -96,14 +96,6 @@ public class Player extends Mob {
 			xMoveBy = 0;
 			yMoveBy = 2;
 		}
-		
-
-		if(InputHandler.menu.keyTapped){ //brings up the menu.
-			if(!Globals.state.drawMenu)
-				Globals.state = State.gameMenu;
-			else
-				Globals.state = State.inGame;
-		}
 
 		inv.update();
 
