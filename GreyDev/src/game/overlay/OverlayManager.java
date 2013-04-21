@@ -39,12 +39,14 @@ public class OverlayManager {
 		if (Globals.state == State.mainMenu)
 			start.update();
 		inv.update();
+		headsUp.update();
 		headsUp.drawText(displayText);
+		displayText="";
 	}
 
 	public void render(Graphics g) {
 
-		if (Globals.state == State.inGame) {
+		if (Globals.state.gameRunning) {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.scale(Camera.width * 1.0 / light.getWidth(), Camera.height * 1.0/ light.getHeight());
 			light.render(g2, 0, 0);

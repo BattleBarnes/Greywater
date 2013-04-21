@@ -90,7 +90,7 @@ public class Core extends Engine {
 	protected void gameTick() {
 		overLayer.tick();
 		InputHandler.tick();
-		if (Globals.state == State.inGame)
+		if (Globals.state.gameRunning)
 			l.tick();
 
 	}

@@ -9,13 +9,14 @@ import java.awt.Graphics;
 
 public class Item extends Entity {
 	
-	public String name = "GodlyPlateoftheGlitch";
+	public String name = "Fist Fulla Gears";
 	public int itemID = 00;
 	
 	
-	public Item(String name, int x, int y){
-		this.name = name;
-		graphicsComponent = new Sprite(name+"Inventory", name+"Inventory");
+	public Item(String name, int x, int y, int code, String displayName){
+		this.name = displayName;
+		itemID = code;
+		graphicsComponent = new Sprite(name, name);
 		physicsComponent = new Tangible(x, y, graphicsComponent.getWidth(), graphicsComponent.getHeight(), 0);
 	}
 

@@ -21,7 +21,7 @@ public class Slot extends Entity {
 	public boolean add(Item i) {
 		if (held == null) {
 			held = i;
-			held.setLocation(getX(), getY());
+			i.setLocation(getX(), getY());
 		} else
 			return false;
 		return true;

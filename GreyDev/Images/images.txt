@@ -28,6 +28,10 @@ S Tile1,text.png
 
 S GodlyPlateoftheWhaleInventory,GodlyPlateoftheWhaleInventory.png
 
+S wrench,wrench.png
+S electricwrench,electricwrench.png
+S voltaiccell,voltaiccell.png
+
 S invslot,invslot.png
 
 
