@@ -24,6 +24,8 @@ import java.awt.Rectangle;
 public class Player extends Mob {
 	
 	private InventoryMenu inv;
+	public Rectangle attRect;
+
 	
 	int lastPos = 0;
 	public boolean notPlayed = true;
@@ -96,9 +98,17 @@ public class Player extends Mob {
 			xMoveBy = 0;
 			yMoveBy = 2;
 		}
+		
+		if(InputHandler.leftClick.heldDown){
+			Rectangle r = this.getPhysicsShape();
+			attRect = new Rectangle(r.x-60, r.y-60, r.width+120, r.height+120);
+		}
+		else{
+			attRect = null;
+			attacking = false;
+		}
 
 		inv.update();
-
 	}
 	
 	
@@ -110,16 +120,38 @@ public class Player extends Mob {
 
 
 	@Override
-	protected void attack(Mob enemy) {
-		// TODO Auto-generated method stub
+	public void attack(Mob enemy) {
+		if(enemy==null)
+			return;
+		double targX = enemy.getPhysicsShape().getCenterX();
+		double targY = enemy.getPhysicsShape().getCenterY();
+		double x = getPhysicsShape().getCenterX();
+		double y = getPhysicsShape().getCenterY();
+		this.direction = Globals.getIntDir(targY - y, targX - x); //TODO FIX THIS SO X AND Y AREN'T REVERSE (POST HEARTLAND)
+		this.currDirection = Globals.getStringDir(direction); 
 		
-	}
-
-
-	@Override
-	protected void takeDamage(int damage) {
-		// TODO Auto-generated method stub
+		this.physicsComponent.stopMovement();
+		xMoveBy = 0;
+		yMoveBy= 0;
 		
+		attacking = true;
+		graphicsComponent.forceImage("WatchmanAttack"+currDirection);
+		
+		int damage = 0;
+		int hitMod = 0;
+		int damMod = 0;
+		if(inv.getWeap() != null){
+			hitMod += inv.getWeap().getHitMod();
+			damMod += inv.getWeap().getDamageMod();
+		}
+		if(attacking){
+			int chance = Globals.D(20);
+			if(chance + hitMod > 10){
+				damage += 2*Globals.D(6) + damMod;
+				enemy.damage(damage);
+				System.out.println("Kablowie");
+			}
+		}
 	}
 
 

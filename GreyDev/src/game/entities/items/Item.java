@@ -43,5 +43,16 @@ public class Item extends Entity {
 	public String showText(){
 		return name;
 	}
+	
+	public int getHitMod(){
+		return 5;
+	}
+	
+	public int getDamageMod(){
+		if(name.contains("Electric"))
+			return 20;
+		return 10;
+	}
+	
 
 }

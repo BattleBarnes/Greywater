@@ -76,7 +76,7 @@ public class Watchman extends Mob{
 				}
 			}else if (lastPos != 3){
 				attacking = true;
-				graphicsComponent.loopImg(0.8, "Attack");
+			//	graphicsComponent.loopImg(0.8, "Attack");
 			}
 		}
 
@@ -86,11 +86,6 @@ public class Watchman extends Mob{
 		this.currDirection = Globals.getStringDir(direction);
 	}
 
-	@Override
-	protected void takeDamage(int damage) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	private void pathFind(){
 		

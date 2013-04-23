@@ -56,6 +56,15 @@ S hud,HUD.png
 
 T WatchSheet.png,8,6,WatchmanWalkEast,WatchmanWalkNorth,WatchmanWalkNorthEast,WatchmanWalkNorthWest,WatchmanWalkSouth,WatchmanWalkSouthEast,WatchmanWalkSouthWest,WatchmanWalkWest
 
+S WatchmanAttackSouth,Watchman_Attack_South.png
+S WatchmanAttackNorth,Watchman_Attack_North.png
+S WatchmanAttackEast,Watchman_Attack_East.png
+S WatchmanAttackWest,Watchman_Attack_West.png
+S WatchmanAttackNorthEast,Watchman_Attack_NorthEast.png
+S WatchmanAttackSouthEast,Watchman_Attack_SouthEast.png
+S WatchmanAttackNorthWest,Watchman_Attack_NorthWest.png
+S WatchmanAttackSouthWest,Watchman_Attack_SouthWest.png
+
 S WatchmanStandSouth,Watchman_Stand_South.png
 S WatchmanStandNorth,Watchman_Stand_North.png
 S WatchmanStandEast,Watchman_Stand_East.png

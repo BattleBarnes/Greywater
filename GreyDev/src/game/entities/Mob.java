@@ -118,7 +118,6 @@ public abstract class Mob extends Entity {
 
 	protected abstract void attack(Mob enemy);
 
-	protected abstract void takeDamage(int damage);
 
 	public Line2D getSight() {
 		return sight;

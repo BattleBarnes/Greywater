@@ -57,9 +57,5 @@ public class Sweepy extends Mob {
 		return;
 	}
 
-	@Override
-	protected void takeDamage(int damage) {
-		return;
-	}
 
 }

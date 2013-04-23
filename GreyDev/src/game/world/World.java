@@ -160,6 +160,10 @@ public class World {
 					m.undoMove(true, true);
 			}
 		}
+		Rectangle r = player.attRect;
+		if(r!=null){
+			player.attack((Mob)getEntityCollision(r, player));
+		}
 
 		// move the camera to follow the player
 		Point p = Globals.getIsoCoords(player.getX(), player.getY());
@@ -201,6 +205,18 @@ public class World {
 				return true;
 		}
 		return false;
+	}
+	
+	public Entity getEntityCollision(Shape s, Mob caller){
+		for(Entity e:mobList){
+			if(e==null)
+				continue;
+			if(e == caller)
+				continue;
+			if(s.intersects(e.getPhysicsShape()))
+				return e;
+		}
+		return null;
 	}
 
 	public boolean checkValidTile(int x, int y) {

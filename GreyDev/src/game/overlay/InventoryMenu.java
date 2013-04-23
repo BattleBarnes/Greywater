@@ -281,4 +281,8 @@ public class InventoryMenu {
 		System.out.println("Done crafted!");
 
 	}
+	
+	public Item getWeap(){
+		return equip.get(0).getItem();
+	}
 }

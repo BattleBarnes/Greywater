@@ -47,7 +47,6 @@ public class HUDge {
 	
 	public void update(){
 		if(InputHandler.leftClick.keyTapped){
-			System.out.println("Click right");
 			if(inv.getPhysicsShape().contains(InputHandler.mouseLoc)){
 				if(Globals.state != State.gameMenu)
 					Globals.state = State.gameMenu;
