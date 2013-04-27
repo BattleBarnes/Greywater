@@ -2,7 +2,10 @@ package game.entities;
 
 import game.Globals;
 import game.entities.components.Entity;
+import game.entities.components.Sprite;
 import game.entities.components.ai.PathFinder;
+import game.overlay.InventoryMenu;
+import game.overlay.OverlayManager;
 import game.world.World;
 
 import java.awt.Point;
@@ -17,6 +20,7 @@ public abstract class Mob extends Entity {
 	public Entity target;
 	public Point destination;
 	boolean walks = true;
+	boolean playerFriend;
 
 	PathFinder p;
 
@@ -35,6 +39,8 @@ public abstract class Mob extends Entity {
 	public int xLast; // last valid (non colliding) x position
 	public int yLast; // last valid (non colliding) y position
 	boolean attacking = false;
+	protected InventoryMenu inv;
+	public InventoryMenu currentLoot;
 
 	/**
 	 * Generic method for moving entities: Saves last valid position, moves the
@@ -44,16 +50,20 @@ public abstract class Mob extends Entity {
 	public void tick() {
 		xLast = getX(); // last location was valid or it would have been undone already
 		yLast = getY();
-		getInput(); // get input from AI or controls or whatever
+		if(HP>0)
+			getInput(); // get input from AI or controls or whatever
 		super.tick();
-
-		walk();
+		if(HP>0)
+			walk();
+		if(HP<0 &&!graphicsComponent.isAnimating()){
+			graphicsComponent = new Sprite(this.name, name+"Dead");
+		}
 	}
 
 	public void walk() {
-
 		if (xMoveBy != 0 || yMoveBy != 0) { // sets the physicsComponent moving
 			physicsComponent.moveTo(getX() + xMoveBy, getY() + yMoveBy);
+			currentLoot = null;
 			if (destination == null || destination.x != xMoveBy + getX() || destination.y != yMoveBy + getY()){
 				destination = new Point(xMoveBy + getX(), yMoveBy + getY());
 			}
@@ -133,10 +143,25 @@ public abstract class Mob extends Entity {
 
 	public void damage(int damage) {
 		HP -= damage;
+		if(HP <=0){
+			graphicsComponent.animate(0.9, "Die");
+		}
 	}
 
 	public int getHP() {
 		return HP;
+	}
+	
+	public boolean isAlive(){
+		if (HP > 0) 
+			return true;
+		return false;
+	}
+	
+	public void getInteracted(Mob interactor){
+		if(!isAlive()){
+			interactor.currentLoot = inv;
+		}
 	}
 
 }

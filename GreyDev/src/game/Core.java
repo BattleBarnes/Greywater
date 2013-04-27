@@ -30,7 +30,6 @@ public class Core extends Engine {
 	World l;
 
 	BGMusicPlayer bgp;
-	OverlayManager overLayer;
 
 	public Core(long anim_period, boolean windowed) {
 		super(anim_period, windowed);
@@ -80,7 +79,7 @@ public class Core extends Engine {
 		if (Globals.state.gameRunning) {
 			l.render(g); // all game objects are in the level
 		}
-		overLayer.render(g);
+		OverlayManager.render(g);
 
 	}
 
@@ -88,8 +87,19 @@ public class Core extends Engine {
 	 * Updates game state
 	 */
 	protected void gameTick() {
-		overLayer.tick();
+		OverlayManager.tick();
+		
+		if(InputHandler.exit.keyTapped){
+			if(Globals.state.gameRunning)
+				Globals.state = State.mainMenu;
+			else
+				Globals.state = State.inGame;
+		}
+		
 		InputHandler.tick();
+		
+		
+		
 		if (Globals.state.gameRunning)
 			l.tick();
 
@@ -108,9 +118,9 @@ public class Core extends Engine {
 		// inventory screens and such.
 
 		InventoryMenu i = new InventoryMenu();
-		overLayer = new OverlayManager(this, i);
+		p = new Player(100, 200, i);
+		OverlayManager.init(this, p);
 		// p = new Player(17000, 4000, i);
-		p = new Player(100, 90, i);
 		Watchman w1 = new Watchman(100, 400, p);
 		ArrayList<Mob> mobs = new ArrayList();
 		mobs.add(p);
@@ -118,11 +128,11 @@ public class Core extends Engine {
 		// mobs.add(new Sweepy(900,300,p));
 
 		// item elements, will be replaced with proper tilesets later TODO
-		Sprite w = new Sprite("Wal2l", "Wal2l");
-		Sprite ow = new Sprite("Wall", "Wall");
+	//	Sprite w = new Sprite("Wal2l", "Wal2l");
+	//	Sprite ow = new Sprite("Wall", "Wall");
 		Sprite s = new Sprite("Tile1", "Tile1");
 
-		l = new World(s, w, ow, mobs, p);
+		l = new World(s,mobs, p);
 		w1.addPathFinder(l);
 	}
 

@@ -21,6 +21,7 @@ public class AudioLoader {
 	
 	private static String filePath;
 	private static HashMap sounds = new HashMap();
+	private static SoundClip lastPlayed;
 	
 	/**
 	 * Calls readFile on the text file provided to load sounds into memory from disk.
@@ -151,7 +152,12 @@ public class AudioLoader {
 			Random rand = new Random();
 			int i = rand.nextInt(soundGroup.size());
 			SoundClip ci = (SoundClip) soundGroup.get(i);
-			ci.play(false);
+			if(ci != lastPlayed){
+				ci.play(false);
+				lastPlayed = ci;
+			}else
+				playGrouped(name);
+				
 		}
 	}
 

@@ -12,59 +12,145 @@
 //T format: T Filepath,number of rows, number of columns,RowName1, RowName2, RowName3, RowName4,.....  
 //A format: A Filepath,number of rows, number of columns, (1,1) name, (1,2) name........
 
-
-//G TavishWalkSouth,Tavish_Walk_South_1.png,Tavish_Walk_South_2.png,Tavish_Walk_South_3.png,Tavish_Walk_South_4.png,Tavish_Walk_South_5.png,Tavish_Walk_South_6.png
-
-//G TavishWalkNorth,Tavish_Walk_North_1.png,Tavish_Walk_North_2.png,Tavish_Walk_North_3.png,Tavish_Walk_North_4.png,Tavish_Walk_North_5.png,Tavish_Walk_North_6.png
-
-//S TavishStandSouth,Tavish_Stand_South_1.png
-
-
-S Wal2l,wall_template_small.png
-
-S Wall,wall_template_small_reverse.png
+//menu
+S Bullet,bullet.png
+S Credits,credits.png
+S Exit,exit.png
+S NewGame,newgame.png
+S HowToPlay,howtoplay.png
+S Title,title-screen.png
 
 S Tile1,text.png
 
-S GodlyPlateoftheWhaleInventory,GodlyPlateoftheWhaleInventory.png
+S Wrench,TavWrench.png
+S ElectricWrench,TazerWrench.png
+S VoltaicCell,VoltCell.png
 
-S wrench,wrench.png
-S electricwrench,electricwrench.png
-S voltaiccell,voltaiccell.png
+//placeholder inventories
+S invslot,slot.png
+S inv,inventory.png
+S WeaponSlot,slot_weapon.png
+S Crafting,slot_craft.png
 
-S invslot,invslot.png
 
-
-S area,area.png
-S WeaponSlot,weap.png
-S Crafting,craft.png
-
-G WatchmanAttack,WatchmanAttack.png,WatchmanAttack2.png,WatchmanAttack3.png
 
 S Sweepy,sweep.png
 
+G TavishDie,Tavish_die_1.png,Tavish_die_2.png,Tavish_die_3.png,Tavish_die_4.png,Tavish_die_5.png
+G WatchmanDie,Watchman_die_1.png,Watchman_die_2.png,Watchman_die_3.png,Watchman_die_4.png,Watchman_die_5.png
+S WatchmanDead,Watchman_die_6.png
+S TavishDead,Tavish_die_5.png
 
-S Go,Gobutton.png
-S New,Newslot.png
+//Tavish walk strips
+L TavishWalkSouth,TS.png,6
+L TavishWalkEast,TE.png,6
+L TavishWalkNorth,TN.png,6
+L TavishWalkNorthEast,TNE.png,6
+L TavishWalkNorthWest,TNW.png,6
+L TavishWalkSouthEast,TSE.png,6
+L TavishWalkSouthWest,TSW.png,6
+L TavishWalkWest,TW.png,6
+
+//Tavish stand images
+S TavishStandSouth,Tavish_Stand_South.png
+S TavishStandNorth,Tavish_Stand_North.png
+S TavishStandEast,Tavish_Stand_East.png
+S TavishStandWest,Tavish_Stand_West.png
+S TavishStandNorthEast,Tavish_Stand_NorthEast.png
+S TavishStandSouthEast,Tavish_Stand_SouthEast.png
+S TavishStandNorthWest,Tavish_Stand_NorthWest.png
+S TavishStandSouthWest,Tavish_Stand_SouthWest.png
+
+
+//Tavish fight sheet
+L TavishAttackEast,TFE.png,3
+L TavishAttackNorth,TFN.png,3
+L TavishAttackNorthEast,TFNE.png,3
+L TavishAttackNorthWest,TFNW.png,3
+L TavishAttackSouth,TFS.png,3
+L TavishAttackWest,TFW.png,3
+L TavishAttackSouthEast,TFSE.png,3
+L TavishAttackSouthWest,TFSW.png,3
 
 
 
+//sewer tiles
+S ft1,floor_tile_1.png
+S ft2,floor_tile_2.png
+S ft3,floor_tile_3.png
+S ft4,floor_tile_4.png
+S ft5,floor_tile_5.png
+S ft6,floor_tile_6.png
+S ft7,floor_tile_7.png
+S ft8,floor_tile_8.png
+
+//sewer walls
+S wt1,wall_tile_1.png
+S wt2,wall_tile_2.png
+S wt3,wall_tile_3.png
+S wt4,wall_tile_4.png
+S wt5,wall_tile_5.png
+S wt6,wall_tile_6.png
+S wt7,wall_tile_7.png
+S wt8,wall_tile_8.png
+S wt9,wall_tile_9.png
+S wt10,wall_tile_10.png
 
 //overlays
 S light,light.png
-S hud,HUD.png
+S hud,HUD-base.png
+S hp0,health_0.png
+S hp10,health_10.png
+S hp20,health_20.png
+S hp30,health_30.png
+S hp40,health_40.png
+S hp50,health_50.png
+S hp60,health_60.png
+S hp70,health_70.png
+S hp80,health_80.png
+S hp90,health_90.png
+S hp100,health_100.png
 
-T WatchSheet.png,8,6,WatchmanWalkEast,WatchmanWalkNorth,WatchmanWalkNorthEast,WatchmanWalkNorthWest,WatchmanWalkSouth,WatchmanWalkSouthEast,WatchmanWalkSouthWest,WatchmanWalkWest
+S mp0,manna_0.png
+S mp10,manna_10.png
+S mp20,manna_20.png
+S mp30,manna_30.png
+S mp40,manna_40.png
+S mp50,manna_50.png
+S mp60,manna_60.png
+S mp70,manna_70.png
+S mp80,manna_80.png
+S mp90,manna_90.png
+S mp100,manna_100.png
 
-S WatchmanAttackSouth,Watchman_Attack_South.png
-S WatchmanAttackNorth,Watchman_Attack_North.png
-S WatchmanAttackEast,Watchman_Attack_East.png
-S WatchmanAttackWest,Watchman_Attack_West.png
-S WatchmanAttackNorthEast,Watchman_Attack_NorthEast.png
-S WatchmanAttackSouthEast,Watchman_Attack_SouthEast.png
-S WatchmanAttackNorthWest,Watchman_Attack_NorthWest.png
-S WatchmanAttackSouthWest,Watchman_Attack_SouthWest.png
 
+
+
+//Watchman walk strips
+L WatchmanWalkSouth,WS.png,6
+L WatchmanWalkEast,WE.png,6
+L WatchmanWalkNorth,WN.png,6
+L WatchmanWalkNorthEast,WNE.png,6
+L WatchmanWalkNorthWest,WNW.png,6
+L WatchmanWalkSouthEast,WSE.png,6
+L WatchmanWalkSouthWest,WSW.png,6
+L WatchmanWalkWest,WW.png,6
+
+
+
+//Watchman fight sheet
+L WatchmanAttackEast,WFE.png,3
+L WatchmanAttackNorth,WFN.png,3
+L WatchmanAttackNorthEast,WFNE.png,3
+L WatchmanAttackNorthWest,WFNW.png,3
+L WatchmanAttackSouth,WFS.png,3
+L WatchmanAttackWest,WFW.png,3
+L WatchmanAttackSouthEast,WFSE.png,3
+L WatchmanAttackSouthWest,WFSW.png,3
+
+
+
+//Watchman stand images
 S WatchmanStandSouth,Watchman_Stand_South.png
 S WatchmanStandNorth,Watchman_Stand_North.png
 S WatchmanStandEast,Watchman_Stand_East.png
@@ -73,3 +159,6 @@ S WatchmanStandNorthEast,Watchman_Stand_NorthEast.png
 S WatchmanStandSouthEast,Watchman_Stand_SouthEast.png
 S WatchmanStandNorthWest,Watchman_Stand_NorthWest.png
 S WatchmanStandSouthWest,Watchman_Stand_SouthWest.png
+
+
+

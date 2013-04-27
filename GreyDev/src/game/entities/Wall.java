@@ -84,20 +84,16 @@ public class Wall extends Entity{
 		//if player is in front of wall, render normally
 		Point p = Globals.getIsoCoords(getX() + spriteXOff, getY() + spriteYOff);
 		
-		
-	//	graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.54f);
-		//if(true)return;
-		
 		if(getX() == 0 || getY() == 0){
 			graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
 			return;
 		}
 		
-		if(!west){
+		//if(!west){
 			if(this.getY() < player.getY()){
 				graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
 				return;
-			}
+		//	}
 			
 		}else{
 			if(getX() < player.getX()){
@@ -115,8 +111,9 @@ public class Wall extends Entity{
 		
 		if(distance > 20)
 			graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
-		else
+		else{
 			graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.54f);
+		}
 
 
 	}

@@ -78,6 +78,7 @@ public class Sprite {
 
 	}
 	
+	
 	public void renderScaled(Graphics g, int x, int y){
 		tick();
 		BufferedImage rep = getCurrentImage();
@@ -109,7 +110,7 @@ public class Sprite {
 			totalAnimTime_Millis = (long) ((totalAnimTime_Millis + animPeriod_Millis) % sequenceDuration_Millis);
 			seriesPosition = (int) (totalAnimTime_Millis / cycleLength_Millis);
 		}
-		if(seriesPosition >= seriesLength && !isLooping)
+		if(seriesPosition >= seriesLength-1 && !isLooping)
 			stopAnim(); //if it isn't looping, stop
 		if(seriesPosition >= seriesLength&& isLooping)
 			seriesPosition = 0; //if it is looping, go back to beginning
@@ -122,6 +123,10 @@ public class Sprite {
 		if(isTicking)
 			return ImageLoader.getGroupedImage(currImgName, seriesPosition);
 		return sprite;
+	}
+	
+	public String getCurrentImageName(){
+		return currImgName;
 	}
 	
 	

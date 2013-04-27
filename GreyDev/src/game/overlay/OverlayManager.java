@@ -5,7 +5,9 @@ import game.Globals;
 import game.engine.Camera;
 import game.engine.InputHandler;
 import game.engine.State;
+import game.entities.Player;
 import game.entities.components.Sprite;
+import game.entities.items.Item;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -13,38 +15,48 @@ import java.awt.Graphics2D;
 
 public class OverlayManager {
 
-	HUDge headsUp;
-	StartMenu start;
-	InventoryMenu inv;
-	Sprite light = new Sprite("light", "light");
-	String displayText = "";
-	Sprite hud = new Sprite("hud", "hud");
+	static HUDge headsUp;
+	static StartMenu start;
+	static InventoryMenu inv;
+	static Sprite light = new Sprite("light", "light");
+	static String displayText = "";
+	private static Player p;
+	private static AIInventory currentLoot;
+	private static Item transferItem;
 
-	public OverlayManager(Core parent, InventoryMenu inv) {
+	public static void init(Core parent, Player np) {
 		headsUp = new HUDge();
 		start = new StartMenu(parent);
-		this.inv = inv;
-		inv.setParent(this);
-
+		inv = np.getInv();
+		p = np;
 	}
 
-	public void tick() {
+	public static void tick() {
 		InputHandler.tick();
+		currentLoot = (AIInventory) p.currentLoot;
 		if (InputHandler.menu.keyTapped) { // brings up the menu.
 			if (!Globals.state.drawMenu)
 				Globals.state = State.gameMenu;
 			else
 				Globals.state = State.inGame;
 		}
-		if (Globals.state == State.mainMenu)
+		if (Globals.state.isPaused || !Globals.state.gameRunning)
 			start.update();
 		inv.update();
-		headsUp.update();
+		headsUp.update(p.getHP(), 100);
+		if(currentLoot != null){
+			currentLoot.update();
+			transferItem = currentLoot.selectedItem;
+			if(transferItem!=null)
+				inv.addItem(transferItem);
+			transferItem = null;
+			currentLoot.dropItem();
+		}
 		headsUp.drawText(displayText);
 		displayText="";
 	}
 
-	public void render(Graphics g) {
+	public static void render(Graphics g) {
 
 		if (Globals.state.gameRunning) {
 			Graphics2D g2 = (Graphics2D) g;
@@ -54,15 +66,20 @@ public class OverlayManager {
 
 			headsUp.render(g);
 		}
-		if (Globals.state == State.mainMenu)
+		if (Globals.state.isPaused || !Globals.state.gameRunning)
 			start.render(g);
 		else if (Globals.state == State.gameMenu) {
 			inv.render(g);
+		}
+		if(currentLoot != null){
+			currentLoot.render(g);
 		}
 		g.setColor(Color.PINK);
 		
 		//g.drawString(displayText, 100, 100);
 
 	}
+	
+	
 
 }

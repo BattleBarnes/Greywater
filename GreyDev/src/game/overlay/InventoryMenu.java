@@ -13,67 +13,64 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class InventoryMenu {
-	public final int COLUMNS = 4;
-	public final int ROWS = 9;
+	public final int COLUMNS;// = 6;
+	public final int ROWS;// = 5;
 
-	private ArrayList<Slot> inv = new ArrayList<Slot>((ROWS + 1) * COLUMNS);
+	protected ArrayList<Slot> inv;
 	private ArrayList<Slot> equip = new ArrayList<Slot>();
 	private ArrayList<Slot> craftarea = new ArrayList<Slot>();
 	private Slot craftOutput;
 
-	private boolean objectSelected = false;
-	private Item selectedItem;
-	private Sprite slot;
-	private Sprite craft;
-	private Sprite weap;
-	private Sprite area;
-	private Sprite newThing;
-	private Sprite goButton;
+	protected boolean objectSelected = false;
+	protected Item selectedItem;
+	protected Sprite slot;
+	protected Sprite craft;
+	protected Sprite weap;
+	private Sprite area = new Sprite("inv", "inv");
 
-	private Button craftButton;
-	private OverlayManager parent;
+
 
 	/**
 	 * Constructor, sets up the inventory slot image, and fills the inventory
 	 * list with nulls (null = empty in this system)
+	 * This one's for the player.
 	 */
 	public InventoryMenu() {
+		COLUMNS = 6;
+		ROWS = 4;
 		slot = new Sprite("invslot", "invslot");
 		weap = new Sprite("WeaponSlot", "WeaponSlot");
 		craft = new Sprite("Crafting", "Crafting");
-		area = new Sprite("area", "area");
-		newThing = new Sprite("New", "New");
-		goButton = new Sprite("Go", "Go");
-		for (int i = 0; i < COLUMNS * (ROWS + 1); i++) {
-			int col = i % COLUMNS; // because inventory is a 1D arraylist, the
-									// 2D grid effect is achieved via math.
-			int row = ROWS - i / COLUMNS;
 
-			inv.add(new Slot(slot, (int) ((Camera.width - slot.getWidth() * Camera.scale * COLUMNS) + slot.getWidth() * Camera.scale * col), (int) (row * slot.getHeight() * Camera.scale)));
-		}
 
-		//this.addItem(new Item("GodlyPlateoftheWhale", 0, 0));
-		this.addItem(new Item("wrench", 0, 0, 5, "Shop Wrench"));
-		this.addItem(new Item("voltaiccell", 0, 0, 7, "Voltaic Cell"));
-		this.addItem(new Item("wrench", 0, 0, 5, "Shop Wrench"));
-		this.addItem(new Item("voltaiccell", 0, 0, 7, "Voltaic Cell"));
+		setNewInv();
+
+		this.addItem(new Item("Wrench", 0, 0, 5, "Shop Wrench"));
+
 
 		for (int i = 0; i < 4; i++) {
-			int col = i % 2; // because inventory is a 1D arraylist, the 2D grid
-								// effect is achieved via math.
+			int col = i % 2; // because inventory is a 1D arraylist, the 2D grid effect is achieved via math.
 			int row = 2 - i / 2;
+			craftarea.add(new Slot(craft, (int) (Camera.width - (Camera.scale * ( -1*craft.getWidth() * col + area.getWidth() / 2 + craft.getWidth()))), (int) ((60 + row * craft.getHeight()) * Camera.scale)));
 
-			craftarea.add(new Slot(craft, (int) (Camera.width - slot.getWidth() * Camera.scale * COLUMNS + craft.getWidth() * Camera.scale * col - area.getWidth() * Camera.scale / 2 - craft.getWidth() * Camera.scale), (int) (100 * Camera.scale + row * craft.getHeight() * Camera.scale)));
 		}
 
-		equip.add(new Slot(weap, (int) (Camera.width - area.getWidth() * Camera.scale - slot.getWidth() * Camera.scale * COLUMNS + (area.getWidth() * Camera.scale / 2 - weap.getWidth() * Camera.scale / 2)), (50)));
+		equip.add(new Slot(weap, (int) (Camera.width - (Camera.scale * ( -1*weap.getWidth()/2 + area.getWidth() / 2 + craft.getWidth()))), (20)));
 
-		craftOutput = new Slot(newThing, (int) (craftarea.get(3).getX() + 100 * Camera.scale), (int) (craftarea.get(3).getY()));
-		craftButton = new Button(goButton, (int) (craftarea.get(3).getX()), (int) (craftarea.get(3).getY() + 200 * Camera.scale));
+		craftOutput = new Slot(slot, (int) (craftarea.get(3).getX() + 100 * Camera.scale), (int) (craftarea.get(3).getY()));
 	}
 
-	public void setParent(OverlayManager p) {
-		this.parent = p;
+	public InventoryMenu(int r, int c) {
+		slot = new Sprite("invslot", "invslot");
+
+		ROWS = r;
+		COLUMNS = c;
+
+		
+		int w = Camera.width;
+		Camera.width /= 4;
+		setNewInv();
+		Camera.width = w;
 	}
 
 	/**
@@ -111,7 +108,7 @@ public class InventoryMenu {
 	 *            - Graphics object
 	 */
 	public void render(Graphics g) {
-		area.renderScaled(g, (int) (Camera.width - area.getWidth() * Camera.scale - slot.getWidth() * Camera.scale * COLUMNS), 0);
+		area.renderScaled(g, (int) (Camera.width - area.getWidth() * Camera.scale), 0);
 		for (int i = 0; i < COLUMNS * (ROWS + 1); i++) {
 			inv.get(i).renderScaled(g);
 
@@ -126,7 +123,6 @@ public class InventoryMenu {
 		for (Slot s : equip)
 			s.renderScaled(g);
 
-		craftButton.renderScaled(g);
 		craftOutput.renderScaled(g);
 		if (selectedItem != null) {
 			selectedItem.render(g); // dragged item
@@ -140,6 +136,7 @@ public class InventoryMenu {
 	 * location). If no item is selected, it will try to select one.
 	 */
 	public void update() {
+		craft();
 		if (objectSelected) {// make selection follow the mouse
 			if (InputHandler.leftClick.keyTapped) {
 				placeItem(calcSlot(InputHandler.mouseLoc)); // place it if mouse
@@ -151,8 +148,14 @@ public class InventoryMenu {
 		} else if (InputHandler.leftClick.keyTapped && Globals.state == State.gameMenu) {
 			grabItem(InputHandler.mouseLoc); // pick up item from inventory
 			System.out.println(selectedItem);
-			if (!objectSelected && craftButton.getPhysicsShape().contains(InputHandler.mouseLoc)) {
-				craft();
+			if (!objectSelected && craftOutput.getPhysicsShape().contains(InputHandler.mouseLoc)) {
+				if(!craftOutput.isEmpty()){
+					objectSelected = true;
+					selectedItem = craftOutput.grabItem();
+					for(Slot s:craftarea){
+						s.grabItem();
+					}
+				}
 			}
 		} else {
 			if (Globals.state == State.gameMenu) {
@@ -160,7 +163,7 @@ public class InventoryMenu {
 				if (s != null) {
 					Item i = s.getItem();
 					if (i != null) {
-						parent.displayText = i.name;
+						OverlayManager.displayText = i.name;
 					}
 				}
 				// get text from item from slot from mouse
@@ -242,11 +245,16 @@ public class InventoryMenu {
 			}
 		}
 
-		if (craftOutput.getPhysicsShape().contains(mouse)) {
-			selectedItem = craftOutput.grabItem(); // it is selected
-			if (selectedItem != null)
-				objectSelected = true;
-		}
+		if (craftOutput != null)
+			if (craftOutput.getPhysicsShape().contains(mouse)) {
+				selectedItem = craftOutput.grabItem(); // it is selected
+				if (selectedItem != null){
+					for(Slot s:craftarea){
+						s.grabItem();
+					}
+					objectSelected = true;
+				}
+			}
 
 	}
 
@@ -268,21 +276,53 @@ public class InventoryMenu {
 	}
 
 	private void craft() {
-		int newItem = 0;
-		for (int i = 0; i < craftarea.size(); i++) {
-			if (!craftarea.get(i).isEmpty()) {
-				newItem += craftarea.get(i).grabItem().itemID;
-			}
+		int s1 = 0; int s2 = 0; int s3 = 0; int s4 = 0;
+		if (!craftarea.get(0).isEmpty()) {
+			s1= craftarea.get(0).getItem().itemID;
+		}
+		if (!craftarea.get(1).isEmpty()) {
+			s2= craftarea.get(1).getItem().itemID;
+		}
+		if (!craftarea.get(2).isEmpty()) {
+			s3= craftarea.get(2).getItem().itemID;
+		}
+		if (!craftarea.get(3).isEmpty()) {
+			s4= craftarea.get(3).getItem().itemID;
+		}
+		int newItem = s1+s2+s3+s4;
+		if(!craftOutput.isEmpty()){
+			if(craftOutput.getItem().itemID == newItem)
+				return;
 		}
 		Item n = Recipes.craft(newItem);
-		System.out.println(newItem);
-		if(n != null)
-			craftOutput.add(n);
-		System.out.println("Done crafted!");
+		
+		if (n != null){
+			if(craftOutput.isEmpty())
+				craftOutput.add(n);
+			else{
+				craftOutput.grabItem();
+				craftOutput.add(n);
+			}
+		}
+		else{
+			craftOutput.grabItem();
+		}
 
 	}
-	
-	public Item getWeap(){
+
+	public Item getWeap() {
 		return equip.get(0).getItem();
+	}
+
+	private void setNewInv() {
+		inv = new ArrayList<Slot>((ROWS + 1) * COLUMNS);
+		for (int i = 0; i < COLUMNS * (ROWS + 1); i++) {
+			int col = i % COLUMNS; // because inventory is a 1D arraylist, the
+									// 2D grid effect is achieved via math.
+			int row = ROWS - i / COLUMNS;
+
+			inv.add(new Slot(slot, (int) (Camera.width - (Camera.scale *(slot.getWidth()*(COLUMNS+1) - (slot.getWidth() * col) - 35))), (int) ((area.getHeight()/2 + row * slot.getHeight() - 45) * Camera.scale)));
+		}
+
 	}
 }

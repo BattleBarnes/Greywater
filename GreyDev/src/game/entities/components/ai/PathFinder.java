@@ -45,9 +45,9 @@ public class PathFinder {
 		while (open.size() != 0) { // while some node still left to investigate
 			bestNode = open.pop();
 
-			if (Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight || Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight - 20) { // goal!
-
+			if (Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight + 20 || Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight - 20) { // goal!
 				return bestNode.buildPath(); // return a path to that goal
+				
 			} else {
 				for (int i = 0; i < 8; i++) { // try every direction
 					if ((newNode = bestNode.makeNeighbour(i, world)) != null) {

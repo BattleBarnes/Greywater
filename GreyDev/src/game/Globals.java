@@ -1,5 +1,6 @@
 package game;
 
+import game.engine.Camera;
 import game.engine.State;
 
 import java.awt.Point;
@@ -33,6 +34,8 @@ public class Globals {
 	
 
 	public static Point isoToGrid(int x, int y) {
+		x += Camera.xOffset;
+		y += Camera.yOffset;
 		int X = x/2 + y;
 		int Y = y - x/2;
 		return new Point(X, Y);

@@ -4,6 +4,7 @@ import game.Globals;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
 import game.entities.components.ai.PathFinder;
+import game.overlay.AIInventory;
 import game.world.World;
 
 import java.awt.Point;
@@ -25,6 +26,8 @@ public class Watchman extends Mob{
 		super.walkRate = .7;
 		target = p;
 		sightRange = 1000;
+		playerFriend = false;
+		inv = new AIInventory();
 	}
 	
 	public void addPathFinder(World l){
@@ -36,7 +39,7 @@ public class Watchman extends Mob{
 	protected void getInput() {
 		sight = new Line2D.Double(target.getX(),target.getY(), getX(), getY());
 		
-		if(Globals.distance(new Point(getX(), getY()), new Point(target.getX(),target.getY()) ) < 90 && validSight){
+		if(Globals.distance(new Point(getX(), getY()), new Point(target.getX(),target.getY()) ) < 90 && validSight && ((Mob)target).isAlive()){
 			attack((Mob)target);
 			return;
 		}
@@ -76,7 +79,7 @@ public class Watchman extends Mob{
 				}
 			}else if (lastPos != 3){
 				attacking = true;
-			//	graphicsComponent.loopImg(0.8, "Attack");
+				graphicsComponent.loopImg(0.8, "Attack"+currDirection);
 			}
 		}
 
@@ -91,7 +94,7 @@ public class Watchman extends Mob{
 		
 		
 		if(((destination == null && validSight )||( Globals.distance(sight.getP1(), sight.getP2()) < 900 ))&& System.nanoTime()%47 == 0){
-			System.out.println("New path");
+			System.out.println("Pathfind");
 			p.setNewPath(new Point(getX(), getY()), new Point(target.getX(), target.getY()));
 			destination = p.getNextLoc();
 		}
@@ -99,9 +102,13 @@ public class Watchman extends Mob{
 			destination = p.getNextLoc();
 		
 		
-		if(destination == null){
+		if(destination == null && validSight){
+			System.out.println("Pathfind");
 			p.setNewPath(new Point(getX(), getY()), new Point(target.getX(), target.getY()));
 			return;
+		}
+		if(destination == null && !validSight){
+			destination = new Point(getX(), getY());
 		}
 
 		xMoveBy =  destination.x - getX();

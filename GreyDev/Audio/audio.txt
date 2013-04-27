@@ -8,4 +8,7 @@
 //S - single sound file, used all by itself (perhaps dialogue)
 //S - name,file.ext
 
-G footstep,a.wav,b.wav,c.wav,d.wav
+G footstep,a.wav,b.wav,d.wav
+
+G swing,swing1.wav,swing2.wav,swing3.wav,swing4.wav,swing5.wav,swing6.wav,swing7.wav,swing8.wav,swing9.wav
+//G swing,swing8.wav

@@ -71,9 +71,9 @@ public abstract class Entity {
 	 * @param g - Graphics object
 	 */
 	public void render(Graphics g){
-		//g.setColor(Color.PINK);
-		//Rectangle r = this.getPhysicsShape();
-		//g.drawRect(r.x, r.y, r.width, r.height);
+//		g.setColor(Color.PINK);
+//		Rectangle r = this.getPhysicsShape();
+//		g.drawRect(r.x, r.y, r.width, r.height);
 		int xPos = getX();
 		int yPos = getY();
 		Point p = Globals.getIsoCoords(xPos + spriteXOff, yPos + spriteYOff);

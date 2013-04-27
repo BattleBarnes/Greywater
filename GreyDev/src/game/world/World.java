@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class World {
@@ -39,8 +40,6 @@ public class World {
 	Wall[][] walls;
 
 	Sprite tile;
-	Sprite wall;
-	Sprite otherwall;
 	Player player;
 
 	public ArrayList<Mob> mobList;
@@ -58,7 +57,7 @@ public class World {
 
 	};
 
-	public World(Sprite t, Sprite w, Sprite ow, List<Mob> mobs, Player p) {
+	public World(Sprite t,List<Mob> mobs, Player p) {
 
 		tileWidth = t.getWidth() / 2;
 		tileHeight = t.getHeight();
@@ -66,9 +65,8 @@ public class World {
 		Globals.tileHeight = tileHeight;
 		Globals.tileWidth = t.getWidth() / 2; // same as tileHeight (square/flatspace)
 
-		wall = w;
 		tile = t;
-		otherwall = ow;
+
 
 		mobList = (ArrayList<Mob>) mobs;
 		player = p;
@@ -162,7 +160,7 @@ public class World {
 		}
 		Rectangle r = player.attRect;
 		if(r!=null){
-			player.attack((Mob)getEntityCollision(r, player));
+			player.interact((Mob)getEntityCollision(r, player));
 		}
 
 		// move the camera to follow the player
@@ -208,14 +206,21 @@ public class World {
 	}
 	
 	public Entity getEntityCollision(Shape s, Mob caller){
-		for(Entity e:mobList){
+		Mob deadMob = null;
+		for(Mob e:mobList){
 			if(e==null)
 				continue;
 			if(e == caller)
 				continue;
-			if(s.intersects(e.getPhysicsShape()))
-				return e;
+			if(s.intersects(e.getPhysicsShape())){
+				if(e.isAlive())
+					return e;
+				else
+					deadMob = e;
+			}
 		}
+		if(deadMob != null)
+			return deadMob;
 		return null;
 	}
 
@@ -232,18 +237,14 @@ public class World {
 		if(p.x > 0 && p.x < xLength && p.y > 0 && p.y < yHeight)
 			return true;
 		
-//		for (int i = 0; i < xLength; i++) {
-//			for (int j = 0; j < yHeight; j++) {
-//				if (tileMap[i][j] != null && tileMap[i][j].getPhysicsShape().contains(x, y))
-//					return true;
-//			}
-//		}
-
 		return false;
 
 	}
 
 	private void loadEnviro(int lvlno) {
+		Sprite[] floor = {new Sprite("ft1", "ft1"),new Sprite("ft2", "ft2"), new Sprite("ft3", "ft3"),new Sprite("ft4", "ft4"), new Sprite("ft5", "ft5"), new Sprite("ft6", "ft6"), new Sprite("ft7", "ft7"), new Sprite("ft8", "ft8")};
+		Sprite[] wall = {new Sprite("wt1", "wt1"),new Sprite("wt2", "wt2"), new Sprite("wt3", "wt3"),new Sprite("wt4", "wt4"), new Sprite("wt5", "wt5"), new Sprite("wt6", "wt6"), new Sprite("wt7", "wt7"), new Sprite("wt8", "wt8"), new Sprite("wt9", "wt9"), new Sprite("wt10", "wt10")};
+		Random rand = new Random();
 		try {
 
 			File readFile = new File("Level" + lvlno + ".txt");
@@ -267,7 +268,8 @@ public class World {
 					if (line.charAt(x) == '0') {
 						int xCo = x * tileWidth;
 						int yCo = y * tileHeight;
-						tileMap[x][y] = new Tile(tile, xCo, yCo);
+						
+						tileMap[x][y] = new Tile(floor[rand.nextInt(7)+1], xCo, yCo);
 					}
 				}
 			}
@@ -290,13 +292,14 @@ public class World {
 					int xCo = x * tileWidth;
 					int yCo = y * tileHeight;
 
-					if (line.charAt(x) == 'W') {
+					if (line.charAt(x) == 'W' || line.charAt(x) == 'S') {
+						int choice = rand.nextInt(9)+1;
 						xCo = x * tileWidth;
 						yCo = y * tileHeight;
-						walls[x][y] = new Wall(xCo, yCo, wall, tileWidth * 2.0 / tileHeight, tileWidth, tileHeight, player, true);
-					} else if (line.charAt(x) == 'S') {
-						walls[x][y] = new Wall(xCo, yCo, otherwall, tileWidth * (2.0) / tileHeight, tileWidth, tileHeight, player, false);
-					}
+						walls[x][y] = new Wall(xCo, yCo, wall[choice], tileWidth * 2.0 / tileHeight, tileWidth, tileHeight, player, true);
+					} //else if (line.charAt(x) == 'S') {
+					//	walls[x][y] = new Wall(xCo, yCo, otherwall, tileWidth * (2.0) / tileHeight, tileWidth, tileHeight, player, false);
+					//}
 				}
 			}
 

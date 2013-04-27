@@ -75,6 +75,8 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 	public static Trigger use;
 	public static Trigger leftClick;
 	public static Point2D mouseLoc;
+	public static Trigger spaceBar;
+	public static Trigger exit;
 	
 	public static boolean mouseClicked;
 	public static double wheelScrolled;
@@ -90,6 +92,8 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 		menu = new Trigger();
 		use = new Trigger();
 		leftClick = new Trigger();
+		spaceBar = new Trigger();
+		exit = new Trigger();
 	}
 	
 
@@ -165,10 +169,13 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 		case(KeyEvent.VK_RIGHT):;
 		case(KeyEvent.VK_NUMPAD6): right.toggle(pressed); break;
 		
-		case(KeyEvent.VK_SPACE):;
 		case(KeyEvent.VK_ENTER): use.toggle(pressed); break;
 		
-		case(KeyEvent.VK_M): menu.toggle(pressed); break;
+		case(KeyEvent.VK_I): menu.toggle(pressed); break;
+		
+		case(KeyEvent.VK_ESCAPE): exit.toggle(pressed);break;
+		
+		case(KeyEvent.VK_SPACE): spaceBar.toggle(pressed);
 				
 		}
 	
