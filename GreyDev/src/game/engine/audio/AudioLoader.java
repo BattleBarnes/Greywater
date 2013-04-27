@@ -130,7 +130,7 @@ public class AudioLoader {
 		SoundClip ci = (SoundClip) sounds.get(name);
 		if (ci == null)
 			System.out.println("Error: " + name + "not stored");
-		else
+		else if(!ci.isPlaying())
 			ci.play(toLoop);
 	} // end of play()
 

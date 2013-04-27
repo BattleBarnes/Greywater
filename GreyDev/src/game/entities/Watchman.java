@@ -1,6 +1,7 @@
 package game.entities;
 
 import game.Globals;
+import game.engine.audio.AudioLoader;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
 import game.entities.components.ai.PathFinder;
@@ -43,6 +44,12 @@ public class Watchman extends Mob{
 			attack((Mob)target);
 			return;
 		}
+		
+		if(Globals.distance(new Point(getX(), getY()), new Point(target.getX(),target.getY()) ) < 500 && HP > 0){
+			AudioLoader.playSingle("click", false);
+		}
+		//else
+		//	AudioLoader.stopSingle("click");
 
 		attacking = false;
 
@@ -94,7 +101,7 @@ public class Watchman extends Mob{
 		
 		
 		if(((destination == null && validSight )||( Globals.distance(sight.getP1(), sight.getP2()) < 900 ))&& System.nanoTime()%47 == 0){
-			System.out.println("Pathfind");
+			//System.out.println("Pathfind");
 			p.setNewPath(new Point(getX(), getY()), new Point(target.getX(), target.getY()));
 			destination = p.getNextLoc();
 		}
@@ -103,7 +110,7 @@ public class Watchman extends Mob{
 		
 		
 		if(destination == null && validSight){
-			System.out.println("Pathfind");
+			//System.out.println("Pathfind");
 			p.setNewPath(new Point(getX(), getY()), new Point(target.getX(), target.getY()));
 			return;
 		}
@@ -116,8 +123,10 @@ public class Watchman extends Mob{
 		
 	}
 	
-	private void findNearestPoint(){
-		
+	public void damage(int dmg){
+		super.damage(dmg);
+		AudioLoader.playSingle("hit",false);
 	}
+	
 
 }

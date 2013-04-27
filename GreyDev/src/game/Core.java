@@ -9,6 +9,7 @@ import game.engine.audio.AudioLoader;
 import game.engine.audio.BGMusicPlayer;
 import game.entities.Mob;
 import game.entities.Player;
+import game.entities.Sweepy;
 import game.entities.Watchman;
 import game.entities.components.Sprite;
 import game.overlay.InventoryMenu;
@@ -118,14 +119,13 @@ public class Core extends Engine {
 		// inventory screens and such.
 
 		InventoryMenu i = new InventoryMenu();
-		p = new Player(100, 200, i);
+		p = new Player(2200, 250, i);
 		OverlayManager.init(this, p);
 		// p = new Player(17000, 4000, i);
 		Watchman w1 = new Watchman(100, 400, p);
 		ArrayList<Mob> mobs = new ArrayList();
 		mobs.add(p);
 		mobs.add(w1);
-		// mobs.add(new Sweepy(900,300,p));
 
 		// item elements, will be replaced with proper tilesets later TODO
 	//	Sprite w = new Sprite("Wal2l", "Wal2l");
@@ -141,8 +141,8 @@ public class Core extends Engine {
 	 */
 	public void initNewGame() {
 		Globals.state = State.inGame;
-		// bgp = new BGMusicPlayer(new File("Audio/s1.wav"));
-		// bgp.start();
+		 bgp = new BGMusicPlayer(new File("Audio/cave.wav"));
+		 bgp.start();
 	}
 
 	/**

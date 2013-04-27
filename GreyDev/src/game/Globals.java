@@ -21,6 +21,8 @@ public class Globals {
 	public static final int NORTHWEST = 7;
 	public static State state = State.mainMenu;
 	
+
+	
 	public static int tileWidth;
 	public static int tileHeight;
 	public static Random rand = new Random();

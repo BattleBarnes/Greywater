@@ -18,7 +18,9 @@ public class AIInventory extends InventoryMenu {
 		super(4, 4);
 		Random rand = new Random();
 		if(rand.nextInt(20)> 14)
-			this.addItem(new Item("VoltaicCell", 0, 0, '1', "Voltaic Cell"));
+			this.addItem(new Item("VoltaicCell", 0, 0, 7, "Voltaic Cell"));
+		if(rand.nextInt(20)> 10)
+			this.addItem(new Item("Health", 0, 0, 1, "Health Drank"));
 
 	}
 	

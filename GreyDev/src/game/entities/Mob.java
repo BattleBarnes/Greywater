@@ -20,11 +20,11 @@ public abstract class Mob extends Entity {
 	public Entity target;
 	public Point destination;
 	boolean walks = true;
-	boolean playerFriend;
+	public boolean playerFriend;
 
 	PathFinder p;
 
-	private int HP = 100;
+	protected int HP = 100;
 	protected double walkRate = .59; // used to determine how fast a mob's walk
 										// animation cycle is
 	protected Line2D sight;
@@ -55,7 +55,7 @@ public abstract class Mob extends Entity {
 		super.tick();
 		if(HP>0)
 			walk();
-		if(HP<0 &&!graphicsComponent.isAnimating()){
+		if(HP<=0 &&!graphicsComponent.isAnimating()){
 			graphicsComponent = new Sprite(this.name, name+"Dead");
 		}
 	}

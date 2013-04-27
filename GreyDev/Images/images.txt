@@ -19,6 +19,7 @@ S Exit,exit.png
 S NewGame,newgame.png
 S HowToPlay,howtoplay.png
 S Title,title-screen.png
+S Back,back.png
 
 S Tile1,text.png
 
@@ -32,9 +33,21 @@ S inv,inventory.png
 S WeaponSlot,slot_weapon.png
 S Crafting,slot_craft.png
 
+S Health,HealthPotion.png
 
 
-S Sweepy,sweep.png
+//S Sweepy,sweep.png
+S SweepyNorth,sweepy_north.png
+S SweepySouth,sweepy_south.png
+S SweepyEast,sweepy_east.png
+S SweepyWest,sweepy_west.png
+S SweepySouthWest,sweepy_southwest.png
+S SweepySouthEast,sweepy_southeast.png
+S SweepyNorthEast,sweepy_northeast.png
+S SweepyNorthWest,sweepy_northwest.png
+
+
+S column,Wall_pipe_1.png
 
 G TavishDie,Tavish_die_1.png,Tavish_die_2.png,Tavish_die_3.png,Tavish_die_4.png,Tavish_die_5.png
 G WatchmanDie,Watchman_die_1.png,Watchman_die_2.png,Watchman_die_3.png,Watchman_die_4.png,Watchman_die_5.png

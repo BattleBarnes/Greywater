@@ -6,7 +6,8 @@ public enum State {
 	inGame(true, false, false, false),
 	pauseMenu(false, true, true, false),
 	gameMenu(true,true,false,false),
-	gameEnding(false, false, false, true);
+	gameEnding(false, false, false, true),
+	gameWon(false,true,true,false);
 
 	public boolean gameRunning, drawMenu, isPaused, finishedOff;
 	

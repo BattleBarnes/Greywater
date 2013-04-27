@@ -7,7 +7,11 @@ import game.engine.InputHandler;
 import game.engine.State;
 import game.entities.components.Sprite;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class StartMenu {
 	// String cursor = "";
@@ -23,13 +27,14 @@ public class StartMenu {
 	Sprite newGame = new Sprite("NewGame", "NewGame");
 	Sprite howPlay = new Sprite("HowToPlay", "HowToPlay");
 	Sprite exit = new Sprite("Exit", "Exit");
+	Sprite back = new Sprite("Back", "Back");
 
 	Sprite[] options = { newGame, howPlay, credits, exit };
 
 	int option = 0;
 
-	// Font menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, 40);
-	// FontMetrics fm;
+	Font menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, 60);
+	FontMetrics fm;
 
 	int cursorLength = 0;
 
@@ -41,23 +46,78 @@ public class StartMenu {
 	}
 
 	public void render(Graphics g) {
-		title.render(g, 0, 0);
-		// if(fm == null){
-		// fm = g.getFontMetrics(menuFont);
-		// }
-		// g.setColor(Color.darkGray);
-		// g.setFont(menuFont);
-		if (titleScrn)
+		if (Globals.state == State.gameWon) {
+			title.render(g, 0, 0);
+			g.setColor(Color.ORANGE);
+			g.setFont(menuFont);
+			String s0 = "You Escaped! You win!";
+			Graphics2D g2 = (Graphics2D) g;
+			int strw = fm.stringWidth(s0);
+			g2.drawString(s0, (int) (Camera.width / 3 - strw / 2), Camera.height / 3 + 50);
+			g2.scale(1 / Camera.scale, 1 / Camera.scale);
+			return;
+
+		}
+		if (fm == null) {
+			fm = g.getFontMetrics(menuFont);
+		}
+		if (titleScrn) {
+			title.render(g, 0, 0);
 			for (int i = 0; i < 4; i++) {
 				options[i].render(g, 0, 0);
 				if (option == i) {
 					cursor.render(g, 190, 4 * Camera.height / 11 + 110 * i);
 				}
 			}
+		}
 		if (howPlayScrn) {
+			g.setColor(Color.ORANGE);
+			g.setFont(menuFont);
+			String s0 = "Ms Sweepy has gotten lost in the sewers again!";
+			String s1 = "The objective of the game is to find your robot - Ms Sweepy.";
+			String s2 = "Be careful of the Watchmen, the automated security drones --";
+			String s3 = "they attack indiscriminately. Find Sweepy and escape the sewers.";
+			String s4 = "CONTROLS";
+			String s5 = "WASD or Arrow Keys to move";
+			String s6 = "Spacebar or click to attack/loot enemies";
+			String s7 = "ESC to go to menu.";
+			String[] s = { s0, s1, s2, s3, "", s4, s5, s6, s7 };
+			Graphics2D g2 = (Graphics2D) g;
+			for (int i = 0; i < s.length; i++) {
+				int strw = fm.stringWidth(s[i]);
+				g2.drawString(s[i], (int) (Camera.width / 2 - strw / 2), Camera.height / 3 + 50 * i);
+				g2.scale(1 / Camera.scale, 1 / Camera.scale);
+
+			}
+			back.render(g, Camera.width / 2 - 105, Camera.height - 200);
+			cursor.render(g, Camera.width / 2 - 160, Camera.height - 200);
 
 		}
 		if (creditsScrn) {
+
+			g.setColor(Color.ORANGE);
+			g.setFont(menuFont);
+			String s0 = "Jill Graves   - Graphics Wizard";
+			String s1 = "Dominique Barnes  - Pixelmancer";
+			String s2 = "Grace Hammons    - Imagemeister";
+			String s3 = "Jeremy Barnes  - KeyboardMasher";
+			String s4 = "SPECIAL THANKS";
+			String s5 = "Iwan Gabovitch - http://opengameart.org/";
+			String s6 = "Alvinwhatup2 - http://freesound.org/";
+			String s7 = "FreqMan - http://freesound.org/people/FreqMan/";
+			String s8 = "Brandon75689 - http://opengameart.org/";
+			String s9 = "VERY SPECIAL THANKS";
+			String s10 = "Coffee";
+			String[] s = { s0, s1, s2, s3, "", s4, s5, s6, s7, s8, "", s9, s10 };
+			Graphics2D g2 = (Graphics2D) g;
+			for (int i = 0; i < s.length; i++) {
+				int strw = fm.stringWidth(s[i]);
+				g2.drawString(s[i], (int) (Camera.width / 2 - strw / 2), 100 + 50 * i);
+				g2.scale(1 / Camera.scale, 1 / Camera.scale);
+
+			}
+			back.render(g, Camera.width / 2 - 105, Camera.height - 200);
+			cursor.render(g, Camera.width / 2 - 160, Camera.height - 200);
 
 		}
 	}

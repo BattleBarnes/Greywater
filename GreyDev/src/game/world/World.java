@@ -9,7 +9,9 @@ import game.Globals;
 import game.engine.Camera;
 import game.entities.Mob;
 import game.entities.Player;
+import game.entities.Sweepy;
 import game.entities.Wall;
+import game.entities.Watchman;
 import game.entities.components.Entity;
 import game.entities.components.Sprite;
 
@@ -207,20 +209,25 @@ public class World {
 	
 	public Entity getEntityCollision(Shape s, Mob caller){
 		Mob deadMob = null;
+		Mob friendMob = null;
 		for(Mob e:mobList){
 			if(e==null)
 				continue;
 			if(e == caller)
 				continue;
 			if(s.intersects(e.getPhysicsShape())){
-				if(e.isAlive())
+				if(e.isAlive() && !(e.playerFriend))
 					return e;
+				else if(e.playerFriend)
+					friendMob = e;
 				else
 					deadMob = e;
 			}
 		}
 		if(deadMob != null)
 			return deadMob;
+		else if(friendMob !=null)
+					return friendMob;
 		return null;
 	}
 
@@ -245,6 +252,7 @@ public class World {
 		Sprite[] floor = {new Sprite("ft1", "ft1"),new Sprite("ft2", "ft2"), new Sprite("ft3", "ft3"),new Sprite("ft4", "ft4"), new Sprite("ft5", "ft5"), new Sprite("ft6", "ft6"), new Sprite("ft7", "ft7"), new Sprite("ft8", "ft8")};
 		Sprite[] wall = {new Sprite("wt1", "wt1"),new Sprite("wt2", "wt2"), new Sprite("wt3", "wt3"),new Sprite("wt4", "wt4"), new Sprite("wt5", "wt5"), new Sprite("wt6", "wt6"), new Sprite("wt7", "wt7"), new Sprite("wt8", "wt8"), new Sprite("wt9", "wt9"), new Sprite("wt10", "wt10")};
 		Random rand = new Random();
+		Sprite column = new Sprite("column", "column");
 		try {
 
 			File readFile = new File("Level" + lvlno + ".txt");
@@ -297,9 +305,17 @@ public class World {
 						xCo = x * tileWidth;
 						yCo = y * tileHeight;
 						walls[x][y] = new Wall(xCo, yCo, wall[choice], tileWidth * 2.0 / tileHeight, tileWidth, tileHeight, player, true);
-					} //else if (line.charAt(x) == 'S') {
-					//	walls[x][y] = new Wall(xCo, yCo, otherwall, tileWidth * (2.0) / tileHeight, tileWidth, tileHeight, player, false);
-					//}
+					} else if (line.charAt(x) == 'C') {
+						walls[x][y] = new Wall(xCo, yCo, column, tileWidth * (2.0) / tileHeight, tileWidth, tileHeight, player, false);
+					}
+					else if(line.charAt(x) == 'T'){
+						Watchman w = new Watchman(xCo, yCo, player);
+						w.addPathFinder(this);
+						mobList.add(w);
+					}
+					else if(line.charAt(x) == 'X'){
+						 mobList.add(new Sweepy(xCo,yCo,player));
+					}
 				}
 			}
 

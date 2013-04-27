@@ -107,6 +107,13 @@ public class SoundClip implements LineListener {
 			clip.start(); // start playing
 		}
 	}
+	
+	public boolean isPlaying(){
+		if(clip!=null)
+			return clip.isRunning();
+		else
+			return false;
+	}
 
 	public void stop()
 	// stop and reset clip to its start

@@ -112,7 +112,7 @@ public class Wall extends Entity{
 		if(distance > 20)
 			graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
 		else{
-			graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.54f);
+			graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.3f);
 		}
 
 

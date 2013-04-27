@@ -1,6 +1,7 @@
 package game.entities.items;
 
 import game.engine.Camera;
+import game.entities.Mob;
 import game.entities.components.Entity;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
@@ -52,6 +53,13 @@ public class Item extends Entity {
 		if(name.contains("Electric"))
 			return 20;
 		return 10;
+	}
+	
+	public int use(){
+		if(name.contains("Health"))
+			return 25;
+		else
+			return 0;
 	}
 	
 

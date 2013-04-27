@@ -27,6 +27,7 @@ public class InventoryMenu {
 	protected Sprite craft;
 	protected Sprite weap;
 	private Sprite area = new Sprite("inv", "inv");
+	public int buff;
 
 
 
@@ -157,7 +158,15 @@ public class InventoryMenu {
 					}
 				}
 			}
-		} else {
+		}else if(InputHandler.rightClick.keyTapped  && Globals.state == State.gameMenu){
+			Slot s = calcSlot(InputHandler.mouseLoc);
+			if(s != null && !s.isEmpty()){
+				if(s.getItem().itemID == 1){
+					buff = s.getItem().use();
+					s.grabItem();
+				}
+			}
+		}else {
 			if (Globals.state == State.gameMenu) {
 				Slot s = calcSlot(InputHandler.mouseLoc);
 				if (s != null) {

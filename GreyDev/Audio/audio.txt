@@ -11,4 +11,7 @@
 G footstep,a.wav,b.wav,d.wav
 
 G swing,swing1.wav,swing2.wav,swing3.wav,swing4.wav,swing5.wav,swing6.wav,swing7.wav,swing8.wav,swing9.wav
+
+S click,click.wav
+S hit,hit.wav
 //G swing,swing8.wav

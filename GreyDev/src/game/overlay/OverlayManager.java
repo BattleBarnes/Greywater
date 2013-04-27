@@ -63,6 +63,9 @@ public class OverlayManager {
 			g2.scale(Camera.width * 1.0 / light.getWidth(), Camera.height * 1.0/ light.getHeight());
 			light.render(g2, 0, 0);
 			g2.scale(light.getWidth() * 1.0 / Camera.width, light.getHeight()* 1.0 / Camera.height);
+			if(currentLoot != null){
+				currentLoot.render(g);
+			}
 
 			headsUp.render(g);
 		}
@@ -71,9 +74,7 @@ public class OverlayManager {
 		else if (Globals.state == State.gameMenu) {
 			inv.render(g);
 		}
-		if(currentLoot != null){
-			currentLoot.render(g);
-		}
+		
 		g.setColor(Color.PINK);
 		
 		//g.drawString(displayText, 100, 100);

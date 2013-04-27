@@ -77,6 +77,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 	public static Point2D mouseLoc;
 	public static Trigger spaceBar;
 	public static Trigger exit;
+	public static Trigger rightClick;
 	
 	public static boolean mouseClicked;
 	public static double wheelScrolled;
@@ -94,6 +95,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 		leftClick = new Trigger();
 		spaceBar = new Trigger();
 		exit = new Trigger();
+		rightClick = new Trigger();
 	}
 	
 
@@ -182,6 +184,8 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 	if(me != null)
 		switch(me.getButton()){
 		case(MouseEvent.BUTTON1): leftClick.toggle(pressed, me.getLocationOnScreen()); break;	
+		case(MouseEvent.BUTTON3):;
+		case(MouseEvent.BUTTON2): rightClick.toggle(pressed, me.getLocationOnScreen());break;
 		}
 		
 		

@@ -32,7 +32,7 @@ public class HUDge {
 	public HUDge(){
 		inv = new Button((int)(hud.getWidth()/2*Camera.scale - 45), (int)(Camera.height - hud.getHeight()*Camera.scale), 90,90);
 		health = new Sprite("hp100", "hp100");
-		mana = new Sprite("mp100", "mp100");
+	//	mana = new Sprite("mp100", "mp100");
 	}
 	
 	public void drawText(String text){
@@ -47,7 +47,7 @@ public class HUDge {
 		g2.scale(Camera.scale, Camera.scale);
 		hud.render(g2, 0, (int) (Camera.height/Camera.scale - hud.getHeight()) );
 		health.render(g2, 0, (int) (Camera.height/Camera.scale - hud.getHeight()) );
-		mana.render(g2, 0, (int) (Camera.height/Camera.scale - hud.getHeight()) );
+	//	mana.render(g2, 0, (int) (Camera.height/Camera.scale - hud.getHeight()) );
 		FontMetrics fm = g.getFontMetrics(menuFont); // or another font
 		int strw = fm.stringWidth(drawText);
 		
@@ -57,8 +57,15 @@ public class HUDge {
 	}
 	
 	public void update(int hp, int mp){
-		health = hpSprites[(hp - hp%10)/10];
-		mana = mpSprites[(mp - mp%10)/10];
+		int hpVal = (hp - hp%10)/10;
+		if(hpVal > 11)
+			hpVal = 11;
+		
+		if(hpVal < 0){
+			hpVal = 0;
+		}
+		health = hpSprites[hpVal];
+	//	mana = mpSprites[(mp - mp%10)/10];
 		if(InputHandler.leftClick.keyTapped){
 			if(inv.getPhysicsShape().contains(InputHandler.mouseLoc)){
 				if(Globals.state != State.gameMenu)

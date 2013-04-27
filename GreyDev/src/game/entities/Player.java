@@ -60,7 +60,8 @@ public class Player extends Mob {
 	 * and sets the graphics component accordingly.
 	 */
 	protected void getInput() {
-
+		damage(-inv.buff);
+		inv.buff = 0;
 		if (graphicsComponent.isAnimating() && !attacking && physicsComponent.isMoving()) {
 			lastPos = graphicsComponent.seriesPosition;
 			if (lastPos == 0 || lastPos == 3) {
