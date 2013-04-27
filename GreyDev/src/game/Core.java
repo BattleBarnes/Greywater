@@ -88,6 +88,11 @@ public class Core extends Engine {
 	 * Updates game state
 	 */
 	protected void gameTick() {
+		if(!bgp.playing()){
+			 bgp = new BGMusicPlayer(new File("Audio/cave.wav"));
+			 bgp.start();
+		}
+
 		OverlayManager.tick();
 		
 		if(InputHandler.exit.keyTapped){
@@ -110,6 +115,9 @@ public class Core extends Engine {
 	 * Initialize game and menu elements pre-game.
 	 */
 	protected void init() {
+		bgp = new BGMusicPlayer(new File("Audio/Escadre.wav"));
+		 bgp.start();
+		
 		ImageLoader.init("images.txt");
 		AudioLoader.init("audio.txt");
 
@@ -140,6 +148,7 @@ public class Core extends Engine {
 	 * Start a brand new game
 	 */
 	public void initNewGame() {
+		bgp.stop();
 		Globals.state = State.inGame;
 		 bgp = new BGMusicPlayer(new File("Audio/cave.wav"));
 		 bgp.start();

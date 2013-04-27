@@ -72,6 +72,8 @@ public class StartMenu {
 		}
 		if (howPlayScrn) {
 			g.setColor(Color.ORANGE);
+			menuFont =  new Font("Baskerville Old Face", Font.TRUETYPE_FONT, 60);
+			fm = g.getFontMetrics(menuFont);
 			g.setFont(menuFont);
 			String s0 = "Ms Sweepy has gotten lost in the sewers again!";
 			String s1 = "The objective of the game is to find your robot - Ms Sweepy.";
@@ -85,7 +87,7 @@ public class StartMenu {
 			Graphics2D g2 = (Graphics2D) g;
 			for (int i = 0; i < s.length; i++) {
 				int strw = fm.stringWidth(s[i]);
-				g2.drawString(s[i], (int) (Camera.width / 2 - strw / 2), Camera.height / 3 + 50 * i);
+				g2.drawString(s[i], (int) (Camera.width / 2 - strw / 2), 100 + 70 * i);
 				g2.scale(1 / Camera.scale, 1 / Camera.scale);
 
 			}
@@ -94,25 +96,27 @@ public class StartMenu {
 
 		}
 		if (creditsScrn) {
-
+			menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, 50);
 			g.setColor(Color.ORANGE);
 			g.setFont(menuFont);
-			String s0 = "Jill Graves   - Graphics Wizard";
-			String s1 = "Dominique Barnes  - Pixelmancer";
-			String s2 = "Grace Hammons    - Imagemeister";
-			String s3 = "Jeremy Barnes  - KeyboardMasher";
+			fm = g.getFontMetrics(menuFont);
+			String s0 = "Jill Graves - Graphics Wizard";
+			String s1 = "Dominique Barnes - Pixelmancer";
+			String s2 = "Grace Hammons - Imagemeister";
+			String s3 = "Jeremy Barnes - KeyboardMasher";
 			String s4 = "SPECIAL THANKS";
+			String s45 = "Alexandr Zhelanov - http://opengameart.org/";
 			String s5 = "Iwan Gabovitch - http://opengameart.org/";
 			String s6 = "Alvinwhatup2 - http://freesound.org/";
 			String s7 = "FreqMan - http://freesound.org/people/FreqMan/";
 			String s8 = "Brandon75689 - http://opengameart.org/";
 			String s9 = "VERY SPECIAL THANKS";
 			String s10 = "Coffee";
-			String[] s = { s0, s1, s2, s3, "", s4, s5, s6, s7, s8, "", s9, s10 };
+			String[] s = { s0, s1, s2, s3, "", s4, s45, s5, s6, s7, s8, "", s9, s10 };
 			Graphics2D g2 = (Graphics2D) g;
 			for (int i = 0; i < s.length; i++) {
 				int strw = fm.stringWidth(s[i]);
-				g2.drawString(s[i], (int) (Camera.width / 2 - strw / 2), 100 + 50 * i);
+				g2.drawString(s[i], (int) (Camera.width / 2 - strw / 2), 50+ 60 * i);
 				g2.scale(1 / Camera.scale, 1 / Camera.scale);
 
 			}

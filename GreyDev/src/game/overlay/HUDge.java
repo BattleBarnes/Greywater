@@ -58,8 +58,8 @@ public class HUDge {
 	
 	public void update(int hp, int mp){
 		int hpVal = (hp - hp%10)/10;
-		if(hpVal > 11)
-			hpVal = 11;
+		if(hpVal >= 11)
+			hpVal = 10;
 		
 		if(hpVal < 0){
 			hpVal = 0;

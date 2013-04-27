@@ -107,6 +107,10 @@ public class BGMusicPlayer implements Runnable {
 		playing = false;
 		line.stop();
 	}
+	
+	public boolean playing(){
+		return playing;
+	}
 
 }
 
