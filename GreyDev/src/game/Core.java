@@ -96,9 +96,9 @@ public class Core extends Engine {
 		OverlayManager.tick();
 		
 		if(InputHandler.exit.keyTapped){
-			if(Globals.state.gameRunning)
-				Globals.state = State.mainMenu;
-			else
+			if(Globals.state == State.inGame)
+				Globals.state = State.pauseMenu;
+			else if(Globals.state == State.pauseMenu)
 				Globals.state = State.inGame;
 		}
 		

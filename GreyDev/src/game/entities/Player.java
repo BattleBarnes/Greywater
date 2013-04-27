@@ -110,10 +110,10 @@ public class Player extends Mob {
 			Point r = (Point) InputHandler.mouseLoc;
 			Point p = Globals.isoToGrid(r.x, r.y);
 			lastClick = p;
-			attRect = new Rectangle(p.x - 50, p.y - 50, 100, 100);
+			attRect = new Rectangle(p.x - 70, p.y - 70, 140, 140);
 		} else if (InputHandler.spaceBar.heldDown && !attacking) {
 			Rectangle r = this.getPhysicsShape();
-			attRect = new Rectangle(r.x - 60, r.y - 60, r.width + 120, r.height + 120);
+			attRect = new Rectangle(r.x - 90, r.y - 90, r.width + 180, r.height + 180);
 		} else if (target != null)
 			attack((Mob) target);
 		else {
@@ -198,9 +198,9 @@ public class Player extends Mob {
 					damMod += inv.getWeap().getDamageMod();
 				}
 				int chance = Globals.D(20);
-				System.out.println("Nat" + chance);
+				//System.out.println("Nat" + chance);
 				if (chance + hitMod > 2) {
-					damage +=  damMod + Globals.D(4) + Globals.D(4) + Globals.D(4)+ Globals.D(4);
+					damage +=  damMod + Globals.D(6) + Globals.D(6) + Globals.D(6)+ Globals.D(6);
 					enemy.damage(damage);
 				}
 
