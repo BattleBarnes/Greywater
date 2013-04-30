@@ -109,7 +109,7 @@ public class Wall extends Entity{
 		int distance = (int)Globals.distance(plgrid,pwgrid);
 		distance = distance/Globals.tileHeight;
 		
-		if(distance > 20)
+		if(distance > 10)
 			graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
 		else{
 			graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.3f);
