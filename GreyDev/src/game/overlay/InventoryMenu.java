@@ -5,8 +5,8 @@ import game.engine.Camera;
 import game.engine.InputHandler;
 import game.engine.State;
 import game.entities.components.Sprite;
+import game.entities.items.Crafting;
 import game.entities.items.Item;
-import game.entities.items.Recipes;
 
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
@@ -29,8 +29,6 @@ public class InventoryMenu {
 	private Sprite area = new Sprite("inv", "inv");
 	public int buff;
 
-
-
 	/**
 	 * Constructor, sets up the inventory slot image, and fills the inventory
 	 * list with nulls (null = empty in this system)
@@ -43,22 +41,21 @@ public class InventoryMenu {
 		weap = new Sprite("WeaponSlot", "WeaponSlot");
 		craft = new Sprite("Crafting", "Crafting");
 
-
 		setNewInv();
-
-		this.addItem(new Item("Wrench", 0, 0, 5, "Shop Wrench"));
 
 
 		for (int i = 0; i < 4; i++) {
 			int col = i % 2; // because inventory is a 1D arraylist, the 2D grid effect is achieved via math.
 			int row = 2 - i / 2;
-			craftarea.add(new Slot(craft, (int) (Camera.width - (Camera.scale * ( -1*craft.getWidth() * col + area.getWidth() / 2 + craft.getWidth()))), (int) ((60 + row * craft.getHeight()) * Camera.scale)));
+			craftarea.add(new Slot(craft, (int) (Camera.width - (Camera.scale * (-1 * craft.getWidth() * col + area.getWidth() / 2 + craft.getWidth()))), (int) ((60 + row * craft.getHeight()) * Camera.scale)));
 
 		}
 
-		equip.add(new Slot(weap, (int) (Camera.width - (Camera.scale * ( -1*weap.getWidth()/2 + area.getWidth() / 2 + craft.getWidth()))), (20)));
+		equip.add(new Slot(weap, (int) (Camera.width - (Camera.scale * (-1 * weap.getWidth() / 2 + area.getWidth() / 2 + craft.getWidth()))), (20)));
 
 		craftOutput = new Slot(slot, (int) (craftarea.get(3).getX() + 100 * Camera.scale), (int) (craftarea.get(3).getY()));
+		
+		this.addItem(new Item("Wrench", 0, 0, 5, "Shop Wrench"));
 	}
 
 	public InventoryMenu(int r, int c) {
@@ -67,7 +64,6 @@ public class InventoryMenu {
 		ROWS = r;
 		COLUMNS = c;
 
-		
 		int w = Camera.width;
 		Camera.width /= 4;
 		setNewInv();
@@ -137,7 +133,6 @@ public class InventoryMenu {
 	 * location). If no item is selected, it will try to select one.
 	 */
 	public void update() {
-		craft();
 		if (objectSelected) {// make selection follow the mouse
 			if (InputHandler.leftClick.keyTapped) {
 				placeItem(calcSlot(InputHandler.mouseLoc)); // place it if mouse
@@ -150,23 +145,23 @@ public class InventoryMenu {
 			grabItem(InputHandler.mouseLoc); // pick up item from inventory
 			System.out.println(selectedItem);
 			if (!objectSelected && craftOutput.getPhysicsShape().contains(InputHandler.mouseLoc)) {
-				if(!craftOutput.isEmpty()){
+				if (!craftOutput.isEmpty()) {
 					objectSelected = true;
 					selectedItem = craftOutput.grabItem();
-					for(Slot s:craftarea){
+					for (Slot s : craftarea) {
 						s.grabItem();
 					}
 				}
 			}
-		}else if(InputHandler.rightClick.keyTapped  && Globals.state == State.gameMenu){
+		} else if (InputHandler.rightClick.keyTapped && Globals.state == State.gameMenu) {
 			Slot s = calcSlot(InputHandler.mouseLoc);
-			if(s != null && !s.isEmpty()){
-				if(s.getItem().itemID == 1){
+			if (s != null && !s.isEmpty()) {
+				if (s.getItem().itemID == 1) {
 					buff = s.getItem().use();
 					s.grabItem();
 				}
 			}
-		}else {
+		} else {
 			if (Globals.state == State.gameMenu) {
 				Slot s = calcSlot(InputHandler.mouseLoc);
 				if (s != null) {
@@ -257,8 +252,8 @@ public class InventoryMenu {
 		if (craftOutput != null)
 			if (craftOutput.getPhysicsShape().contains(mouse)) {
 				selectedItem = craftOutput.grabItem(); // it is selected
-				if (selectedItem != null){
-					for(Slot s:craftarea){
+				if (selectedItem != null) {
+					for (Slot s : craftarea) {
 						s.grabItem();
 					}
 					objectSelected = true;
@@ -282,41 +277,42 @@ public class InventoryMenu {
 			selectedItem = null; // item is no longer selected
 			objectSelected = false;
 		}
+		craft();
 	}
 
 	private void craft() {
-		int s1 = 0; int s2 = 0; int s3 = 0; int s4 = 0;
+		int s1 = 0;
+		int s2 = 0;
+		int s3 = 0;
+		int s4 = 0;
 		if (!craftarea.get(0).isEmpty()) {
-			s1= craftarea.get(0).getItem().itemID;
+			s1 = craftarea.get(0).getItem().itemID;
 		}
 		if (!craftarea.get(1).isEmpty()) {
-			s2= craftarea.get(1).getItem().itemID;
+			s2 = craftarea.get(1).getItem().itemID;
 		}
 		if (!craftarea.get(2).isEmpty()) {
-			s3= craftarea.get(2).getItem().itemID;
+			s3 = craftarea.get(2).getItem().itemID;
 		}
 		if (!craftarea.get(3).isEmpty()) {
-			s4= craftarea.get(3).getItem().itemID;
+			s4 = craftarea.get(3).getItem().itemID;
 		}
-		int newItem = s1+s2+s3+s4;
-		if(!craftOutput.isEmpty()){
-			if(craftOutput.getItem().itemID == newItem)
-				return;
-		}
-		Item n = Recipes.craft(newItem);
-		
-		if (n != null){
-			if(craftOutput.isEmpty())
-				craftOutput.add(n);
-			else{
-				craftOutput.grabItem();
-				craftOutput.add(n);
+		int[] newItem = { s1, s2, s3, s4 };
+		if (craftOutput.isEmpty()) {
+
+			Item n = Crafting.craft(newItem);
+
+			if (n != null) {
+				if (craftOutput.isEmpty())
+					craftOutput.add(n);
+				else {
+					craftOutput.grabItem();//TODO is this line necessary?
+					craftOutput.add(n);
+				}
+			} else {
+				craftOutput.grabItem();//TODO is this line necessary?
 			}
 		}
-		else{
-			craftOutput.grabItem();
-		}
-
 	}
 
 	public Item getWeap() {
@@ -330,7 +326,7 @@ public class InventoryMenu {
 									// 2D grid effect is achieved via math.
 			int row = ROWS - i / COLUMNS;
 
-			inv.add(new Slot(slot, (int) (Camera.width - (Camera.scale *(slot.getWidth()*(COLUMNS+1) - (slot.getWidth() * col) - 35))), (int) ((area.getHeight()/2 + row * slot.getHeight() - 45) * Camera.scale)));
+			inv.add(new Slot(slot, (int) (Camera.width - (Camera.scale * (slot.getWidth() * (COLUMNS + 1) - (slot.getWidth() * col) - 35))), (int) ((area.getHeight() / 2 + row * slot.getHeight() - 45) * Camera.scale)));
 		}
 
 	}

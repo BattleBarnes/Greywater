@@ -5,7 +5,6 @@ import game.engine.Camera;
 import game.engine.InputHandler;
 import game.engine.State;
 import game.entities.items.Item;
-import game.entities.items.Recipes;
 
 import java.awt.Graphics;
 import java.awt.geom.Point2D;

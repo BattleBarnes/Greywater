@@ -14,10 +14,10 @@ public class Item extends Entity {
 	public int itemID = 00;
 	
 	
-	public Item(String name, int x, int y, int code, String displayName){
+	public Item(String imgName, int x, int y, int code, String displayName){
 		this.name = displayName;
 		itemID = code;
-		graphicsComponent = new Sprite(name, name);
+		graphicsComponent = new Sprite(imgName, imgName);
 		physicsComponent = new Tangible(x, y, graphicsComponent.getWidth(), graphicsComponent.getHeight(), 0);
 	}
 

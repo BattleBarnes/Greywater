@@ -88,14 +88,23 @@ L TavishAttackSouthWest,TFSW.png,3
 
 
 //sewer tiles
-S ft1,floor_tile_1.png
-S ft2,floor_tile_2.png
-S ft3,floor_tile_3.png
-S ft4,floor_tile_4.png
-S ft5,floor_tile_5.png
-S ft6,floor_tile_6.png
-S ft7,floor_tile_7.png
-S ft8,floor_tile_8.png
+//S ft1,floor_tile_1.png
+//S ft2,floor_tile_2.png
+//S ft3,floor_tile_3.png
+//S ft4,floor_tile_4.png
+//S ft5,floor_tile_5.png
+//S ft6,floor_tile_6.png
+//S ft7,floor_tile_7.png
+//S ft8,floor_tile_8.png
+S ft1,textured_tile_1.png
+S ft2,textured_tile_1.png
+S ft3,textured_tile_1.png
+S ft4,textured_tile_1.png
+S ft5,textured_tile_1.png
+S ft6,textured_tile_1.png
+S ft7,textured_tile_1.png
+S ft8,textured_tile_1.png
+
 
 //sewer walls
 S wt1,wall_tile_1.png
