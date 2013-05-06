@@ -277,7 +277,7 @@ public class World {
 						int xCo = x * tileWidth;
 						int yCo = y * tileHeight;
 						
-						tileMap[x][y] = new Tile(floor[rand.nextInt(7)+1], xCo, yCo);
+						tileMap[x][y] = new Tile(floor[rand.nextInt(8)], xCo, yCo);
 					}
 				}
 			}
@@ -301,7 +301,7 @@ public class World {
 					int yCo = y * tileHeight;
 
 					if (line.charAt(x) == 'W' || line.charAt(x) == 'S') {
-						int choice = rand.nextInt(9)+1;
+						int choice = rand.nextInt(9);
 						xCo = x * tileWidth;
 						yCo = y * tileHeight;
 						walls[x][y] = new Wall(xCo, yCo, wall[choice], tileWidth * 2.0 / tileHeight, tileWidth, tileHeight, player, true);

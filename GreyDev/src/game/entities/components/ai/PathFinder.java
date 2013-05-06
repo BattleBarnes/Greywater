@@ -7,7 +7,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 public class PathFinder {
-
+	private final int MAXRETRIES = 350;
+	int retries = 0;
 	ArrayList<Point> path;
 	private World world;
 	int pathIndex = 0;
@@ -20,6 +21,8 @@ public class PathFinder {
 	public void setNewPath(Point start, Point goal) {
 		path = aStar(start, goal);
 		pathIndex = 0;
+		System.out.println(retries);
+		retries = 0;
 	}
 
 	public Point getNextLoc() {
@@ -43,7 +46,12 @@ public class PathFinder {
 		NodeList closed = new NodeList();
 
 		while (open.size() != 0) { // while some node still left to investigate
+			retries++;
 			bestNode = open.pop();
+			
+			if(retries >= MAXRETRIES){
+				return bestNode.buildPath();
+			}
 
 			if (Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight + 20 || Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight - 20) { // goal!
 				return bestNode.buildPath(); // return a path to that goal
@@ -56,14 +64,13 @@ public class PathFinder {
 						// if this tile already has a cheaper open or closed
 						// node then ignore the new node
 
-						if ((oldVer != null)
-								&& (oldVer.getCostFromStart() <= newCost))
+						if ((oldVer != null) && (oldVer.getCostFromStart() <= newCost))
 							continue;
-						else if (((oldVer = closed.findNode(newNode.getPoint())) != null)
-								&& (oldVer.getCostFromStart() <= newCost))
+						else if (((oldVer = closed.findNode(newNode.getPoint())) != null) && (oldVer.getCostFromStart() <= newCost))
 							continue;
-						else { // store the new/improved node, removing the old
-								// one
+						else if((oldVer != null) &&oldVer.getCostFromStart() <= 3000)
+							continue;
+						else { // store the new/improved node, removing the old one
 							newNode.costToGoal(goalLoc);
 							// delete the old details (if they exist)
 							closed.delete(newNode.getPoint()); // may do nothing

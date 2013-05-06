@@ -26,7 +26,7 @@ public class Watchman extends Mob{
 		spriteYOff = -graphicsComponent.getHeight() + 65;
 		super.walkRate = .7;
 		target = p;
-		sightRange = 1000;
+		sightRange = 700;
 		playerFriend = false;
 		inv = new AIInventory();
 	}
@@ -53,11 +53,11 @@ public class Watchman extends Mob{
 
 		attacking = false;
 
-		xMoveBy = 1;
+		xMoveBy = 0;
 		yMoveBy = 0;
 		
 
-			pathFind();
+		pathFind();
 	}
 	
 
@@ -100,7 +100,7 @@ public class Watchman extends Mob{
 	private void pathFind(){
 		
 		
-		if(((destination == null && validSight )||( Globals.distance(sight.getP1(), sight.getP2()) < 900 ))&& System.nanoTime()%47 == 0){
+		if(((destination == null && validSight )||( Globals.distance(sight.getP1(), sight.getP2()) < 300 ))&& System.nanoTime()%47 == 0){
 			//System.out.println("Pathfind");
 			p.setNewPath(new Point(getX(), getY()), new Point(target.getX(), target.getY()));
 			destination = p.getNextLoc();

@@ -96,15 +96,22 @@ L TavishAttackSouthWest,TFSW.png,3
 //S ft6,floor_tile_6.png
 //S ft7,floor_tile_7.png
 //S ft8,floor_tile_8.png
-S ft1,textured_tile_1.png
-S ft2,textured_tile_1.png
-S ft3,textured_tile_1.png
-S ft4,textured_tile_1.png
-S ft5,textured_tile_1.png
-S ft6,textured_tile_1.png
-S ft7,textured_tile_1.png
-S ft8,textured_tile_1.png
-
+//S ft1,textured_tile_1.png
+//S ft2,textured_tile_1.png
+//S ft3,textured_tile_1.png
+//S ft4,textured_tile_1.png
+//S ft5,textured_tile_1.png
+///S ft6,textured_tile_1.png
+//S ft7,textured_tile_1.png
+//S ft8,textured_tile_1.png
+S ft1,grassland_tile_1.png
+S ft2,grassland_tile_2.png
+S ft3,grassland_tile_3.png
+S ft4,grassland_tile_4.png
+S ft5,grassland_tile_5.png
+S ft6,grassland_tile_1.png
+S ft7,grassland_tile_2.png
+S ft8,grassland_tile_3.png
 
 //sewer walls
 S wt1,wall_tile_1.png
@@ -121,29 +128,10 @@ S wt10,wall_tile_10.png
 //overlays
 S light,light.png
 S hud,HUD-base.png
-S hp0,health_0.png
-S hp10,health_10.png
-S hp20,health_20.png
-S hp30,health_30.png
-S hp40,health_40.png
-S hp50,health_50.png
-S hp60,health_60.png
-S hp70,health_70.png
-S hp80,health_80.png
-S hp90,health_90.png
-S hp100,health_100.png
 
-S mp0,manna_0.png
-S mp10,manna_10.png
-S mp20,manna_20.png
-S mp30,manna_30.png
-S mp40,manna_40.png
-S mp50,manna_50.png
-S mp60,manna_60.png
-S mp70,manna_70.png
-S mp80,manna_80.png
-S mp90,manna_90.png
-S mp100,manna_100.png
+A health_sheet_0-30.png,31,1,hp_0,hp_1,hp_2,hp_3,hp_4,hp_5,hp_6,hp_7,hp_8,hp_9,hp_10,hp_11,hp_12,hp_13,hp_14,hp_15,hp_16,hp_17,hp_18,hp_19,hp_20,hp_21,hp_22,hp_23,hp_24,hp_25,hp_26,hp_27,hp_28,hp_29,hp_30
+A /health dial/health_sheet_31-61.png,1,30,hp_31,hp_32,hp_33,hp_34,hp_35,hp_36,hp_37,hp_38,hp_39,hp_40,hp_41,hp_42,hp_43,hp_44,hp_45,hp_46,hp_47,hp_48,hp_49,hp_50,hp_51,hp_52,hp_53,hp_54,hp_55,hp_56,hp_57,hp_58,hp_59,hp_60,hp_61
+A /health dial/health_sheet_62-100.png,1,39,hp_62,hp_63,hp_64,hp_65,hp_66,hp_67,hp_68,hp_69,hp_70,hp_71,hp_72,hp_73,hp_74,hp_75,hp_76,hp_77,hp_78,hp_79,hp_80,hp_81,hp_82,hp_83,hp_84,hp_85,hp_86,hp_87,hp_88,hp_89,hp_90,hp_91,hp_92,hp_93,hp_94,hp_95,hp_96,hp_97,hp_98,hp_99,hp_100
 
 
 
