@@ -25,7 +25,7 @@ public class AIInventory extends InventoryMenu {
 	
 	public void render(Graphics g){
 		for (int i = 0; i < COLUMNS * (ROWS + 1); i++) {
-			inv.get(i).renderScaled(g);
+			inv.get(i).render(g);
 		}
 		if (selectedItem != null) {
 			selectedItem.render(g); // dragged item
@@ -67,11 +67,11 @@ public class AIInventory extends InventoryMenu {
 	public void update() {
 
 		if (InputHandler.leftClick.keyTapped) {
-			grabItem(InputHandler.mouseLoc); // pick up item from inventory
+			grabItem(InputHandler.getMouse()); // pick up item from inventory
 			System.out.println(selectedItem);
 		} else {
 			if (Globals.state == State.gameMenu) {
-				Slot s = calcSlot(InputHandler.mouseLoc);
+				Slot s = calcSlot(InputHandler.getMouse());
 				if (s != null) {
 					Item i = s.getItem();
 					if (i != null) {
@@ -156,7 +156,7 @@ public class AIInventory extends InventoryMenu {
 									// 2D grid effect is achieved via math.
 			int row = ROWS - i / COLUMNS;
 
-			inv.add(new Slot(slot, (int) (((Camera.width - slot.getWidth() * COLUMNS) + slot.getWidth() * col) * Camera.scale), (int) (row * slot.getHeight() * Camera.scale)));
+			inv.add(new Slot(slot, (int) (((Camera.width - slot.getWidth() * COLUMNS) + slot.getWidth() * col)), (int) (row * slot.getHeight() )));
 		}
 
 	}

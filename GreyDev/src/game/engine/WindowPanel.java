@@ -54,13 +54,12 @@ public class WindowPanel extends JPanel{
 		if (bufferImage == null){
 			bufferImage = createImage(this.getWidth(), this.getHeight());
 		}
-		//	dgb = bufferImage.getGraphics();
-
-		// draw a white background
-		dgb.setColor(Color.white);
-	//	dgb.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
-			parent.gameRender(dgb);
+
+		dgb.setColor(Color.black);
+		dgb.fillRect(0, 0, this.getWidth(), this.getHeight());
+	
+		parent.gameRender(dgb);
 	}
 
 	/**
@@ -71,15 +70,10 @@ public class WindowPanel extends JPanel{
 	 */
 	private void paintScreen(Graphics dgb){
 		try {
-		//	dgb = this.getGraphics();
-
-
-		//	if ((dgb != null) && (bufferImage != null))
-			//	dgb.drawImage(bufferImage, 0, 0, null);
 
 			// Sync the display on some systems.
 			Toolkit.getDefaultToolkit().sync();
-		//	dgb.dispose();
+
 		}
 		catch (Exception e)
 		{ System.out.println("Graphics context error: " + e);  }

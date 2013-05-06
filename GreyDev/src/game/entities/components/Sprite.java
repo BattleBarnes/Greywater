@@ -79,18 +79,18 @@ public class Sprite {
 	}
 	
 	
-	public void renderScaled(Graphics g, int x, int y){
-		tick();
-		BufferedImage rep = getCurrentImage();
-		//g.drawImage(rep, x, y, rep.getWidth(), rep.getHeight(), null);
-	//	((Graphics2D)g).scale(Camera.scale, Camera.scale);
-		if(Camera.scale == 1.0){
-			render(g,x,y);
-			return;
-		}
-		g.drawImage(rep, x, y,(int)Math.round(rep.getWidth()*Camera.scale), (int)Math.round(rep.getHeight()*Camera.scale), null);
-	//	((Graphics2D)g).scale(1/Camera.scale, 1/Camera.scale);
-	}
+//	public void renderScaled(Graphics g, int x, int y){
+//		tick();
+//		BufferedImage rep = getCurrentImage();
+//		//g.drawImage(rep, x, y, rep.getWidth(), rep.getHeight(), null);
+//	//	((Graphics2D)g).scale(Camera.scale, Camera.scale);
+//		if(Camera.scale == 1.0){
+//			render(g,x,y);
+//			return;
+//		}
+//		g.drawImage(rep, x, y,(int)Math.round(rep.getWidth()*Camera.scale), (int)Math.round(rep.getHeight()*Camera.scale), null);
+//	//	((Graphics2D)g).scale(1/Camera.scale, 1/Camera.scale);
+//	}
 	
 	public void drawTransparent(Graphics g, int x, int y, float opacity){
 		BufferedImage tranny = getCurrentImage();

@@ -226,6 +226,8 @@ public abstract class Engine extends JFrame implements Runnable {
 			tickCount++;
 			gameUpdate();
 			frameCount++;
+			
+			
 			if (!windowed) {
 				screenUpdate(g);
 			} else {
@@ -233,7 +235,6 @@ public abstract class Engine extends JFrame implements Runnable {
 				windowedPanel.windowRender(g);
 
 			}
-
 			endTime = System.nanoTime();
 
 			spareTime = startTime - endTime;
@@ -316,11 +317,13 @@ public abstract class Engine extends JFrame implements Runnable {
 			g.setColor(Color.BLACK);
 			
 			g.fillRect(0, 0, 3*Camera.height, 3*Camera.width);
-			
+			Graphics2D g2 = (Graphics2D) g;
+			g2.scale(Camera.scale, Camera.scale);
 		
 			
-			fullScreenRender(g);
-
+			fullScreenRender(g2);
+			g2.scale(1.0/Camera.scale, 1.0/Camera.scale);
+			g2.dispose();
 			g.dispose();
 			if (!bufferStrategy.contentsLost())
 				bufferStrategy.show();

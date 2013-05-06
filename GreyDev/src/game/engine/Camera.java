@@ -31,8 +31,11 @@ public class Camera  {
 	public static int width;
 	public static int height;
 	
-	//rectangle that has all the camera data in it.
-	public static Rectangle viewPort;
+	public static final int actWidth = 1920;
+	public static final int actHeight = 1080;
+	
+	public static int moveX;
+	public static int moveY;
 	
 	
 	/**
@@ -49,11 +52,10 @@ public class Camera  {
 		width = w;
 		height = h;
 		
-		//yScale = (height/1080.);
-		scale = width/1920.;
+		scale = width*1./actWidth;
 	
 		
-		viewPort = new Rectangle(xPos, yPos, width, height);
+	
 
 	}
 
@@ -66,9 +68,8 @@ public class Camera  {
 		if(x  + xOffset == xPos && y + yOffset == yPos)
 			return;
 
-		yOffset = y - height/3;
-		xOffset = x - width/2 + 50;
-		viewPort.setLocation(xPos + xOffset, yPos + yOffset);
+		yOffset = y - actHeight/3;
+		xOffset =  x - actWidth/2 + 50;
 	}
 	
 	

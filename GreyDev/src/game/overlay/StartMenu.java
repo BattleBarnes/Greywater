@@ -51,10 +51,8 @@ public class StartMenu {
 			g.setColor(Color.ORANGE);
 			g.setFont(menuFont);
 			String s0 = "You Escaped! You win!";
-			Graphics2D g2 = (Graphics2D) g;
 			int strw = fm.stringWidth(s0);
-			g2.drawString(s0, (int) (Camera.width / 3 - strw / 2), Camera.height / 3 + 50);
-			g2.scale(1 / Camera.scale, 1 / Camera.scale);
+			g.drawString(s0, (int) (Camera.width / 3 - strw / 2), Camera.height / 3 + 50);
 			return;
 
 		}
@@ -84,14 +82,13 @@ public class StartMenu {
 			String s6 = "Spacebar or click to attack/loot enemies";
 			String s7 = "ESC to go to menu.";
 			String[] s = { s0, s1, s2, s3, "", s4, s5, s6, s7 };
-			Graphics2D g2 = (Graphics2D) g;
 			for (int i = 0; i < s.length; i++) {
 				int strw = fm.stringWidth(s[i]);
-				g2.drawString(s[i], (int) (Camera.width / 2 - strw / 2), 100 + 70 * i);
-				g2.scale(1 / Camera.scale, 1 / Camera.scale);
+				g.drawString(s[i], (int) (Camera.width / 2 - strw / 2), 100 + 70 * i);
 
 			}
-			back.render(g, Camera.width / 2 - 105, Camera.height - 200);
+			back.render(g, (int)(Camera.width / 2 - 105*Camera.scale),(int)( Camera.height - 200*Camera.scale));
+
 			cursor.render(g, Camera.width / 2 - 160, Camera.height - 200);
 
 		}
@@ -117,10 +114,9 @@ public class StartMenu {
 			for (int i = 0; i < s.length; i++) {
 				int strw = fm.stringWidth(s[i]);
 				g2.drawString(s[i], (int) (Camera.width / 2 - strw / 2), 50+ 60 * i);
-				g2.scale(1 / Camera.scale, 1 / Camera.scale);
 
 			}
-			back.render(g, Camera.width / 2 - 105, Camera.height - 200);
+			back.render(g, (int)(Camera.width / 2 - back.getWidth()*Camera.scale),(int)( Camera.height - back.getHeight()*Camera.scale));
 			cursor.render(g, Camera.width / 2 - 160, Camera.height - 200);
 
 		}

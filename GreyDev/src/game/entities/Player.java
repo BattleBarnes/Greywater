@@ -107,7 +107,7 @@ public class Player extends Mob {
 		}
 
 		if (InputHandler.leftClick.heldDown && !attacking) {
-			Point r = (Point) InputHandler.mouseLoc;
+			Point r = (Point) InputHandler.getMouse();
 			Point p = Globals.isoToGrid(r.x, r.y);
 			lastClick = p;
 			attRect = new Rectangle(p.x - 70, p.y - 70, 140, 140);

@@ -10,9 +10,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.Point2D;
 
 public class HUDge {
 	
@@ -29,10 +27,9 @@ public class HUDge {
 //	Sprite[] mpSprites = {new Sprite("mp0", "mp0"),new Sprite("mp10","mp10"), new Sprite("mp20", "mp20"), new Sprite("mp30", "mp30"), new Sprite("mp40", "mp40"),new Sprite("mp50", "mp50"), new Sprite("mp60", "mp60"), new Sprite("mp70", "mp70"), new Sprite("mp80", "mp80"), new Sprite("mp90", "mp90"), new Sprite("mp100", "mp100")};
 
 
-	public HUDge(){
-		inv = new Button((int)(hud.getWidth()/2*Camera.scale - 45), (int)(Camera.height - hud.getHeight()*Camera.scale), 90,90);
+	public HUDge(){//TODO REMOVED SCALEDS
+		inv = new Button((int)(Camera.actWidth/2 - 45), (Camera.actHeight - hud.getHeight()), 90,90);
 		health = new Sprite("hp_0", "hp_0");
-		System.out.println("Set up hudge");
 	//	mana = new Sprite("mp100", "mp100"); TODO TURN ON ALL 100 AND RE-ARRANGE SPRITE SHEETS
 	}
 	
@@ -44,16 +41,15 @@ public class HUDge {
 	public void render(Graphics g){
 		g.setFont(menuFont);
 		g.setColor(Color.BLACK);
-		Graphics2D g2 = (Graphics2D) g;
-		g2.scale(Camera.scale, Camera.scale);
-		hud.render(g2, 0, (int) (Camera.height/Camera.scale - hud.getHeight()) );
-		health.render(g2, 0, (int) (Camera.height/Camera.scale - hud.getHeight()) );
+
+		hud.render(g, 0, (int) (Camera.actHeight - hud.getHeight()));
+		health.render(g, 0, (int) (Camera.actHeight - hud.getHeight()) );
 	//	mana.render(g2, 0, (int) (Camera.height/Camera.scale - hud.getHeight()) );
 		FontMetrics fm = g.getFontMetrics(menuFont); // or another font
 		int strw = fm.stringWidth(drawText);
 		
-		g2.drawString(drawText, (int)(hud.getWidth()/2  - strw/2),(int) (Camera.height/Camera.scale - hud.getHeight()/2 + 80));
-		g2.scale(1/Camera.scale, 1/Camera.scale);
+		g.drawString(drawText, (int)(hud.getWidth()/2  - strw/2),(int) (Camera.actHeight - hud.getHeight()/2 + 80));
+		g.drawRect((Camera.actWidth/2 - 45), Camera.actHeight - hud.getHeight(),90, 90);
 
 	}
 	
@@ -67,7 +63,7 @@ public class HUDge {
 	//	health = hpSprites[hpVal/10];
 	//	mana = mpSprites[(mp - mp%10)/10];
 		if(InputHandler.leftClick.keyTapped){
-			if(inv.getPhysicsShape().contains(InputHandler.mouseLoc)){
+			if(inv.getPhysicsShape().contains(InputHandler.getMouse())){
 				if(Globals.state != State.gameMenu)
 					Globals.state = State.gameMenu;
 				else

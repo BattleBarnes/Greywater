@@ -34,12 +34,6 @@ public class Item extends Entity {
 	public void move(int x, int y){
 		physicsComponent.updateHitSpace(x, y);
 	}
-
-
-	public void renderScaled(Graphics g) {
-		graphicsComponent.renderScaled(g, getX(), getY());
-		
-	}
 	
 	public String showText(){
 		return name;

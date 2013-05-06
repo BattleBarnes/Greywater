@@ -22,6 +22,8 @@
  */
 package game.entities.components;
 
+import game.engine.Camera;
+
 import java.awt.Rectangle;
 
 public class Tangible {
@@ -45,6 +47,7 @@ public class Tangible {
 	 * @param hitHeight - height of hitBox
 	 */
 	public Tangible(int x, int y, int hitWidth, int hitHeight, int speed){
+
 		xDest = x;
 		yDest = y;
 		this.speed = speed;

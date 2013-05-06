@@ -74,7 +74,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 	public static Trigger menu;
 	public static Trigger use;
 	public static Trigger leftClick;
-	public static Point2D mouseLoc;
+	private static Point2D mouseLoc;
 	public static Trigger spaceBar;
 	public static Trigger exit;
 	public static Trigger rightClick;
@@ -96,6 +96,11 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 		spaceBar = new Trigger();
 		exit = new Trigger();
 		rightClick = new Trigger();
+	}
+	
+	public static Point getMouse(){
+		//Point p = new 
+		return new Point((int)(mouseLoc.getX()/Camera.scale),(int)( mouseLoc.getY()/Camera.scale));
 	}
 	
 
@@ -183,7 +188,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 	
 	if(me != null)
 		switch(me.getButton()){
-		case(MouseEvent.BUTTON1): leftClick.toggle(pressed, me.getLocationOnScreen()); break;	
+		case(MouseEvent.BUTTON1): leftClick.toggle(pressed, me.getLocationOnScreen()); System.out.println(me.getLocationOnScreen());break;	
 		case(MouseEvent.BUTTON3):;
 		case(MouseEvent.BUTTON2): rightClick.toggle(pressed, me.getLocationOnScreen());break;
 		}
