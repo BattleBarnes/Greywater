@@ -37,10 +37,8 @@ public class Player extends Mob {
 	/**
 	 * Constructor!
 	 * 
-	 * @param x
-	 *            - Starting x location
-	 * @param y
-	 *            - Starting y location
+	 * @param x - Starting x location
+	 * @param y  - Starting y location
 	 */
 	public Player(int x, int y, InventoryMenu m) {
 		name = "Tavish";
@@ -107,7 +105,7 @@ public class Player extends Mob {
 		}
 
 		if (InputHandler.leftClick.heldDown && !attacking) {
-			Point r = (Point) InputHandler.getMouse();
+			Point r = (Point) InputHandler.getScaledMouse();
 			Point p = Globals.isoToGrid(r.x, r.y);
 			lastClick = p;
 			attRect = new Rectangle(p.x - 70, p.y - 70, 140, 140);
@@ -167,7 +165,7 @@ public class Player extends Mob {
 		double targY = enemy.getPhysicsShape().getCenterY();
 		double x = getPhysicsShape().getCenterX();
 		double y = getPhysicsShape().getCenterY();
-		this.direction = Globals.getIntDir(targY - y, targX - x); // TODO FIX THIS SO X AND Y AREN'T REVERSE (POST HEARTLAND)
+		this.direction = Globals.getIntDir(targX - x , targY - y); 
 		this.currDirection = Globals.getStringDir(direction);
 
 		this.physicsComponent.stopMovement();

@@ -5,7 +5,6 @@ import game.entities.components.Entity;
 import game.entities.components.Sprite;
 import game.entities.components.ai.PathFinder;
 import game.overlay.InventoryMenu;
-import game.overlay.OverlayManager;
 import game.world.World;
 
 import java.awt.Point;
@@ -50,21 +49,27 @@ public abstract class Mob extends Entity {
 	public void tick() {
 		xLast = getX(); // last location was valid or it would have been undone already
 		yLast = getY();
-		if(HP>0)
+		if (HP > 0)
 			getInput(); // get input from AI or controls or whatever
 		super.tick();
-		if(HP>0)
+		if (HP > 0)
 			walk();
-		if(HP<=0 &&!graphicsComponent.isAnimating()){
-			graphicsComponent = new Sprite(this.name, name+"Dead");
+		if (HP <= 0 && !graphicsComponent.isAnimating()) {
+			graphicsComponent = new Sprite(this.name, name + "Dead");
 		}
+		
+
 	}
 
+	/**
+	 * Moves the physics component, dismisses any open loot windows, finds the direction of movement,
+	 * shows the walk animation
+	 */
 	public void walk() {
 		if (xMoveBy != 0 || yMoveBy != 0) { // sets the physicsComponent moving
 			physicsComponent.moveTo(getX() + xMoveBy, getY() + yMoveBy);
 			currentLoot = null;
-			if (destination == null || destination.x != xMoveBy + getX() || destination.y != yMoveBy + getY()){
+			if (destination == null || destination.x != xMoveBy + getX() || destination.y != yMoveBy + getY()) {
 				destination = new Point(xMoveBy + getX(), yMoveBy + getY());
 			}
 		}
@@ -86,10 +91,8 @@ public abstract class Mob extends Entity {
 	/**
 	 * Stops movement (for collisions)
 	 * 
-	 * @param x
-	 *            - if true, stop movement in the x direction
-	 * @param y
-	 *            - if true, stop movement in the y direction
+	 * @param x - if true, stop movement in the x direction
+	 * @param y - if true, stop movement in the y direction
 	 */
 	public void undoMove(boolean x, boolean y) {
 		if (x && y) {
@@ -128,7 +131,6 @@ public abstract class Mob extends Entity {
 
 	protected abstract void attack(Mob enemy);
 
-
 	public Line2D getSight() {
 		return sight;
 	}
@@ -141,9 +143,14 @@ public abstract class Mob extends Entity {
 		p = new PathFinder(l);
 	}
 
+	/**
+	 * Change the Mob's HP by the given amount.
+	 * 
+	 * @param damage - how much to change mob hp by
+	 */
 	public void damage(int damage) {
 		HP -= damage;
-		if(HP <=0){
+		if (HP <= 0) {
 			graphicsComponent.animate(0.9, "Die");
 		}
 	}
@@ -151,15 +158,23 @@ public abstract class Mob extends Entity {
 	public int getHP() {
 		return HP;
 	}
-	
-	public boolean isAlive(){
-		if (HP > 0) 
+
+	/**
+	 * @return True if HP > 0
+	 */
+	public boolean isAlive() {
+		if (HP > 0)
 			return true;
 		return false;
 	}
-	
-	public void getInteracted(Mob interactor){
-		if(!isAlive()){
+
+	/**
+	 * Allows another mob to interact with this mob.
+	 * 
+	 * @param interactor - caller
+	 */
+	public void getInteracted(Mob interactor) {
+		if (!isAlive()) {
 			interactor.currentLoot = inv;
 		}
 	}

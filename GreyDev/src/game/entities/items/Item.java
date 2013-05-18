@@ -12,10 +12,11 @@ public class Item extends Entity {
 	
 	public String name = "Fist Fulla Gears";
 	public int itemID = 00;
-	
+	public String showName;
 	
 	public Item(String imgName, int x, int y, int code, String displayName){
-		this.name = displayName;
+		this.showName = displayName;
+		this.name = imgName;
 		itemID = code;
 		graphicsComponent = new Sprite(imgName, imgName);
 		physicsComponent = new Tangible(x, y, graphicsComponent.getWidth(), graphicsComponent.getHeight(), 0);
@@ -36,7 +37,7 @@ public class Item extends Entity {
 	}
 	
 	public String showText(){
-		return name;
+		return showName;
 	}
 	
 	public int getHitMod(){

@@ -1,3 +1,6 @@
+/**
+ * Functions needed all over the damn place.
+ */
 package game;
 
 import game.engine.Camera;
@@ -22,19 +25,34 @@ public class Globals {
 	public static State state = State.mainMenu;
 	
 
-	
+	//width and height of a tile in memory (not image size)
 	public static int tileWidth;
 	public static int tileHeight;
-	public static Random rand = new Random();
+	public static Random rand = new Random(); //used for dicerolls
 	
-	
+	/**
+	 * Finds the array indexes of a tile given two co-ordinates
+	 * already in flatspace. Does not convert screen (iso) co-ordinates to 
+	 * grid-co-ordinates. You have to do that with isoToGrid()
+	 * @param x - x location
+	 * @param y - y location
+	 * @return Point whose x and y value are the array indices of the tile in question.
+	 */
 	public static Point findTile(int x, int y){
 		int xt = x / tileWidth;
 		int yt = y/tileHeight;
 		return new Point(xt,yt);
 	}
 	
-
+	/**
+	 * Converts screen co-ordinates (isometic view) into flatspace, 
+	 * or grid co-ordinates. Remember, the grid is rectangular and top down in memory.
+	 * It is only rotated for display.
+	 * 
+	 * @param x - x on screen
+	 * @param y - y on screen
+	 * @return
+	 */
 	public static Point isoToGrid(int x, int y) {
 		x += Camera.xOffset;
 		y += Camera.yOffset;
@@ -132,9 +150,10 @@ public class Globals {
 	 * 			you need not concern yourself with them.
 	 */
 	public static int getIntDir(double xDiff, double yDiff){
-		double angle =(-1)* Math.toDegrees(Math.atan2(xDiff, yDiff)) - 45;
+		double angle =(-1)* Math.toDegrees(Math.atan2(yDiff, xDiff)) - 45;
 		if(angle < 0)
 			angle += 360;
+		System.out.println(angle);
 		if(angle >= 337.5 || angle < 22.5 )
 			return EAST;
 		else if(angle >= 22.5 && angle < 67.5  )
@@ -151,16 +170,28 @@ public class Globals {
 			return SOUTH;
 		else if(angle >= 292.5 && angle < 337.5 )
 			return SOUTHEAST;
-		return 99;
+		
+		
+		return 666;
 	}
 	
-	
+	/**
+	 * This is the distance (straight line) between 2 points.
+	 * @param p1
+	 * @param p2
+	 * @return the distance as a double
+	 */
 	public static double distance(Point2D p1, Point2D p2){
 		double dist = 0.;
 		dist = Math.sqrt(Math.pow((p1.getX()*1.0 - p2.getX()),2) + Math.pow((p1.getY()*1.0 - p2.getY()),2));
 		return dist;
 	}
 	
+	/**
+	 * Roll a dice with the specified number of sides. Returns 1-dice, inclusive.
+	 * @param dice - D(20) or D(12). Just like DND.
+	 * @return the resultant roll.
+	 */
 	public static int D(int dice){
 		return rand.nextInt(dice) + 1;
 	}

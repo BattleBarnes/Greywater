@@ -92,7 +92,7 @@ public class Watchman extends Mob{
 
 		
 		
-		this.direction = Globals.getIntDir((targY - y),(targX - x));
+		this.direction = Globals.getIntDir((targX - x), (targY - y));
 		this.currDirection = Globals.getStringDir(direction);
 	}
 

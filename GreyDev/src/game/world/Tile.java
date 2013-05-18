@@ -38,7 +38,7 @@ public class Tile extends Entity {
 
 	/**
 	 * Ticks the graphics component in case it is animated.
-	 *  Draws the current sprite for this entity by calling the superclasses render method
+	 *  Draws the current sprite for this entity by calling the superclass's render method
 	 * @param g - Graphics device
 	 */
 	public void render(Graphics g){

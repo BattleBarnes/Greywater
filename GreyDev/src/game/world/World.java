@@ -59,20 +59,22 @@ public class World {
 
 	};
 
-	public World(Sprite t,List<Mob> mobs, Player p) {
+	public World(Sprite t,Player p) {
 
-		tileWidth = t.getWidth() / 2;
-		tileHeight = t.getHeight();
+	
+		tileHeight = (int)(Camera.scale*t.getHeight());
+		tileWidth = (int)(Camera.scale*t.getWidth() / 2); // same as tileHeight (square/flatspace)
 
-		Globals.tileHeight = tileHeight;
-		Globals.tileWidth = t.getWidth() / 2; // same as tileHeight (square/flatspace)
+		Globals.tileHeight = (int)(Camera.scale*t.getHeight());
+		Globals.tileWidth = (int)(Camera.scale*t.getWidth() / 2); // same as tileHeight (square/flatspace)
 
 		tile = t;
 
 
-		mobList = (ArrayList<Mob>) mobs;
+		mobList = new ArrayList<Mob>();
 		player = p;
-
+		mobList.add(p);
+		
 		loadEnviro(9);
 
 	}
@@ -142,7 +144,6 @@ public class World {
 		// collision detection
 	
 		for (Mob m : mobList) {
-		//Mob m = player;
 			if (checkWorldCollision(m.getPhysicsShape())) {
 				Rectangle2D r = m.getPhysicsShape();
 				// physics shape, renamed for convenience
@@ -168,7 +169,6 @@ public class World {
 		// move the camera to follow the player
 		Point p = Globals.getIsoCoords(player.getX(), player.getY());
 		Camera.moveTo(p.x, p.y);
-		//Camera.setMove(p.x,p.y);
 
 	}
 

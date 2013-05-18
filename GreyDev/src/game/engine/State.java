@@ -2,12 +2,12 @@ package game.engine;
 
 public enum State {
 	
-	mainMenu(false, true, false, false),
-	inGame(true, false, false, false),
-	pauseMenu(false, true, true, false),
-	gameMenu(true,true,false,false),
-	gameEnding(false, false, false, true),
-	gameWon(false,true,true,false);
+	mainMenu(false, true, false, false), //the first menu - while things are init-ing
+	inGame(true, false, false, false), //standard gameplay
+	pauseMenu(false, true, true, false), //when you hit escape to bring up the menu while playing
+	gameMenu(true,true,false,false), //inventory menus and shit
+	gameEnding(false, false, false, true), //game over, man
+	gameWon(false,true,true,false); //show win screen, don't close game.
 
 	public boolean gameRunning, drawMenu, isPaused, finishedOff;
 	

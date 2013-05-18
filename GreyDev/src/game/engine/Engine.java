@@ -2,9 +2,8 @@
  * Central Framework (Engine.java)
  * This class is the skeleton on which the rest of the program hangs. It is called by the Core
  * class because Core allows the programmer to focus on game design, not subsystem building.
- * This Engine provides a camera, a windowed mode, FSEM mode, and the main game loop. These
- * are all behind the scenes. Encapsulation is the name of the game, and the only input needed is how fast it should run, and
- * whether or not it's windowed.
+ * This Engine provides a camera, FSEM mode, and the main game loop. These
+ * are all behind the scenes. Encapsulation is the name of the game, and the only input needed is how fast it should run.
  * 
  * This class is the engine, programmers need only focus on steering and the gas pedal.
  * 
@@ -23,7 +22,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Window;
 import java.awt.image.BufferStrategy;
 
+import javax.print.attribute.standard.JobMessageFromOperator;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public abstract class Engine extends JFrame implements Runnable {
 	private static final long serialVersionUID = 1863596360846514344L;
@@ -42,16 +43,12 @@ public abstract class Engine extends JFrame implements Runnable {
 
 	public static long animPeriodNano; // period between drawing in nanoseconds
 
-	// used for windowing
-	protected boolean windowed;
-	WindowPanel windowedPanel;
-
 	// used for full-screen exclusive mode
 	private GraphicsDevice vidcard;
 	private BufferStrategy bufferStrategy;
 
 	//player input
-	protected InputHandler inHandle = new InputHandler(this);
+	protected InputHandler inHandle = new InputHandler();
 
 	protected Camera cam; //Graphics devices
 	private Graphics g;
@@ -64,17 +61,14 @@ public abstract class Engine extends JFrame implements Runnable {
 	 * @param anim_period_ns - period of animation in nanoseconds
 	 * @param w - Whether or not the game is to be played in a window (vs FSEM)
 	 */
-	public Engine(long animPeriod_ns, boolean w) {
-		this.windowed = w;
+	public Engine(long animPeriod_ns) {
 		animPeriodNano = animPeriod_ns;
 
 		Globals.state = State.mainMenu;
 
-		if (!windowed)
-			initFullScreen();
-		else {
-			initWindowMode();
-		}
+
+		initFullScreen();
+
 
 
 		init();
@@ -82,24 +76,12 @@ public abstract class Engine extends JFrame implements Runnable {
 
 	} // end of constructor
 
-	/**
-	 * Defaults too 1920x1080, creates a non-full screen window
-	 * and sets up the graphics object.
-	 */
-	private void initWindowMode() {
-		windowedPanel = new WindowPanel(this);
-		this.setSize(1000, 800);
-		this.add(windowedPanel);
-		this.setVisible(true);
-		this.pack();
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		cam = new Camera(0,0,windowedPanel.getBounds().width, windowedPanel.getBounds().height);
 
-	}
+	
 
 	/**
 	 * Creates a full screen exclusive mode window, sets up the graphics device.
-	 * If FSEM isn't supported, creates a window.
+	 * If FSEM isn't supported, crashes
 	 * 
 	 * Also sets up input handling.
 	 */
@@ -109,9 +91,8 @@ public abstract class Engine extends JFrame implements Runnable {
 
 		if (!vidcard.isFullScreenSupported()) { //if FSEM isn't supported, windowed mode default.
 			System.out.println("Full-screen exclusive mode not supported");
-			initWindowMode();
-			windowed = true;
-			return;
+			JOptionPane.showMessageDialog(null, "Your device doesn't support fullscreen!");
+			System.exit(1);
 		}
 
 		setUndecorated(true); // no menu bar, borders, etc. or Swing components
@@ -126,7 +107,7 @@ public abstract class Engine extends JFrame implements Runnable {
 		vidcard.setFullScreenWindow(this); // switch on full-screen exclusive mode
 		setBufferStrategy();
 
-		cam = new Camera(0,0,getBounds().width, getBounds().height);
+		cam = new Camera(0,0,getBounds().width, getBounds().height); //set up camera object for scaling and player following
 
 
 		setBufferStrategy();
@@ -173,8 +154,7 @@ public abstract class Engine extends JFrame implements Runnable {
 	 */
 	private void finishOff() {
 		if (Globals.state.finishedOff) {
-			if (!windowed)
-				restoreScreen();
+			restoreScreen();
 			System.exit(0);
 			Globals.state = State.gameEnding;
 		}
@@ -228,13 +208,12 @@ public abstract class Engine extends JFrame implements Runnable {
 			frameCount++;
 			
 			
-			if (!windowed) {
-				screenUpdate(g);
-			} else {
-				Graphics g = this.getGraphics();
-				windowedPanel.windowRender(g);
 
-			}
+			screenUpdate(g);
+
+			Graphics g = this.getGraphics();
+
+			
 			endTime = System.nanoTime();
 
 			spareTime = startTime - endTime;
@@ -318,11 +297,9 @@ public abstract class Engine extends JFrame implements Runnable {
 			
 			g.fillRect(0, 0, 3*Camera.height, 3*Camera.width);
 			Graphics2D g2 = (Graphics2D) g;
-			g2.scale(Camera.scale, Camera.scale);
 		
 			
 			fullScreenRender(g2);
-			g2.scale(1.0/Camera.scale, 1.0/Camera.scale);
 			g2.dispose();
 			g.dispose();
 			if (!bufferStrategy.contentsLost())

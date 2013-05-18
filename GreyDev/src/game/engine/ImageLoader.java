@@ -9,7 +9,7 @@
  * 
  * A word on the system of image loading:
  * 
- * The image loader loads images specified by a text file in the "Images" folder in the working path.
+ * The image loader loads images specified by a text file (images.ini) in the "Images/{resolution or common}" folder in the working path.
  * The name of the text file is user-specified, but the format is not.
  * 
  * The loader uses a string parser to tell what images to load and what to do with them, it can handle individual images,
@@ -54,6 +54,7 @@ public class ImageLoader {
 	
 	private static String filePath;
 	private static HashMap images = new HashMap();
+	private static String currentFolder;
 	
 	/**
 	 * Calls readFile on the text file provided to load images into memory from disk.
@@ -64,8 +65,11 @@ public class ImageLoader {
 	 */
 	public static void init(String filepath) {
 		filePath = filepath;
-	
-		readFile(filePath);
+		
+		currentFolder = "Images/common/";
+		readFile("common/"+filePath); //common images
+		currentFolder = "Images/"+ Camera.width +"/";
+		readFile(Camera.width+"/"+filepath); //resolution specific images
 	}
 
 /*
@@ -85,6 +89,7 @@ public class ImageLoader {
 		try{
 			
 			File file = new File("Images/"+filePath);
+			System.out.println(file.getAbsolutePath());
 			BufferedReader br = new BufferedReader(new FileReader(file));
 
 			while(br.ready()){
@@ -256,8 +261,8 @@ public class ImageLoader {
 	public static BufferedImage loadImage(String imgPath){
 		BufferedImage I = null;
 		try {
-			I = ImageIO.read(new File("Images/"+imgPath));
-		} catch (Exception e) {e.printStackTrace(); System.out.println(imgPath);}
+			I = ImageIO.read(new File(currentFolder+imgPath));
+		} catch (Exception e) {System.out.println("ERROR: Cannot load: " +currentFolder+imgPath);}
 		
 		return I;
 	}

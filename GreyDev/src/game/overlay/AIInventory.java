@@ -11,6 +11,14 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * AIInventory.java
+ * @author Barnes 4/25/13
+ * 
+ * Extension of the inventorymenu with reduced functionality (no holster or crafting areas)
+ * Exists to allow the enemy to have lootable items.
+ *
+ */
 public class AIInventory extends InventoryMenu {
 
 	public AIInventory() {
@@ -24,7 +32,7 @@ public class AIInventory extends InventoryMenu {
 	}
 	
 	public void render(Graphics g){
-		for (int i = 0; i < COLUMNS * (ROWS + 1); i++) {
+		for (int i = 0; i < COLUMNS * (ROWS); i++) {
 			inv.get(i).render(g);
 		}
 		if (selectedItem != null) {
@@ -35,8 +43,7 @@ public class AIInventory extends InventoryMenu {
 	/**
 	 * Adds a new item to the inventory grid. If grid is full, drops the item.
 	 * 
-	 * @param i
-	 *            - the item to add.
+	 * @param i - the item to add.
 	 */
 	public void addItem(Item i) {
 		selectedItem = i;
@@ -49,6 +56,9 @@ public class AIInventory extends InventoryMenu {
 		}
 	}
 
+	/**
+	 * @return Finds an empty slot to place things into
+	 */
 	public Slot findEmptySlot() {
 		for (Slot i : inv) {
 			if (i.isEmpty())
@@ -87,8 +97,7 @@ public class AIInventory extends InventoryMenu {
 	 * Determines which slot has been clicked. Used for placing/removing items
 	 * from the inventory grid.
 	 * 
-	 * @param mouse
-	 *            - the location of the mouse click on screen.
+	 * @param mouse - the location of the mouse click on screen.
 	 * @return - the slot (0-inv.size-1) or -1 if the slot is invalid/not a slot
 	 */
 	private Slot calcSlot(Point2D mouse) {
@@ -107,7 +116,7 @@ public class AIInventory extends InventoryMenu {
 
 		// if the item was in inventory previously, remove it and set it to
 		// null.
-		if (inv.indexOf(selectedItem) > 0 && inv.indexOf(selectedItem) < COLUMNS * (ROWS + 1))
+		if (inv.indexOf(selectedItem) > 0 && inv.indexOf(selectedItem) < COLUMNS * (ROWS))
 			inv.set(inv.indexOf(selectedItem), null);
 
 		selectedItem = null;// no item is currently selected.
@@ -117,8 +126,7 @@ public class AIInventory extends InventoryMenu {
 	/**
 	 * Picks up an item from within the grid.
 	 * 
-	 * @param mouse
-	 *            - mouse click location
+	 * @param mouse - mouse click location
 	 * @return the item selected
 	 */
 	private void grabItem(Point2D mouse) {
@@ -135,8 +143,7 @@ public class AIInventory extends InventoryMenu {
 	/**
 	 * Places the currently selected item into the grid
 	 * 
-	 * @param loc
-	 *            - slot where the item should be placed
+	 * @param loc - slot where the item should be placed
 	 */
 	private void placeItem(Slot dest) {
 		// if the slot loc is invalid, abort!
@@ -147,17 +154,5 @@ public class AIInventory extends InventoryMenu {
 			selectedItem = null; // item is no longer selected
 			objectSelected = false;
 		}
-	}
-
-	private void setNewInv() {
-		inv = new ArrayList<Slot>((ROWS + 1) * COLUMNS);
-		for (int i = 0; i < COLUMNS * (ROWS + 1); i++) {
-			int col = i % COLUMNS; // because inventory is a 1D arraylist, the
-									// 2D grid effect is achieved via math.
-			int row = ROWS - i / COLUMNS;
-
-			inv.add(new Slot(slot, (int) (((Camera.width - slot.getWidth() * COLUMNS) + slot.getWidth() * col)), (int) (row * slot.getHeight() )));
-		}
-
 	}
 }

@@ -9,7 +9,8 @@ public class Crafting {
 	
 	
 	public static void init(){
-		//recipes.add(new Recipe(thisItem, recip)); TODO this a bunch.
+	//	recipes.add(new Recipe(thisItem, recip)); //TODO this a bunch.
+		recipes.add(new Recipe(new Item("ElectricWrench", 0, 0, 13, "Electric Arc Truncheon"), new int[]{5,0,0,7}));
 	}
 	
 

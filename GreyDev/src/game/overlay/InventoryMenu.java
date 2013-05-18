@@ -12,22 +12,35 @@ import java.awt.Graphics;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+/**
+ * InventoryMenu.java
+ * 
+ * @author Barnes 4/19/13
+ * 
+ *  Used to represent and manage all the images and logic for player inventory and items.
+ *  See also - Slot.java, Button.java, and Crafting.java
+ * 
+ */
 public class InventoryMenu {
-	public final int COLUMNS;// = 6;
-	public final int ROWS;// = 5;
+	public final int COLUMNS;// = 6; number of columns of slots
+	public final int ROWS;// = 5; number of rows of slots
 
-	protected ArrayList<Slot> inv;
-	private ArrayList<Slot> equip = new ArrayList<Slot>();
-	private ArrayList<Slot> craftarea = new ArrayList<Slot>();
-	private Slot craftOutput;
+	/* ********* Logical Slots used to actually hold things and provide functionality *** */
+	protected ArrayList<Slot> inv; // arraylist of slots is the real inventory
+	private ArrayList<Slot> equip = new ArrayList<Slot>(); // equipped items array. weapon, armor, trinket, offhand
+	private ArrayList<Slot> craftarea = new ArrayList<Slot>(); // 4 slots for crafting type purposes
+	private Slot craftOutput; // single slot for crafted output
 
-	protected boolean objectSelected = false;
-	protected Item selectedItem;
-	protected Sprite slot;
-	protected Sprite craft;
-	protected Sprite weap;
-	private Sprite area = new Sprite("inv", "inv");
-	public int buff;
+	protected boolean objectSelected = false; // whether or not the user has picked an object to move between slots (mouse slot)
+	protected Item selectedItem; // what the picked up object is (mouse slot)
+
+	/* ***** Sprites - Used to represent the various aspects of the inventory menu **** */
+	protected Sprite slot = new Sprite("invslot", "invslot");;
+	protected Sprite craft = new Sprite("Crafting", "Crafting");
+	protected Sprite weap = new Sprite("WeaponSlot", "WeaponSlot");
+	private Sprite area = new Sprite("inv", "inv"); // back-board used to hold the inventory
+
+	public int buff;// total buff from items (as in buff/debuff)
 
 	/**
 	 * Constructor, sets up the inventory slot image, and fills the inventory
@@ -36,44 +49,47 @@ public class InventoryMenu {
 	 */
 	public InventoryMenu() {
 		COLUMNS = 6;
-		ROWS = 4;
-		slot = new Sprite("invslot", "invslot");
-		weap = new Sprite("WeaponSlot", "WeaponSlot");
-		craft = new Sprite("Crafting", "Crafting");
+		ROWS = 5;
 
-		setNewInv(Camera.actWidth);
+		setNewInv(Camera.width); // create the inventory grid
 
+		// set up crafting area
 		for (int i = 0; i < 4; i++) {
-			int col = i % 2; // because inventory is a 1D arraylist, the 2D grid effect is achieved via math.
+			int col = i % 2; // because inventory sections are 1D arraylists, the 2D grid effect is achieved via math.
 			int row = 2 - i / 2;
-			craftarea.add(new Slot(craft, Camera.actWidth - (-1 * craft.getWidth() * col + area.getWidth() / 2 + craft.getWidth()), (60 + row * craft.getHeight())));
 
+			craftarea.add(new Slot(craft, Camera.width - (area.getWidth() / 2 + craft.getWidth() - craft.getWidth() * col), (60 + row * craft.getHeight())));
 		}
 
-		equip.add(new Slot(weap, Camera.actWidth - (-1 * weap.getWidth() / 2 + area.getWidth() / 2 + craft.getWidth()), 20));
+		// set up equipment slots
+		equip.add(new Slot(weap, Camera.width - (area.getWidth() / 2 + craft.getWidth() - weap.getWidth() / 2), 20));
 
+		// add craft output slot
 		craftOutput = new Slot(slot, craftarea.get(3).getX() + 100, craftarea.get(3).getY());
 
-		this.addItem(new Item("Wrench", 0, 0, 5, "Shop Wrench"));
+		// Tavish always has his motherfucking wrench
+		this.addItem(new Item("Wrench", 0, 0, 5, "Wrench"));
 	}
 
+	/**
+	 * Used for setting up NPC inventory grids.
+	 * 
+	 * @param r - rows the inventory grid should have
+	 * @param c - columns the grid should have
+	 */
 	public InventoryMenu(int r, int c) {
 		slot = new Sprite("invslot", "invslot");
 
 		ROWS = r;
 		COLUMNS = c;
 
-	//	int w = Camera.width;
-		//Camera.width /= 4;
-		setNewInv(Camera.actWidth/4);
-	//	Camera.width = w;
+		setNewInv(Camera.width / 4);
 	}
 
 	/**
 	 * Adds a new item to the inventory grid. If grid is full, drops the item.
 	 * 
-	 * @param i
-	 *            - the item to add.
+	 * @param i - the item to add.
 	 */
 	public void addItem(Item i) {
 		selectedItem = i;
@@ -86,12 +102,13 @@ public class InventoryMenu {
 		}
 	}
 
-	public Slot findEmptySlot() {
-		for (Slot i : inv) {
-			if (i.isEmpty())
-				return i;
-		}
-		return null;
+	/**
+	 * Get the item in the weapons slot of the equipment array
+	 * 
+	 * @return whatever Item is in the equip slot, null if empty
+	 */
+	public Item getWeap() {
+		return equip.get(0).getItem();
 	}
 
 	/**
@@ -101,20 +118,12 @@ public class InventoryMenu {
 	 * Also draws the "selected item" which is the item being dragged currently.
 	 * 
 	 * @param g
-	 *            - Graphics object
+	 * 
 	 */
 	public void render(Graphics g) {
-		area.render(g, Camera.actWidth - area.getWidth(), 0);
-		for (int i = 0; i < COLUMNS * (ROWS + 1); i++) {
-			int col = i % COLUMNS; // because inventory is a 1D arraylist, the 2D grid effect is achieved via math.
-			int row = ROWS - i / COLUMNS;
-			
+		area.render(g, Camera.width - area.getWidth(), 0);
+		for (int i = 0; i < COLUMNS * (ROWS); i++) {
 			inv.get(i).render(g);
-
-			// Rectangle r = inv.get(i).getPhysicsShape();
-			// g.setColor(Color.PINK);
-			// g.drawRect(Camera.actWidth - (slot.getWidth()*(COLUMNS + 1) - (slot.getWidth() * col)), (area.getHeight() / 2 + row * slot.getHeight() - 45), 45, 45);
-
 		}
 		for (Slot s : craftarea)
 			s.render(g);
@@ -181,8 +190,7 @@ public class InventoryMenu {
 	 * Determines which slot has been clicked. Used for placing/removing items
 	 * from the inventory grid.
 	 * 
-	 * @param mouse
-	 *            - the location of the mouse click on screen.
+	 * @param mouse - the location of the mouse click on screen.
 	 * @return - the slot (0-inv.size-1) or -1 if the slot is invalid/not a slot
 	 */
 	private Slot calcSlot(Point2D mouse) {
@@ -201,28 +209,73 @@ public class InventoryMenu {
 				return i;
 			}
 		}
+		if (mouse.getX() < Camera.width - area.getWidth())
+			dropItem();
 		return null;
+	}
+
+	/**
+	 * Checks the recipe list to see if the items in the crafting slots
+	 * make anything new. If they do, it puts the result in the craftoutput slot, so
+	 * that you can see before you craft. Somewhere else needs to clear the crafting slots when the output
+	 * is picked up.
+	 */
+	private void craft() {
+		int s1 = 0;
+		int s2 = 0;
+		int s3 = 0;
+		int s4 = 0;
+
+		if (!craftarea.get(0).isEmpty()) {
+			s1 = craftarea.get(0).getItem().itemID;
+		}
+		if (!craftarea.get(1).isEmpty()) {
+			s2 = craftarea.get(1).getItem().itemID;
+		}
+		if (!craftarea.get(2).isEmpty()) {
+			s3 = craftarea.get(2).getItem().itemID;
+		}
+		if (!craftarea.get(3).isEmpty()) {
+			s4 = craftarea.get(3).getItem().itemID;
+		}
+		int[] newItem = { s1, s2, s3, s4 };
+
+		if (craftOutput.isEmpty()) {
+
+			Item n = Crafting.craft(newItem); // see if the recipe in the craft area is a thing
+
+			if (n != null) { // if it is
+				if (craftOutput.isEmpty()) // and the output slot is empty
+					craftOutput.add(n); // put the output in the output slot
+
+			}
+		}
 	}
 
 	/**
 	 * Destroys the selected item.
 	 */
 	private void dropItem() {
-
-		// if the item was in inventory previously, remove it and set it to
-		// null.
-		if (inv.indexOf(selectedItem) > 0 && inv.indexOf(selectedItem) < COLUMNS * (ROWS + 1))
+		// if the item was in inventory previously, remove it and set it to null.
+		if (inv.indexOf(selectedItem) > 0 && inv.indexOf(selectedItem) < COLUMNS * (ROWS))
 			inv.set(inv.indexOf(selectedItem), null);
 
 		selectedItem = null;// no item is currently selected.
 		objectSelected = false;
 	}
 
+	private Slot findEmptySlot() {
+		for (Slot i : inv) {
+			if (i.isEmpty())
+				return i;
+		}
+		return null;
+	}
+
 	/**
 	 * Picks up an item from within the grid.
 	 * 
-	 * @param mouse
-	 *            - mouse click location
+	 * @param mouse - mouse click location
 	 * @return the item selected
 	 */
 	private void grabItem(Point2D mouse) {
@@ -265,17 +318,15 @@ public class InventoryMenu {
 	}
 
 	/**
-	 * Places the currently selected item into the grid
+	 * Places the currently selected item into the grid and removes it from the mouse slot.
+	 * Does nothing if the slot isn't real.
 	 * 
-	 * @param loc
-	 *            - slot where the item should be placed
+	 * @param loc - slot where the item should be placed
 	 */
 	private void placeItem(Slot dest) {
-		craft();
 		// if the slot loc is invalid, abort!
 		if (dest == null)
 			return;
-
 		if (dest.add(selectedItem)) {
 			selectedItem = null; // item is no longer selected
 			objectSelected = false;
@@ -283,52 +334,19 @@ public class InventoryMenu {
 		craft();
 	}
 
-	private void craft() {
-		int s1 = 0;
-		int s2 = 0;
-		int s3 = 0;
-		int s4 = 0;
-		if (!craftarea.get(0).isEmpty()) {
-			s1 = craftarea.get(0).getItem().itemID;
-		}
-		if (!craftarea.get(1).isEmpty()) {
-			s2 = craftarea.get(1).getItem().itemID;
-		}
-		if (!craftarea.get(2).isEmpty()) {
-			s3 = craftarea.get(2).getItem().itemID;
-		}
-		if (!craftarea.get(3).isEmpty()) {
-			s4 = craftarea.get(3).getItem().itemID;
-		}
-		int[] newItem = { s1, s2, s3, s4 };
-		if (craftOutput.isEmpty()) {
-
-			Item n = Crafting.craft(newItem);
-
-			if (n != null) {
-				if (craftOutput.isEmpty())
-					craftOutput.add(n);
-				else {
-					craftOutput.grabItem();// TODO is this line necessary?
-					craftOutput.add(n);
-				}
-			} else {
-				craftOutput.grabItem();// TODO is this line necessary?
-			}
-		}
-	}
-
-	public Item getWeap() {
-		return equip.get(0).getItem();
-	}
-
+	/**
+	 * Avoiding duplicate code for the constructors, sets up a new grid of slots that is ROWS x COLUMNS.
+	 * The right side is anchored to StartX
+	 * 
+	 * @param startX - the right side of the grid
+	 */
 	private void setNewInv(int startX) {
-		inv = new ArrayList<Slot>((ROWS + 1) * COLUMNS);
-		for (int i = 0; i < COLUMNS * (ROWS + 1); i++) {
+		inv = new ArrayList<Slot>((ROWS) * COLUMNS);
+		for (int i = 0; i < COLUMNS * (ROWS); i++) {
 			int col = i % COLUMNS; // because inventory is a 1D arraylist, the 2D grid effect is achieved via math.
-			int row = ROWS - i / COLUMNS;
+			int row = ROWS - 1 - i / COLUMNS;
 
-			inv.add(new Slot(slot, startX - (slot.getWidth()*(COLUMNS + 1) - (slot.getWidth() * col) - 35), (area.getHeight() / 2 + row * slot.getHeight() - 45)));
+			inv.add(new Slot(slot, startX - (slot.getWidth() * (COLUMNS + 1) - (slot.getWidth() * col) - 35), (area.getHeight() / 2 + row * slot.getHeight() - 45)));
 		}
 
 	}

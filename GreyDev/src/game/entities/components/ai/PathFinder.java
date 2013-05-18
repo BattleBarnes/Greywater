@@ -7,7 +7,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 public class PathFinder {
-	private final int MAXRETRIES = 350;
+	private final int MAXRETRIES = 130;
 	int retries = 0;
 	ArrayList<Point> path;
 	private World world;

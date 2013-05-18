@@ -23,19 +23,19 @@ public class Camera  {
 	public static int xOffset;
 	public static int yOffset;
 	
-	//Sprites were designed for display at 1920 x 1080
+	//Images/Common files were designed for display at 1600 x 900
 	//rescale when the resolution changes.
 	public static double scale;
+	public static final int actWidth = 1600; //actual (native)
+	public static final int actHeight = 900;
 	
 	//screen dimensions
 	public static int width;
 	public static int height;
 	
-	public static final int actWidth = 1920;
-	public static final int actHeight = 1080;
+
 	
-	public static int moveX;
-	public static int moveY;
+
 	
 	
 	/**
@@ -53,10 +53,6 @@ public class Camera  {
 		height = h;
 		
 		scale = width*1./actWidth;
-	
-		
-	
-
 	}
 
 	/**
@@ -68,8 +64,8 @@ public class Camera  {
 		if(x  + xOffset == xPos && y + yOffset == yPos)
 			return;
 
-		yOffset = y - actHeight/3;
-		xOffset =  x - actWidth/2 + 50;
+		yOffset = y - height/3;
+		xOffset =  x - width/2 + 50;
 	}
 	
 	
