@@ -73,7 +73,7 @@ public class StartMenu {
 	 * @param g - Graphics object
 	 */
 	public void render(Graphics g) {
-		//if the game is over, show the win screen
+		// if the game is over, show the win screen
 		if (Globals.state == State.gameWon) {
 			title.render(g, 0, 0);
 			g.setColor(Color.ORANGE);
@@ -87,26 +87,26 @@ public class StartMenu {
 		if (fm == null) {
 			fm = g.getFontMetrics(menuFont);
 		}
-		
-		//if we're on the titlescreen, render the title and the main menu
+
+		// if we're on the titlescreen, render the title and the main menu
 		if (titleScrn) {
-			title.render(g, 0, 0); //Greywater
-			
-			for (int i = 0; i < 4; i++) { //loop through menu options
-				options[i].render(g, 0, 0); //and draw them
-				
-				if (option == i)  //if this element is the currently selected one, render the bullet at that location.
-					cursor.render(g, 190, (int) (4 * Camera.height / 11 + 110 * i)); //TODO come back to this when the menu is finished for each resolution
+			title.render(g, 0, 0); // Greywater
+
+			for (int i = 0; i < 4; i++) { // loop through menu options
+				options[i].render(g, 0, 0); // and draw them
+
+				if (option == i) // if this element is the currently selected one, render the bullet at that location.
+					cursor.render(g, 190, (int) (5 * Camera.height / 15 + 99 * Camera.scale * i)); // TODO come back to this when the menu is finished for each resolution
 			}
 		}
-		//if we're on the how to play screen, render that information instead
+		// if we're on the how to play screen, render that information instead
 		else if (howPlayScrn) {
 			g.setColor(Color.ORANGE);
-			menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, (int) (60*Camera.scale));
+			menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, (int) (60 * Camera.scale * Camera.scale));
 			fm = g.getFontMetrics(menuFont);
 			g.setFont(menuFont);
-			
-			//set up the screentext
+
+			// set up the screentext
 			String s0 = "Ms Sweepy has gotten lost in the sewers again!";
 			String s1 = "The objective of the game is to find your robot - Ms Sweepy.";
 			String s2 = "Be careful of the Watchmen, the automated security drones --";
@@ -116,26 +116,27 @@ public class StartMenu {
 			String s6 = "Spacebar or click to attack/loot enemies";
 			String s7 = "ESC to go to menu.";
 			String[] s = { s0, s1, s2, s3, "", s4, s5, s6, s7 };
-			
-			//draw the strings
+
+			// draw the strings
 			for (int i = 0; i < s.length; i++) {
 				int strw = fm.stringWidth(s[i]);
 				g.drawString(s[i], (int) (Camera.width / 2 - strw / 2), 100 + 70 * i);
 			}
-			//render the back button TODO come back when the new assets happen
-			back.render(g, (int) (Camera.width / 2 - 105 * Camera.scale), (int) (Camera.height - 200 * Camera.scale));
+			// render the back button TODO come back when the new assets happen
+			back.render(g, (int) (Camera.width / 2 - 105 * Camera.scale), (int) (Camera.height - back.getHeight() * Camera.scale));
 
-			//draw the cursor next to the back button
-			cursor.render(g, Camera.width / 2 - 160, Camera.height - 200);
+			// draw the cursor next to the back button
+			cursor.render(g, Camera.width / 2 - 160, (int) (Camera.height - back.getHeight() * Camera.scale));
 
-		}//otherwise, render the "credits" screen!
+		}// otherwise, render the "credits" screen!
 		else if (creditsScrn) {
-			menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, (int) (50*Camera.scale));
+			menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, (int) (50 * Camera.scale));
+			System.out.println(50 * Camera.scale * Camera.scale * Camera.scale);
 			g.setColor(Color.ORANGE);
 			g.setFont(menuFont);
 			fm = g.getFontMetrics(menuFont);
-			
-			//set up the screentext
+
+			// set up the screentext
 			String s0 = "Jill Graves - Graphics Wizard";
 			String s1 = "Dominique Barnes - Pixelmancer";
 			String s2 = "Grace Hammons - Imagemeister";
@@ -149,17 +150,17 @@ public class StartMenu {
 			String s9 = "VERY SPECIAL THANKS";
 			String s10 = "Coffee";
 			String[] s = { s0, s1, s2, s3, "", s4, s45, s5, s6, s7, s8, "", s9, s10 };
-			
-			//draw the strings to screen
+
+			// draw the strings to screen
 			Graphics2D g2 = (Graphics2D) g;
 			for (int i = 0; i < s.length; i++) {
 				int strw = fm.stringWidth(s[i]);
-				g2.drawString(s[i], (int) (Camera.width / 2 - strw / 2), 50 + 60 * i); //TODO fix for resolution differences
+				g2.drawString(s[i], (int) (Camera.width / 2 - strw / 2), (int) (50 + 60 * Camera.scale * i)); // TODO fix for resolution differences
 
 			}
-			//render the back button and cursor TODO come back when new art assets for differnet resolutions happen
+			// render the back button and cursor TODO come back when new art assets for differnet resolutions happen
 			back.render(g, (int) (Camera.width / 2 - back.getWidth() * Camera.scale), (int) (Camera.height - back.getHeight() * Camera.scale));
-			cursor.render(g, Camera.width / 2 - 160, Camera.height - 200);
+			cursor.render(g, Camera.width / 2 - 160, (int) (Camera.height - back.getHeight() * Camera.scale));
 
 		}
 	}
@@ -168,24 +169,42 @@ public class StartMenu {
 	 * Update method, ticks the menu to move the cursor and respond to user input.
 	 */
 	public void tick() {
-		if (InputHandler.up.keyTapped && option > 0) {
-			option--; //move cursor up if not at top
+		if (this.titleScrn) {
+			if (InputHandler.up.keyTapped && option > 0) {
+				option--; // move cursor up if not at top
+			} else if (InputHandler.down.keyTapped && option < 3) {
+				option++; // move cursor down if not at bottom
+			} else if (InputHandler.use.keyTapped) {
+				choose(); // if they hit enter, choose that selection
+			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.height / 15) && InputHandler.getMouse().getY() < (int) (5 * Camera.height / 15 + 99 * Camera.scale)) {
+				option = 0;
+
+				if (InputHandler.leftClick.keyTapped) {
+					choose();
+				}
+			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.height / 15 + 99 * Camera.scale) && InputHandler.getMouse().getY() < (int) (5 * Camera.height / 15 + 99 * Camera.scale * 2)) {
+				option = 1;
+
+				if (InputHandler.leftClick.keyTapped) {
+					choose();
+				}
+			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.height / 15 + 99 * Camera.scale * 2) && InputHandler.getMouse().getY() < (int) (5 * Camera.height / 15 + 99 * Camera.scale * 3)) {
+				option = 2;
+
+				if (InputHandler.leftClick.keyTapped) {
+					choose();
+				}
+			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.height / 15 + 99 * Camera.scale * 3) && InputHandler.getMouse().getY() < (int) (5 * Camera.height / 15 + 99 * Camera.scale * 4)) {
+				option = 3;
+
+				if (InputHandler.leftClick.keyTapped) {
+					choose();
+				}
+			}
 		}
-		else if (InputHandler.down.keyTapped && option < 3) {
-			option++; //move cursor down if not at bottom
+		else if(InputHandler.leftClick.keyTapped || InputHandler.spaceBar.keyTapped){
+			choose();
 		}
-		else if (InputHandler.use.keyTapped) {
-			choose(); //if they hit enter, choose that selection
-		}
-//		else if (InputHandler.mouseClicked){
-//			for(Sprite s : options){
-//				Point2D p = InputHandler.getMouse();
-//				if(p.getY() > s.)
-// TODO MOUSE INPUT, NEEDS BUTTONS NOT SPRITES.
-//					
-//			}
-//		}
-		
 
 	}
 
@@ -193,7 +212,7 @@ public class StartMenu {
 	 * Determines what the player has chosen based on their currently selected option integer.
 	 */
 	public void choose() {
-		if (!titleScrn) { //if they aren't in the title now, they can only be going back to the title
+		if (!titleScrn) { // if they aren't in the title now, they can only be going back to the title
 			creditsScrn = false;
 			titleScrn = true;
 			howPlayScrn = false;

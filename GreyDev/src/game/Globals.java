@@ -153,7 +153,6 @@ public class Globals {
 		double angle =(-1)* Math.toDegrees(Math.atan2(yDiff, xDiff)) - 45;
 		if(angle < 0)
 			angle += 360;
-		System.out.println(angle);
 		if(angle >= 337.5 || angle < 22.5 )
 			return EAST;
 		else if(angle >= 22.5 && angle < 67.5  )

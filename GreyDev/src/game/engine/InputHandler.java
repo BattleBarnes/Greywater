@@ -14,6 +14,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -104,7 +105,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 	public static Trigger menu;
 	public static Trigger use;
 	public static Trigger leftClick;
-	private static Point2D mouseLoc;
+	private static Point2D mouseLoc = new Point.Double(0,0);
 	public static Trigger spaceBar;
 	public static Trigger exit;
 	public static Trigger rightClick;
@@ -254,7 +255,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 	
 	if(me != null) //if mouseinput exists, parse it.
 		switch(me.getButton()){
-		case(MouseEvent.BUTTON1): leftClick.toggle(pressed, me.getLocationOnScreen()); System.out.println(me.getLocationOnScreen());break;	
+		case(MouseEvent.BUTTON1): leftClick.toggle(pressed, me.getLocationOnScreen()); break;	
 		case(MouseEvent.BUTTON3):;
 		case(MouseEvent.BUTTON2): rightClick.toggle(pressed, me.getLocationOnScreen());break;
 		}

@@ -47,11 +47,14 @@ public abstract class Mob extends Entity {
 	 * hitBox.
 	 */
 	public void tick() {
+
 		xLast = getX(); // last location was valid or it would have been undone already
 		yLast = getY();
 		if (HP > 0)
 			getInput(); // get input from AI or controls or whatever
 		super.tick();
+		if(xMoveBy == 0 && yMoveBy ==0)
+			physicsComponent.stopMovement();
 		if (HP > 0)
 			walk();
 		if (HP <= 0 && !graphicsComponent.isAnimating()) {
@@ -74,7 +77,8 @@ public abstract class Mob extends Entity {
 			}
 		}
 
-		direction = Globals.getIntDir(physicsComponent.xDest - getX(), physicsComponent.yDest - getY());
+	//	direction = Globals.getIntDir(physicsComponent.xDest - getX(), physicsComponent.yDest - getY());
+		direction = Globals.getIntDir( (double)physicsComponent.xDest - getX(), (double)physicsComponent.yDest - getY());
 
 		if (physicsComponent.isMoving() && !attacking) { // display animation walk loop.
 			graphicsComponent.loopImg(walkRate, "Walk" + Globals.getStringDir(direction));

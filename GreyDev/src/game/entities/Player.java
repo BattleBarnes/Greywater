@@ -11,6 +11,7 @@
 package game.entities;
 
 import game.Globals;
+import game.engine.Camera;
 import game.engine.InputHandler;
 import game.engine.audio.AudioLoader;
 import game.entities.components.Entity;
@@ -44,10 +45,10 @@ public class Player extends Mob {
 		name = "Tavish";
 		currDirection = "South";
 		this.graphicsComponent = new Sprite(name, name + "StandSouth");
-		this.physicsComponent = new Tangible(x, y, 35, 35, 2);
+		this.physicsComponent = new Tangible(x, y,(int)(35*Camera.scale), (int)(35*Camera.scale), 2);
 
-		spriteXOff = -graphicsComponent.getWidth() / 2 - 100;
-		spriteYOff = -graphicsComponent.getHeight() + 65;
+		spriteXOff = (int) (-graphicsComponent.getWidth() / 2 - 65 -35*Camera.scale);
+		spriteYOff = (int) (-graphicsComponent.getHeight() + 30 + 35*Camera.scale);
 		inv = m;
 		this.walkRate = .5;
 	}
@@ -105,16 +106,21 @@ public class Player extends Mob {
 		}
 
 		if (InputHandler.leftClick.heldDown && !attacking) {
-			Point r = (Point) InputHandler.getScaledMouse();
+			Point r = (Point) InputHandler.getMouse();
 			Point p = Globals.isoToGrid(r.x, r.y);
 			lastClick = p;
-			attRect = new Rectangle(p.x - 70, p.y - 70, 140, 140);
-		} else if (InputHandler.spaceBar.heldDown && !attacking) {
+			attRect = new Rectangle(p.x - 90, p.y - 90, 180, 180);
+			this.xMoveBy = -(getX() - p.x);
+			this.yMoveBy = -(getY() - p.y);
+			System.out.println(xMoveBy);
+			System.out.println(yMoveBy);
+			System.out.println();
+		} else if (InputHandler.spaceBar.heldDown && !attacking) {//if spacebar attack
 			Rectangle r = this.getPhysicsShape();
 			attRect = new Rectangle(r.x - 90, r.y - 90, r.width + 180, r.height + 180);
-		} else if (target != null)
+		} else if (target != null) //if there is a target assigned, kill it
 			attack((Mob) target);
-		else {
+		else { //otherwise, not attacking
 			attRect = null;
 			attacking = false;
 		}
