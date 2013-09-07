@@ -36,8 +36,9 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 		public int waitTicks; //how long the button has been considered toggled on
 		public boolean heldDown; //for mashing a button
 		public boolean keyTapped; //for one press buttons. (Discrete, not continuous)
-		public int xPos;
-		public int yPos;
+		public double xPos;
+		public double yPos;
+		public Point2D location;
 		
 		public Trigger(){
 			controls.add(this);
@@ -59,6 +60,9 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 		public void toggle(boolean pressed, Point p){
 			xPos = p.x;
 			yPos = p.y;
+			location = p;
+			
+			System.out.println("Click " + p.getX() + "," + p.getY());
 			
 			if(pressed != heldDown){
 				heldDown = pressed; //if button is not pressed, then it is not held down, and vice versa
@@ -255,7 +259,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 	
 	if(me != null) //if mouseinput exists, parse it.
 		switch(me.getButton()){
-		case(MouseEvent.BUTTON1): leftClick.toggle(pressed, me.getLocationOnScreen()); break;	
+		case(MouseEvent.BUTTON1): leftClick.toggle(pressed, me.getPoint()/*me.getLocationOnScreen()*/); break;	
 		case(MouseEvent.BUTTON3):;
 		case(MouseEvent.BUTTON2): rightClick.toggle(pressed, me.getLocationOnScreen());break;
 		}

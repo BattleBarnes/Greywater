@@ -14,12 +14,12 @@ public class Item extends Entity {
 	public int itemID = 00;
 	public String showName;
 	
-	public Item(String imgName, int x, int y, int code, String displayName){
+	public Item(String imgName, double d, double e, int code, String displayName){
 		this.showName = displayName;
 		this.name = imgName;
 		itemID = code;
 		graphicsComponent = new Sprite(imgName, imgName);
-		physicsComponent = new Tangible(x, y, graphicsComponent.getWidth(), graphicsComponent.getHeight(), 0);
+		physicsComponent = new Tangible(d, e, graphicsComponent.getWidth(), graphicsComponent.getHeight(), 0);
 	}
 
 	
@@ -29,7 +29,7 @@ public class Item extends Entity {
 	
 	
 	public void render(Graphics g){
-		graphicsComponent.render(g, getX(), getY());
+		graphicsComponent.render(g, (int)getX(), (int)getY());
 	}
 	
 	public void move(int x, int y){

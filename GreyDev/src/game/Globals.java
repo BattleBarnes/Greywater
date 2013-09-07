@@ -23,11 +23,12 @@ public class Globals {
 	public static final int WEST = 6;
 	public static final int NORTHWEST = 7;
 	public static State state = State.mainMenu;
-	
+	public static int DEVMODE = 1;
+	//0 = on and only render flatspace, 1 = off, 2 = on and render flatspace merged with isometric
 
 	//width and height of a tile in memory (not image size)
-	public static int tileWidth;
-	public static int tileHeight;
+	public static double tileWidth;
+	public static double tileHeight;
 	public static Random rand = new Random(); //used for dicerolls
 	
 	/**
@@ -38,9 +39,9 @@ public class Globals {
 	 * @param y - y location
 	 * @return Point whose x and y value are the array indices of the tile in question.
 	 */
-	public static Point findTile(int x, int y){
-		int xt = x / tileWidth;
-		int yt = y/tileHeight;
+	public static Point findTile(double x, double y){
+		int xt = (int) Math.round(x / tileWidth);
+		int yt = (int) Math.round(y/tileHeight);
 		return new Point(xt,yt);
 	}
 	
@@ -53,12 +54,19 @@ public class Globals {
 	 * @param y - y on screen
 	 * @return
 	 */
-	public static Point isoToGrid(int x, int y) {
+	public static Point2D isoToGrid(double x, double y) {
 		x += Camera.xOffset;
 		y += Camera.yOffset;
-		int X = x/2 + y;
-		int Y = y - x/2;
-		return new Point(X, Y);
+		double X = x/2 + y - 3*tileWidth/2;
+		double Y = y - x/2;
+		
+	//	double X = x + y;
+	//	double Y = 2 * y - x;
+		
+		
+//		double X = 2*x - x/2 + y;
+//		double Y = 3 * y - x/2;
+		return new Point2D.Double(X, Y);
 	}
 	
 	/**
@@ -67,10 +75,10 @@ public class Globals {
 	 * @param y - y location in square-space
 	 * @return a Point with the objects X and Y co-ordinates adjusted for Isometric Display
 	 */
-	public static Point getIsoCoords(int x, int y) {
-		int X = x - y;
-		int Y = (x + y)/2;
-		return new Point(X, Y);
+	public static Point2D getIsoCoords(double x, double y) {
+		double X = x - y;
+		double Y = (x + y)/2;
+		return new Point2D.Double(X, Y);
 	}
 	
 	

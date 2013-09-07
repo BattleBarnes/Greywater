@@ -4,28 +4,29 @@ import game.Globals;
 import game.world.World;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class PathFinder {
 	private final int MAXRETRIES = 130;
 	int retries = 0;
-	ArrayList<Point> path;
+	ArrayList<Point2D> path;
 	private World world;
 	int pathIndex = 0;
 
 	public PathFinder(World w) {
-		path = new ArrayList<Point>();
+		path = new ArrayList<Point2D>();
 		world = w;
 	}
 
-	public void setNewPath(Point start, Point goal) {
+	public void setNewPath(Point2D start, Point2D goal) {
 		path = aStar(start, goal);
 		pathIndex = 0;
 		System.out.println(retries);
 		retries = 0;
 	}
 
-	public Point getNextLoc() {
+	public Point2D getNextLoc() {
 		if (path == null || pathIndex == path.size())
 			return null;
 		else {
@@ -34,12 +35,12 @@ public class PathFinder {
 		}
 	}
 
-	private ArrayList<Point> aStar(Point startLoc, Point goalLoc) {
+	private ArrayList<Point2D> aStar(Point2D start, Point2D goal) {
 		double newCost;
 		PathNode bestNode, newNode;
 
-		PathNode startNode = new PathNode(startLoc); // set start node
-		startNode.costToGoal(goalLoc);
+		PathNode startNode = new PathNode(start); // set start node
+		startNode.costToGoal(goal);
 
 		// create the open queue and closed list
 		NodePriQueue open = new NodePriQueue(startNode);
@@ -53,7 +54,7 @@ public class PathFinder {
 				return bestNode.buildPath();
 			}
 
-			if (Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight + 20 || Globals.distance(goalLoc, bestNode.getPoint()) < Globals.tileHeight - 20) { // goal!
+			if (Globals.distance(goal, bestNode.getPoint()) < Globals.tileHeight + 20 || Globals.distance(goal, bestNode.getPoint()) < Globals.tileHeight - 20) { // goal!
 				return bestNode.buildPath(); // return a path to that goal
 				
 			} else {
@@ -71,7 +72,7 @@ public class PathFinder {
 						else if((oldVer != null) &&oldVer.getCostFromStart() <= 3000)
 							continue;
 						else { // store the new/improved node, removing the old one
-							newNode.costToGoal(goalLoc);
+							newNode.costToGoal(goal);
 							// delete the old details (if they exist)
 							closed.delete(newNode.getPoint()); // may do nothing
 							open.delete(newNode.getPoint()); // may do nothing

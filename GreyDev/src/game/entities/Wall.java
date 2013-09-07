@@ -22,14 +22,14 @@ import game.entities.components.Tangible;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 public class Wall extends Entity {
 
-	int tileWidth;
-	int tileHeight;
+	double tileWidth;
+	double tileHeight;
 
 	int xDepth;
 	int wallWidth;
@@ -51,7 +51,7 @@ public class Wall extends Entity {
 	 * @param isoAngle - the slope of the wall
 	 * @param tileWidth - used for aligning it to the floor grid.
 	 */
-	public Wall(int x, int y, Sprite wall, double isoAngle, int tileWidth, int tileHeight, Player p, boolean west) {
+	public Wall(double x, double y, Sprite wall, double isoAngle, double tileWidth, double tileHeight, Player p, boolean west) {
 		this.west = west;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
@@ -64,10 +64,10 @@ public class Wall extends Entity {
 		wallWidth = graphicsComponent.getWidth() - xDepth; // length of the face of the wall
 		transparentSpace = (int) (wallWidth * isoAngle); // how much of the image is transparent space
 
-		physicsComponent = new Tangible(x, y, tileWidth, tileHeight, 0);
+		physicsComponent = new Tangible(x, y, (int) tileWidth, (int) tileHeight, 0);
 
-		spriteXOff = -(4 * tileWidth) - xDepth / 2 + 5;
-		spriteYOff = -(4 * tileHeight) - xDepth + 10;
+		spriteXOff = (int) (-(4 * tileWidth) - xDepth / 2 + 5);
+		spriteYOff = (int) (-(4 * tileHeight) - xDepth + 10);
 
 	}
 
@@ -78,23 +78,32 @@ public class Wall extends Entity {
 	 * @param pDepth - Depth of the player from Entity.getDepth();
 	 */
 	public void render(Graphics g) {
+		
+	if(Globals.DEVMODE != 1){
+			 g.setColor(Color.green);
+			 Rectangle2D r = this.getPhysicsShape();
+			 g.drawRect((int)r.getX() - 500, (int)r.getY(), (int)r.getWidth(), (int)r.getHeight());
+			 if(Globals.DEVMODE == 0)
+				 return;
+
+	}
 
 		graphicsComponent.tick(); // maybe walls are animated
 
 		// if player is in front of wall, render normally
-		Point p = Globals.getIsoCoords(getX() + spriteXOff, getY() + spriteYOff);
+		Point2D p = Globals.getIsoCoords(getX() + spriteXOff, getY() + spriteYOff);
 
 		if (getX() == 0 || getY() == 0) {
-			graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
+			graphicsComponent.render(g, (int)p.getX()  - Camera.xOffset, (int)p.getY() - Camera.yOffset);
 			return;
 		}
 		if (this.getY() < player.getY()) {
-			graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
+			graphicsComponent.render(g, (int)p.getX()  - Camera.xOffset, (int)p.getY() - Camera.yOffset);
 			return;
 
 		} else {
 			if (getX() < player.getX()) {
-				graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
+				graphicsComponent.render(g, (int)p.getX()  - Camera.xOffset, (int)p.getY() - Camera.yOffset);
 				return;
 			}
 
@@ -103,14 +112,18 @@ public class Wall extends Entity {
 		Point2D plgrid = new Point2D.Double(player.getX(), player.getY());
 		Point2D pwgrid = new Point2D.Double(getX(), getY());
 		int distance = (int) Globals.distance(plgrid, pwgrid);
-		distance = distance / Globals.tileHeight;
+		distance = (int) Math.round( distance / Globals.tileHeight);
 
 		if (distance > 10)
-			graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
+			graphicsComponent.render(g,(int)p.getX()  - Camera.xOffset, (int)p.getY() - Camera.yOffset);
 		else {
-			graphicsComponent.drawTransparent(g, p.x - Camera.xOffset, p.y - Camera.yOffset, 0.3f);
+			graphicsComponent.drawTransparent(g, (int)p.getX()  - Camera.xOffset, (int)p.getY() - Camera.yOffset, 0.3f);
 		}
 
+	}
+	
+	public void printName(){
+		System.out.println(graphicsComponent.getCurrentImageName());
 	}
 
 }

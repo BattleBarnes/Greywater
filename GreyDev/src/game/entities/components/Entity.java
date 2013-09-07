@@ -41,84 +41,85 @@ import game.engine.Camera;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 public abstract class Entity {
-	
-	/* **** All entities have a physics component for collisions and position, and a graphics component to render on screen ****/
-	protected Tangible physicsComponent; //hitbox
-	protected Sprite graphicsComponent; //sprite
-	
-	
-	
-	/* *** Position is determined by the hitbox, so offsets are tracked to draw in relation to the hitbox. Subclasses must set. ***/
-	protected int spriteXOff; //horizontal distance from (0,0) on hitbox to (0,0) on sprite
-	protected int spriteYOff; //vertical distance from (0,0) on hitbox to (0,0) on sprite
-	
+
+	/* **** All entities have a physics component for collisions and position, and a graphics component to render on screen *** */
+	protected Tangible physicsComponent; // hitbox
+	protected Sprite graphicsComponent; // sprite
+
+	/* *** Position is determined by the hitbox, so offsets are tracked to draw in relation to the hitbox. Subclasses must set. ** */
+	protected int spriteXOff; // horizontal distance from (0,0) on hitbox to (0,0) on sprite
+	protected int spriteYOff; // vertical distance from (0,0) on hitbox to (0,0) on sprite
 
 	/**
 	 * Ticks components (graphics and physics)
 	 */
-	public void tick(){
-		physicsComponent.tick(); //update components
+	public void tick() {
+		physicsComponent.tick(); // update components
 		graphicsComponent.tick();
 	}
-	
-	
+
 	/**
 	 * Draws the current sprite for this entity.
+	 * 
 	 * @param g - Graphics object
 	 */
-	public void render(Graphics g){
-//		g.setColor(Color.PINK);
-//		Rectangle r = this.getPhysicsShape();
-//		g.drawRect(r.x, r.y, r.width, r.height);
-		int xPos = getX();
-		int yPos = getY();
-		Point p = Globals.getIsoCoords(xPos + spriteXOff, yPos + spriteYOff);
-		graphicsComponent.render(g, p.x - Camera.xOffset, p.y - Camera.yOffset);
-	}
-	
-	
-	public void setLocation(int x, int y){
+	public void render(Graphics g) {
+		Rectangle2D r = this.getPhysicsShape();
 
-		physicsComponent.updateHitSpace(x, y);
+		if (Globals.DEVMODE != 1) {
+			g.setColor(Color.PINK);
+			g.drawRect((int) r.getX() - 500, (int) r.getY(), (int) r.getWidth(), (int) r.getHeight());
+		}
+	
+		if(Globals.DEVMODE > 0){
+			Point2D p = Globals.getIsoCoords(getX() + spriteXOff, getY() + spriteYOff);
+			//Point2D p = Globals.getIsoCoords(getX(), getY());
+			graphicsComponent.render(g, (int) Math.round(p.getX() - Camera.xOffset), (int)Math.round(p.getY() - Camera.yOffset));
+		}
+	}
+
+	/**
+	 * Stops movement, teleports Entity to given coordinates.
+	 * @param x - x coordinate
+	 * @param y - y coordinate
+	 */
+	public void setLocation(double x, double y) {
+		physicsComponent.updateHitSpace(x,y);
 		physicsComponent.stopMovement();
 	}
 
 	/**
 	 * @return the Tangible used for collisions and positioning
 	 */
-	public Tangible getPhysics(){
+	public Tangible getPhysics() {
 		return physicsComponent;
 	}
 
-	
 	/**
 	 * @return the Shape used for collision detection
 	 */
-	public Rectangle getPhysicsShape(){
+	public Rectangle2D getPhysicsShape() {
 		return physicsComponent.getPhysicsShape();
 	}
-	
-	public int getX(){
-		return physicsComponent.getPhysicsShape().x;
+
+	public double getX() {
+		return physicsComponent.position.x;
 	}
-	
-	public int getY(){
-		return physicsComponent.getPhysicsShape().y;
+
+	public double getY() {
+		return physicsComponent.position.y;
 	}
-	
+
 	/**
 	 * @return The approximate depth in Z space of the entity. Used for render sorting.
 	 */
-	public double getDepth(){
+	public double getDepth() {
 		double x = physicsComponent.getPhysicsShape().getCenterX();
 		double y = physicsComponent.getPhysicsShape().getCenterY();
-		return (x+y) * .866;
+		return (x + y) * .866;
 	}
-		
 }
-	
-	

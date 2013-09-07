@@ -14,7 +14,7 @@ public class Sweepy extends Mob {
 		name = "Sweepy";
 		currDirection = "South";
 		this.graphicsComponent = new Sprite(name, name+"South");
-		this.physicsComponent = new Tangible(x, y, 30, 30, 2);
+		this.physicsComponent = new Tangible(x, y, 30, 30, 1);
 
 		spriteXOff = 0;
 		spriteYOff = 0;
@@ -34,8 +34,8 @@ public class Sweepy extends Mob {
 	//		Globals.state = State.gameWon;
 	//	}
 
-		if (xMoveBy != 0 || yMoveBy != 0 && validSight) { // sets the physicsComponent moving
-			physicsComponent.moveTo(getX() + xMoveBy, getY() + yMoveBy);
+		if (validSight) { // sets the physicsComponent moving
+			//physicsComponent.moveTo(getX() + xMoveBy, getY() + yMoveBy);
 
 			
 			direction = Globals.getIntDir(target.getX() - getX()*1.0, 1.0*target.getY() - getY());
@@ -46,8 +46,7 @@ public class Sweepy extends Mob {
 			}
 		}
 		//System.out.println("SweepyData: XMB: " + xMoveBy +" YMB: " +yMoveBy + " StrDir: " +currDirection);
-		xMoveBy = 0;// Clear these out for the next input cycle.
-		yMoveBy = 0;
+
 
 	}
 
@@ -55,8 +54,7 @@ public class Sweepy extends Mob {
 	@Override
 	protected void getInput() {
 		
-		xMoveBy = target.getX() - this.getX();
-		yMoveBy = target.getY() - this.getY();
+		physicsComponent.destination.setLocation(target.getPhysics().position);
 	
 //		if(Math.abs(xMoveBy) < 2*getPhysicsShape().width && Math.abs(yMoveBy) < 2*getPhysicsShape().width){
 //			this.physicsComponent.stopMovement();

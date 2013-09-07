@@ -1,6 +1,7 @@
 package game.entities.components.ai;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class NodePriQueue {
@@ -30,7 +31,7 @@ public class NodePriQueue {
 		return nodes.remove(0);
 	}
 
-	public PathNode findNode(Point p)
+	public PathNode findNode(Point2D p)
 	// a linear search looking for the tile at point p;
 	{
 		PathNode entry;
@@ -42,11 +43,11 @@ public class NodePriQueue {
 		return null;
 	} // end of findNode()
 
-	public boolean delete(Point p){
-		Point entry;
+	public boolean delete(Point2D point2d){
+		Point2D entry;
 		for (int i = 0; i < nodes.size(); i++) {
 			entry = nodes.get(i).getPoint();
-			if (entry.equals(p)) {
+			if (entry.equals(point2d)) {
 				nodes.remove(i);
 				return true;
 			}

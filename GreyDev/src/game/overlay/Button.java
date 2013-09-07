@@ -50,7 +50,7 @@ public class Button extends Entity {
 	 */
 	public void render(Graphics g){
 		if(visible)
-			graphicsComponent.render(g, getX(), getY());
+			graphicsComponent.render(g, (int)getX(), (int)getY());
 	}
 
 }

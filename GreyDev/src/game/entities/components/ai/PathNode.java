@@ -4,11 +4,12 @@ import game.Globals;
 import game.world.World;
 
 import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class PathNode {
-	private Point coord;
+	private Point2D coord;
 	private double costFromStart;
 	private double costToGoal;
 
@@ -16,8 +17,8 @@ public class PathNode {
 
 	// can be used to build a path from the starting tile to here
 
-	public PathNode(Point p) {
-		coord = p;
+	public PathNode(Point2D start) {
+		coord = start;
 		parent = null;
 		costFromStart = 0.0;
 	}
@@ -30,10 +31,10 @@ public class PathNode {
 		return costFromStart;
 	}
 
-	public void costToGoal(Point goal)
+	public void costToGoal(Point2D goal)
 	// calculate _floor_ of the straight line dist. to the goal
 	{
-		double dist = coord.distance(goal.x, goal.y);
+		double dist = coord.distance(goal.getX(), goal.getY());
 		costToGoal = Math.floor(dist);
 		// System.out.println(coord + " to " + goal + ": " + costToGoal);
 	}
@@ -42,7 +43,7 @@ public class PathNode {
 		return costFromStart + costToGoal;
 	}
 
-	public Point getPoint() {
+	public Point2D getPoint() {
 		return coord;
 	}
 
@@ -61,8 +62,8 @@ public class PathNode {
 	 */
 	{
 		PathNode newNode = null;
-		int x = coord.x;
-		int y = coord.y;
+		double x = coord.getX();
+		double y = coord.getY();
 		
 		switch(direction){
 		case Globals.NORTH: newNode = makeNode(x, y - Globals.tileHeight, wd, direction); break;
@@ -87,20 +88,20 @@ public class PathNode {
 	 * current node's value, since the new node is one node further along the
 	 * path.
 	 */
-	private PathNode makeNode(int x, int y, World wd, int direction){
-		if (!wd.checkValidTile(x, y))
+	private PathNode makeNode(double x, double y, World wd, int direction){
+		if (!wd.checkValidTile((int)x, (int)y))
 			return null;
-			if(wd.checkWorldCollision(new Rectangle(coord.x +10, coord.y +10 ,2*(x - coord.x) ,(y - coord.y) *2))){
+			if(wd.checkWorldCollision(new Rectangle2D.Double(coord.getX() +10, coord.getY() +10 ,2*(x - coord.getX()) ,(y - coord.getY()) *2))){
 				return null;
 			}
-		PathNode newNode = new PathNode(new Point(x, y));
+		PathNode newNode = new PathNode(new Point2D.Double(x, y));
 		newNode.setCostFromStart(getCostFromStart() + Math.pow(Globals.distance(newNode.getPoint(), this.getPoint()),2));
 		newNode.setParent(this);
 		return newNode;
 	} // end of makeNode()
 
-	public ArrayList<Point> buildPath(){
-		ArrayList<Point> path = new ArrayList<Point>();
+	public ArrayList<Point2D> buildPath(){
+		ArrayList<Point2D> path = new ArrayList<Point2D>();
 		path.add(coord);
 		PathNode temp = parent;
 		while (temp != null) {

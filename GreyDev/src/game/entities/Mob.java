@@ -7,8 +7,9 @@ import game.entities.components.ai.PathFinder;
 import game.overlay.InventoryMenu;
 import game.world.World;
 
-import java.awt.Point;
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
 
 public abstract class Mob extends Entity {
 
@@ -17,29 +18,30 @@ public abstract class Mob extends Entity {
 	protected String currDirection = "South";
 	protected String name;
 	public Entity target;
-	public Point destination;
+	// public Point destination;
 	boolean walks = true;
 	public boolean playerFriend;
 
 	PathFinder p;
 
 	protected int HP = 100;
-	protected double walkRate = .59; // used to determine how fast a mob's walk
-										// animation cycle is
+	protected double walkRate = 1; // used to determine how fast a mob's walk
+									// animation cycle is
 	protected Line2D sight;
 	protected boolean validSight;
 	public int sightRange;
 
 	/* **** POSITIONING VARIABLES ***** */
-	protected int xMoveBy; // how much the entity is moving in the x direction
-							// (DELTA)
-	protected int yMoveBy; // how much the entity is moving in the y direction
-
-	public int xLast; // last valid (non colliding) x position
-	public int yLast; // last valid (non colliding) y position
+	public double xLast; // last valid (non colliding) x position
+	public double yLast; // last valid (non colliding) y position
 	boolean attacking = false;
 	protected InventoryMenu inv;
 	public InventoryMenu currentLoot;
+	protected World world;
+
+	public void init(World w) {
+		world = w;
+	}
 
 	/**
 	 * Generic method for moving entities: Saves last valid position, moves the
@@ -53,32 +55,42 @@ public abstract class Mob extends Entity {
 		if (HP > 0)
 			getInput(); // get input from AI or controls or whatever
 		super.tick();
-		if(xMoveBy == 0 && yMoveBy ==0)
+		if (!validateNextPos(getPhysicsShape())) {
+			double width = getPhysicsShape().getWidth();
+			double height = getPhysicsShape().getHeight();
+
+			Rectangle2D r = new Rectangle2D.Double(xLast, getY(), width, height);
+			if (!validateNextPos(r)) { // if xLast didn't fix it, y is the problem
+				physicsComponent.destination.setLocation(physicsComponent.destination.getX(), yLast);
+				physicsComponent.position.y = yLast;
+			}
+			r = new Rectangle2D.Double(getX(), yLast, width, height);
+			if (!validateNextPos(r)){ //if yLast didn't fix it, x is the problem
+				physicsComponent.destination.setLocation(xLast, physicsComponent.destination.getX());
+				physicsComponent.position.x = xLast;
+			}
+		}
+
+		if (!physicsComponent.isMoving())
 			physicsComponent.stopMovement();
+
 		if (HP > 0)
 			walk();
+
 		if (HP <= 0 && !graphicsComponent.isAnimating()) {
 			graphicsComponent = new Sprite(this.name, name + "Dead");
 		}
-		
 
 	}
 
 	/**
-	 * Moves the physics component, dismisses any open loot windows, finds the direction of movement,
+	 * Dismisses any open loot windows, finds the direction of movement,
 	 * shows the walk animation
 	 */
 	public void walk() {
-		if (xMoveBy != 0 || yMoveBy != 0) { // sets the physicsComponent moving
-			physicsComponent.moveTo(getX() + xMoveBy, getY() + yMoveBy);
-			currentLoot = null;
-			if (destination == null || destination.x != xMoveBy + getX() || destination.y != yMoveBy + getY()) {
-				destination = new Point(xMoveBy + getX(), yMoveBy + getY());
-			}
-		}
 
-	//	direction = Globals.getIntDir(physicsComponent.xDest - getX(), physicsComponent.yDest - getY());
-		direction = Globals.getIntDir( (double)physicsComponent.xDest - getX(), (double)physicsComponent.yDest - getY());
+		// direction = Globals.getIntDir(physicsComponent.xDest - getX(), physicsComponent.yDest - getY());
+		direction = Globals.getIntDir(physicsComponent.destination.getX() - getX(), physicsComponent.destination.getY() - getY());
 
 		if (physicsComponent.isMoving() && !attacking) { // display animation walk loop.
 			graphicsComponent.loopImg(walkRate, "Walk" + Globals.getStringDir(direction));
@@ -86,9 +98,6 @@ public abstract class Mob extends Entity {
 		} else if (!attacking) {
 			graphicsComponent.loopImg(.5, "Stand" + currDirection);
 		}
-
-		xMoveBy = 0;// Clear these out for the next input cycle.
-		yMoveBy = 0;
 
 	}
 
@@ -102,28 +111,16 @@ public abstract class Mob extends Entity {
 		if (x && y) {
 			physicsComponent.updateHitSpace(xLast, yLast);
 			physicsComponent.stopMovement();
-			xMoveBy = 0;
-			yMoveBy = 0;
-			destination = null;
 
 		} else if (x) {
 			physicsComponent.updateHitSpace(xLast, yLast);
 			physicsComponent.stopXMovement();
-			yMoveBy *= 5;
-			xMoveBy *= 0;
-			destination = null;
 
 		} else if (y) {
 			physicsComponent.updateHitSpace(xLast, yLast);
 			physicsComponent.stopYMovement();
-			xMoveBy *= 5;
-			yMoveBy *= 0;
-
-			destination = null;
-
 		}
 
-		physicsComponent.move(xMoveBy, yMoveBy);
 		physicsComponent.tick();
 	}
 
@@ -135,12 +132,21 @@ public abstract class Mob extends Entity {
 
 	protected abstract void attack(Mob enemy);
 
+	/**
+	 * @return a line connecting the entity with the player
+	 */
 	public Line2D getSight() {
 		return sight;
 	}
 
-	public void validateSight(boolean valid) {
-		validSight = valid;
+	/**
+	 * Determines whether or not the Mob has a valid sightline (exists, is not longer than sightRange, and doesn't collide with walls)
+	 * Sets validSight to whether or not the sight is valid.
+	 */
+	public void validateSight() {
+		if(sight != null && Globals.distance(sight.getP1(), sight.getP2()) < this.sightRange && !world.checkWorldCollision(sight))
+			validSight = true;
+		validSight = false;
 	}
 
 	public void addPathFinder(World l) {
@@ -181,6 +187,15 @@ public abstract class Mob extends Entity {
 		if (!isAlive()) {
 			interactor.currentLoot = inv;
 		}
+	}
+
+	/**
+	 * 
+	 * @return whether or not the current position is colliding with the world
+	 *         (True = colliding, invalid; False = no collide, valid)
+	 */
+	public boolean validateNextPos(Rectangle2D hitbox) {
+		return !world.checkWorldCollision(hitbox);
 	}
 
 }

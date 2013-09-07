@@ -12,14 +12,19 @@
  */
 package game.world;
 
+import game.Globals;
+import game.engine.Camera;
 import game.entities.components.Entity;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
 
 import java.awt.Graphics;
+import java.awt.geom.Point2D;
 
 public class Tile extends Entity {
 
+	public boolean isSelected = false;
+	
 	/**
 	 * Constructor!
 	 * 
@@ -27,7 +32,7 @@ public class Tile extends Entity {
 	 * @param xPos -y location in 2D flatspace
 	 * @param yPos -x location in 2D flatspace
 	 */
-	public Tile(Sprite graphicsComponent, int xPos, int yPos) {
+	public Tile(Sprite graphicsComponent, double xPos, double yPos) {
 		this.graphicsComponent = graphicsComponent;
 		//width is half because graphics component is isometric - 2:1 W:H ratio, needs fixing for square flatspace
 		//speed is 0 because tiles don't move, silly
@@ -42,10 +47,17 @@ public class Tile extends Entity {
 	 * @param g - Graphics device
 	 */
 	public void render(Graphics g){
+		
 		graphicsComponent.tick(); //maybe walls are animated
+		if(isSelected){
+			this.graphicsComponent = new Sprite("hl", "hl");
+		}
+		if(getX() < 500 && getY() < 200)
+		System.out.println("This tile is at " + getX() + " , " + getY() + " And it shows up at " + Globals.getIsoCoords(getX() + spriteXOff , getY() + spriteYOff));
 		super.render(g);
 	}
 
+	
 	
 
 
