@@ -31,9 +31,9 @@ public class Wall extends Entity {
 	double tileWidth;
 	double tileHeight;
 
-	int xDepth;
-	int wallWidth;
-	int transparentSpace;
+	double xDepth;
+	double wallWidth;
+	double transparentSpace;
 	double isoAngle;
 
 	Player player;
@@ -64,7 +64,7 @@ public class Wall extends Entity {
 		wallWidth = graphicsComponent.getWidth() - xDepth; // length of the face of the wall
 		transparentSpace = (int) (wallWidth * isoAngle); // how much of the image is transparent space
 
-		physicsComponent = new Tangible(x, y, (int) tileWidth, (int) tileHeight, 0);
+		physicsComponent = new Tangible(x, y, (int)tileWidth, (int)tileHeight, 0);
 
 		spriteXOff = (int) (-(4 * tileWidth) - xDepth / 2 + 5);
 		spriteYOff = (int) (-(4 * tileHeight) - xDepth + 10);
@@ -94,16 +94,16 @@ public class Wall extends Entity {
 		Point2D p = Globals.getIsoCoords(getX() + spriteXOff, getY() + spriteYOff);
 
 		if (getX() == 0 || getY() == 0) {
-			graphicsComponent.render(g, (int)p.getX()  - Camera.xOffset, (int)p.getY() - Camera.yOffset);
+			graphicsComponent.render(g, (int)Math.round(p.getX())  - Camera.xOffset, (int)Math.round(p.getY()) - Camera.yOffset);
 			return;
 		}
 		if (this.getY() < player.getY()) {
-			graphicsComponent.render(g, (int)p.getX()  - Camera.xOffset, (int)p.getY() - Camera.yOffset);
+			graphicsComponent.render(g, (int)Math.round(p.getX())  - Camera.xOffset, (int)Math.round(p.getY()) - Camera.yOffset);
 			return;
 
 		} else {
 			if (getX() < player.getX()) {
-				graphicsComponent.render(g, (int)p.getX()  - Camera.xOffset, (int)p.getY() - Camera.yOffset);
+				graphicsComponent.render(g, (int)Math.round(p.getX())  - Camera.xOffset, (int)Math.round(p.getY()) - Camera.yOffset);
 				return;
 			}
 
@@ -115,9 +115,9 @@ public class Wall extends Entity {
 		distance = (int) Math.round( distance / Globals.tileHeight);
 
 		if (distance > 10)
-			graphicsComponent.render(g,(int)p.getX()  - Camera.xOffset, (int)p.getY() - Camera.yOffset);
+			graphicsComponent.render(g,(int)Math.round(p.getX() ) - Camera.xOffset, (int)Math.round(p.getY()) - Camera.yOffset);
 		else {
-			graphicsComponent.drawTransparent(g, (int)p.getX()  - Camera.xOffset, (int)p.getY() - Camera.yOffset, 0.3f);
+			graphicsComponent.drawTransparent(g, Math.round((int)p.getX())  - Camera.xOffset, (int)Math.round(p.getY()) - Camera.yOffset, 0.3f);
 		}
 
 	}

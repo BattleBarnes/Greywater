@@ -49,10 +49,10 @@ public class Player extends Mob {
 		name = "Tavish";
 		currDirection = "South";
 		this.graphicsComponent = new Sprite(name, name + "StandSouth");
-		this.physicsComponent = new Tangible(x, y, (int) (35 * Camera.scale), (int) (35 * Camera.scale), 1.);
+		this.physicsComponent = new Tangible(x, y,  35, 35, 1.);
 
-		spriteXOff = (int) (-graphicsComponent.getWidth() / 2 - 65 - 35 * Camera.scale);
-		spriteYOff = (int) (-graphicsComponent.getHeight() + 30 + 35 * Camera.scale);
+		spriteXOff = (int) (-graphicsComponent.getWidth() / 2 - 65 - 35) ;
+		spriteYOff = (int) (-graphicsComponent.getHeight() + 30 + 35);
 		inv = m;
 		this.walkRate = 1;
 	}
