@@ -33,6 +33,7 @@ public class Camera  {
 	public static int width;
 	public static int height;
 	
+	public static double sscale;
 
 	
 
@@ -52,7 +53,8 @@ public class Camera  {
 		width = w;
 		height = h;
 		
-		scale = width*1./actWidth;
+		scale = 1;
+		sscale = width*1./actWidth;
 	}
 
 	/**

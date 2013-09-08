@@ -22,8 +22,6 @@ import java.awt.Graphics;
 import java.awt.geom.Point2D;
 
 public class Tile extends Entity {
-
-	public boolean isSelected = false;
 	
 	/**
 	 * Constructor!
@@ -49,11 +47,6 @@ public class Tile extends Entity {
 	public void render(Graphics g){
 		
 		graphicsComponent.tick(); //maybe walls are animated
-		if(isSelected){
-			this.graphicsComponent = new Sprite("hl", "hl");
-		}
-		if(getX() < 500 && getY() < 200)
-		System.out.println("This tile is at " + getX() + " , " + getY() + " And it shows up at " + Globals.getIsoCoords(getX() + spriteXOff , getY() + spriteYOff));
 		super.render(g);
 	}
 

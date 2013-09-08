@@ -68,8 +68,8 @@ public class ImageLoader {
 		
 		currentFolder = "Images/common/";
 		readFile("common/"+filePath); //common images
-		currentFolder = "Images/"+ Camera.width +"/";
-		readFile(Camera.width+"/"+filepath); //resolution specific images
+	//	currentFolder = "Images/"+ Camera.width +"/";
+	//	readFile(Camera.width+"/"+filepath); //resolution specific images
 	}
 
 /*
@@ -85,10 +85,10 @@ public class ImageLoader {
 	 * 
 	 * 
 	 */
-	private static void readFile(String filePath){
+	private static void readFile(String fPath){
 		try{
 			
-			File file = new File("Images/"+filePath);
+			File file = new File("Images/"+fPath);
 			System.out.println(file.getAbsolutePath());
 			BufferedReader br = new BufferedReader(new FileReader(file));
 

@@ -81,18 +81,8 @@ public class Player extends Mob {
 		if (InputHandler.leftClick.heldDown && !attacking) {
 			Point2D r =  InputHandler.leftClick.location;
 			Point2D p = Globals.isoToGrid(r.getX(), r.getY());
-			lastClick = r;
-			
-			System.out.println("Iso coords " + p.getX() + "," + p.getY());
-			
 			Point p2 = Globals.findTile(p.getX(), p.getY());
 			
-			System.out.println("Map coords " + p2.x + "," + p2.x);
-			Tile t = world.tileMap[p2.x][p2.y];
-			if(t != null){
-				t.isSelected = true;
-			}
-			//lastClick = p;
 			attRect = new Rectangle2D.Double(p.getX() - 90, p.getY() - 90, 180, 180);
 			this.physicsComponent.moveTo(p.getX(), p.getY());
 			
@@ -113,8 +103,6 @@ public class Player extends Mob {
 	public void render(Graphics g) {
 		if (Globals.DEVMODE == 1){
 			super.render(g);
-			g.setColor(Color.RED);
-			g.fillOval((int)lastClick.getX(), (int)lastClick.getY(), 33, 33);
 		}else {
 			g.setColor(Color.RED);
 			Rectangle2D r = this.getPhysicsShape();

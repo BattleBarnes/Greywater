@@ -19,6 +19,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -281,14 +282,22 @@ public abstract class Engine extends JFrame implements Runnable {
 
 			g.fillRect(0, 0, 3 * Camera.height, 3 * Camera.width);
 			Graphics2D g2 = (Graphics2D) g;
-			AffineTransform at = new AffineTransform();
-			at.scale(Camera.scale, Camera.scale);
+		// SCALE UP TODO	g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+		// SCLAE DOWN TODO	g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-			if (Camera.scale != 1.0) {
+			g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		//	g2.scale(.85375,.85375);
+		//	g2.translate(-400, 0);
+			
+			
+			AffineTransform at = new AffineTransform();
+			at.scale(Camera.sscale, Camera.sscale);
+				System.out.println(Camera.sscale);
+			//if (Camera.scale != 1.0) {
 				AffineTransformOp t = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 				g2.transform(t.getTransform());
-				g2.translate((Camera.width - Camera.actWidth) / 2, (Camera.height - Camera.actHeight) / 2);
-			}
+				//g2.translate((Camera.width - Camera.actWidth) / 2, (Camera.height - Camera.actHeight) / 2);
+		//	}
 			fullScreenRender(g2);
 			g2.dispose();
 			g.dispose();
