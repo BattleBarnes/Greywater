@@ -55,14 +55,14 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 		/**
 		 * Mouse triggers
 		 * @param pressed - true = clicked, false = released
-		 * @param p - point that was clicked.
+		 * @param loc - point that was clicked.
 		 */
-		public void toggle(boolean pressed, Point p){
-			xPos = p.x;
-			yPos = p.y;
-			location = p;
+		public void toggle(boolean pressed, Point2D loc){
+			xPos = loc.getX();
+			yPos = loc.getY();
+			location = loc;
 			
-			System.out.println("Click " + p.getX() + "," + p.getY());
+		//	System.out.println("Click " + p.getX() + "," + p.getY());
 			
 			if(pressed != heldDown){
 				heldDown = pressed; //if button is not pressed, then it is not held down, and vice versa
@@ -144,8 +144,20 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 	 * 
 	 * @return mouse co-ordinates that match up with *PROGRAM SCALED* images.
 	 */
-	public static Point getScaledMouse(){
-		return new Point((int)(mouseLoc.getX()/Camera.scale),(int)( mouseLoc.getY()/Camera.scale));
+	public static Point2D getScaledMouse(){
+		return new Point2D.Double((mouseLoc.getX()/Camera.sscale),( mouseLoc.getY()/Camera.sscale));
+	}
+	
+	
+	/**
+	 * Sometimes, scaling happens, and so physics objects for menu items don't line up perfectly with the images on screen.
+	 * Its a fact of life. The easiest way to deal with it is to simply scale the mouse input by the inverse image scale, so that
+	 * clicking on the misplaced image actually clicks on the physics hitbox.
+	 * 
+	 * @return mouse co-ordinates that match up with *PROGRAM SCALED* images.
+	 */
+	public static Point2D getScaledMouse(Point2D mouse){
+		return new Point2D.Double((mouse.getX()/Camera.sscale),( mouse.getY()/Camera.sscale));
 	}
 	
 	/**
@@ -259,9 +271,9 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 	
 	if(me != null) //if mouseinput exists, parse it.
 		switch(me.getButton()){
-		case(MouseEvent.BUTTON1): leftClick.toggle(pressed, me.getPoint()/*me.getLocationOnScreen()*/); break;	
+		case(MouseEvent.BUTTON1): leftClick.toggle(pressed, getScaledMouse(me.getLocationOnScreen())); break;	
 		case(MouseEvent.BUTTON3):;
-		case(MouseEvent.BUTTON2): rightClick.toggle(pressed, me.getLocationOnScreen());break;
+		case(MouseEvent.BUTTON2): rightClick.toggle(pressed, getScaledMouse(me.getLocationOnScreen()));break;
 		}
 		
 		

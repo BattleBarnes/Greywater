@@ -73,6 +73,7 @@ public class StartMenu {
 	 * @param g - Graphics object
 	 */
 	public void render(Graphics g) {
+		
 		// if the game is over, show the win screen
 		if (Globals.state == State.gameWon) {
 			title.render(g, 0, 0);
@@ -80,7 +81,7 @@ public class StartMenu {
 			g.setFont(menuFont);
 			String s0 = "You Escaped! You win!";
 			int strw = fm.stringWidth(s0);
-			g.drawString(s0, (int) (Camera.width / 3 - strw / 2), Camera.height / 3 + 50);
+			g.drawString(s0, (int) (Camera.width / 3 - strw / 2), Camera.actHeight / 3 + 50);
 			return;
 
 		}
@@ -96,7 +97,7 @@ public class StartMenu {
 				options[i].render(g, 0, 0); // and draw them
 
 				if (option == i) // if this element is the currently selected one, render the bullet at that location.
-					cursor.render(g, 190, (int) (5 * Camera.height / 15 + 99 * Camera.scale * i)); // TODO come back to this when the menu is finished for each resolution
+					cursor.render(g, 190, (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale * i)); // TODO come back to this when the menu is finished for each resolution
 			}
 		}
 		// if we're on the how to play screen, render that information instead
@@ -123,10 +124,10 @@ public class StartMenu {
 				g.drawString(s[i], (int) (Camera.width / 2 - strw / 2), 100 + 70 * i);
 			}
 			// render the back button TODO come back when the new assets happen
-			back.render(g, (int) (Camera.width / 2 - 105 * Camera.scale), (int) (Camera.height - back.getHeight() * Camera.scale));
+			back.render(g, (int) (Camera.width / 2 - 105 * Camera.scale), (int) (Camera.actHeight - back.getHeight() * Camera.scale));
 
 			// draw the cursor next to the back button
-			cursor.render(g, Camera.width / 2 - 160, (int) (Camera.height - back.getHeight() * Camera.scale));
+			cursor.render(g, Camera.width / 2 - 160, (int) (Camera.actHeight - back.getHeight() * Camera.scale));
 
 		}// otherwise, render the "credits" screen!
 		else if (creditsScrn) {
@@ -159,8 +160,8 @@ public class StartMenu {
 
 			}
 			// render the back button and cursor TODO come back when new art assets for differnet resolutions happen
-			back.render(g, (int) (Camera.width / 2 - back.getWidth() * Camera.scale), (int) (Camera.height - back.getHeight() * Camera.scale));
-			cursor.render(g, Camera.width / 2 - 160, (int) (Camera.height - back.getHeight() * Camera.scale));
+			back.render(g, (int) (Camera.width / 2 - back.getWidth() * Camera.scale), (int) (Camera.actHeight - back.getHeight() * Camera.scale));
+			cursor.render(g, Camera.width / 2 - 160, (int) (Camera.actHeight - back.getHeight() * Camera.scale));
 
 		}
 	}
@@ -176,25 +177,25 @@ public class StartMenu {
 				option++; // move cursor down if not at bottom
 			} else if (InputHandler.use.keyTapped) {
 				choose(); // if they hit enter, choose that selection
-			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.height / 15) && InputHandler.getMouse().getY() < (int) (5 * Camera.height / 15 + 99 * Camera.scale)) {
+			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale)) {
 				option = 0;
 
 				if (InputHandler.leftClick.keyTapped) {
 					choose();
 				}
-			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.height / 15 + 99 * Camera.scale) && InputHandler.getMouse().getY() < (int) (5 * Camera.height / 15 + 99 * Camera.scale * 2)) {
+			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale * 2)) {
 				option = 1;
 
 				if (InputHandler.leftClick.keyTapped) {
 					choose();
 				}
-			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.height / 15 + 99 * Camera.scale * 2) && InputHandler.getMouse().getY() < (int) (5 * Camera.height / 15 + 99 * Camera.scale * 3)) {
+			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale * 2) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale * 3)) {
 				option = 2;
 
 				if (InputHandler.leftClick.keyTapped) {
 					choose();
 				}
-			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.height / 15 + 99 * Camera.scale * 3) && InputHandler.getMouse().getY() < (int) (5 * Camera.height / 15 + 99 * Camera.scale * 4)) {
+			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale * 3) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale * 4)) {
 				option = 3;
 
 				if (InputHandler.leftClick.keyTapped) {

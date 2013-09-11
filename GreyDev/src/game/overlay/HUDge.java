@@ -53,10 +53,11 @@ public class HUDge {
 	public void render(Graphics g){
 		g.setFont(menuFont);
 		g.setColor(Color.BLACK);
+		inv.render(g);
 
 		hud.render(g, 0, (int) (Camera.actHeight - hud.getHeight())); //draw hudbody
-		g.drawRect((int)(Camera.actWidth/2 - 45), (Camera.actHeight - hud.getHeight()), 90,90);
-		Point2D p = InputHandler.leftClick.location;
+		//g.drawRect((int)(Camera.actWidth/2 - 45), (Camera.actHeight - hud.getHeight()), 90,90);
+		Point2D p = InputHandler.getScaledMouse();
 		if(p!=null)
 		g.drawOval((int) p.getX(), (int) p.getY(), 100, 100);
 		health.render(g, 0, (int) (Camera.actHeight - hud.getHeight()) ); //draw the health indicator needle
@@ -91,7 +92,9 @@ public class HUDge {
 		mana.forceImage("mp"+mpVal);
 		
 		if(InputHandler.leftClick.keyTapped){ 
-			if(inv.getPhysicsShape().contains(InputHandler.getMouse())){ //if clicked the inventory button
+			System.out.println("Tap");
+			if(inv.getPhysicsShape().contains(InputHandler.leftClick.location)){ //if clicked the inventory button
+				System.out.println("Contain");
 				if(Globals.state != State.gameMenu) //toggle the inventory screen
 					Globals.state = State.gameMenu;
 				else

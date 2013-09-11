@@ -51,18 +51,18 @@ public class InventoryMenu {
 		COLUMNS = 6;
 		ROWS = 5;
 
-		setNewInv(Camera.width); // create the inventory grid
+		setNewInv(Camera.actWidth); // create the inventory grid
 
 		// set up crafting area
 		for (int i = 0; i < 4; i++) {
 			int col = i % 2; // because inventory sections are 1D arraylists, the 2D grid effect is achieved via math.
 			int row = 2 - i / 2;
 
-			craftarea.add(new Slot(craft, Camera.width - (area.getWidth() / 2 + craft.getWidth() - craft.getWidth() * col), (60 + row * craft.getHeight())));
+			craftarea.add(new Slot(craft, Camera.actWidth - (area.getWidth() / 2 + craft.getWidth() - craft.getWidth() * col), (60 + row * craft.getHeight())));
 		}
 
 		// set up equipment slots
-		equip.add(new Slot(weap, Camera.width - (area.getWidth() / 2 + craft.getWidth() - weap.getWidth() / 2), 20));
+		equip.add(new Slot(weap, Camera.actWidth - (area.getWidth() / 2 + craft.getWidth() - weap.getWidth() / 2), 20));
 
 		// add craft output slot
 		craftOutput = new Slot(slot, craftarea.get(3).getX() + 100, craftarea.get(3).getY());
@@ -83,7 +83,7 @@ public class InventoryMenu {
 		ROWS = r;
 		COLUMNS = c;
 
-		setNewInv(Camera.width / 4);
+		setNewInv(Camera.actWidth / 4);
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class InventoryMenu {
 	 * 
 	 */
 	public void render(Graphics g) {
-		area.render(g, Camera.width - area.getWidth(), 0);
+		area.render(g, Camera.actWidth - area.getWidth(), 0);
 		for (int i = 0; i < COLUMNS * (ROWS); i++) {
 			inv.get(i).render(g);
 		}
@@ -146,16 +146,16 @@ public class InventoryMenu {
 	public void update() {
 		if (objectSelected) {// make selection follow the mouse
 			if (InputHandler.leftClick.keyTapped) {
-				placeItem(calcSlot(InputHandler.getMouse())); // place it if mouse
+				placeItem(calcSlot(InputHandler.leftClick.location)); // place it if mouse
 				System.out.println("Tap place"); // click
 				return;
 			}
-			selectedItem.move((int) InputHandler.getMouse().getX(), (int) InputHandler.getMouse().getY());
+			selectedItem.move((int) InputHandler.getScaledMouse().getX(), (int) InputHandler.getScaledMouse().getY());
 
 		} else if (InputHandler.leftClick.keyTapped && Globals.state == State.gameMenu) {
-			grabItem(InputHandler.getMouse()); // pick up item from inventory
+			grabItem(InputHandler.leftClick.location); // pick up item from inventory
 			System.out.println(selectedItem);
-			if (!objectSelected && craftOutput.getPhysicsShape().contains(InputHandler.getMouse())) {
+			if (!objectSelected && craftOutput.getPhysicsShape().contains(InputHandler.leftClick.location)) {
 				if (!craftOutput.isEmpty()) {
 					objectSelected = true;
 					selectedItem = craftOutput.grabItem();
@@ -165,7 +165,7 @@ public class InventoryMenu {
 				}
 			}
 		} else if (InputHandler.rightClick.keyTapped && Globals.state == State.gameMenu) {
-			Slot s = calcSlot(InputHandler.getMouse());
+			Slot s = calcSlot(InputHandler.rightClick.location);
 			if (s != null && !s.isEmpty()) {
 				if (s.getItem().itemID == 1) {
 					buff = s.getItem().use();
@@ -174,7 +174,7 @@ public class InventoryMenu {
 			}
 		} else {
 			if (Globals.state == State.gameMenu) {
-				Slot s = calcSlot(InputHandler.getMouse());
+				Slot s = calcSlot(InputHandler.getScaledMouse());
 				if (s != null) {
 					Item i = s.getItem();
 					if (i != null) {
@@ -209,7 +209,7 @@ public class InventoryMenu {
 				return i;
 			}
 		}
-		if (mouse.getX() < Camera.width - area.getWidth())
+		if (mouse.getX() < Camera.actWidth - area.getWidth())
 			dropItem();
 		return null;
 	}
@@ -345,8 +345,9 @@ public class InventoryMenu {
 		for (int i = 0; i < COLUMNS * (ROWS); i++) {
 			int col = i % COLUMNS; // because inventory is a 1D arraylist, the 2D grid effect is achieved via math.
 			int row = ROWS - 1 - i / COLUMNS;
-
-			inv.add(new Slot(slot, startX - (slot.getWidth() * (COLUMNS + 1) - (slot.getWidth() * col) - 35), (area.getHeight() / 2 + row * slot.getHeight() - 45)));
+			
+			//I don't know, it fits. Don't try to understand the math.
+			inv.add(new Slot(slot, startX - (slot.getWidth() * (COLUMNS + 1) - (slot.getWidth() * col) - 30), (area.getHeight() / 2. + row * slot.getHeight() - 37)));
 		}
 
 	}

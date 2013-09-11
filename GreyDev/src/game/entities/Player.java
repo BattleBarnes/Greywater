@@ -101,7 +101,7 @@ public class Player extends Mob {
 	}
 
 	public void render(Graphics g) {
-		if (Globals.DEVMODE == 1){
+		if (Globals.DEVMODE >= 1){
 			super.render(g);
 		}else {
 			g.setColor(Color.RED);

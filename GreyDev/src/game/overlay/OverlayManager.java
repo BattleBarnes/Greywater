@@ -95,9 +95,7 @@ public class OverlayManager {
 		if (Globals.state.gameRunning) {
 			Graphics2D g2 = (Graphics2D) g;
 			
-//			g2.scale(Camera.scale,  Camera.scale);
 			 light.render(g2, 0, 0);
-//			 g2.scale(1/Camera.scale, 1/Camera.scale);
 			 
 			if (currentLoot != null) {
 				currentLoot.render(g);

@@ -1,14 +1,12 @@
 package game.overlay;
 
 import game.Globals;
-import game.engine.Camera;
 import game.engine.InputHandler;
 import game.engine.State;
 import game.entities.items.Item;
 
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -77,11 +75,11 @@ public class AIInventory extends InventoryMenu {
 	public void update() {
 
 		if (InputHandler.leftClick.keyTapped) {
-			grabItem(InputHandler.getMouse()); // pick up item from inventory
+			grabItem(InputHandler.leftClick.location); // pick up item from inventory
 			System.out.println(selectedItem);
 		} else {
 			if (Globals.state == State.gameMenu) {
-				Slot s = calcSlot(InputHandler.getMouse());
+				Slot s = calcSlot(InputHandler.getScaledMouse());
 				if (s != null) {
 					Item i = s.getItem();
 					if (i != null) {

@@ -56,6 +56,7 @@ public abstract class Mob extends Entity {
 			getInput(); // get input from AI or controls or whatever
 		super.tick();
 		if (!validateNextPos(getPhysicsShape())) {
+			System.out.println("Colliding!");
 			double width = getPhysicsShape().getWidth();
 			double height = getPhysicsShape().getHeight();
 
@@ -191,8 +192,8 @@ public abstract class Mob extends Entity {
 
 	/**
 	 * 
-	 * @return whether or not the current position is colliding with the world
-	 *         (True = colliding, invalid; False = no collide, valid)
+	 * @return whether or not the current position is valid (not colliding with the world)
+	 *         (True = not colliding, valid; False =  colliding, invalid)
 	 */
 	public boolean validateNextPos(Rectangle2D hitbox) {
 		return !world.checkWorldCollision(hitbox);

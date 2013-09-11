@@ -278,9 +278,9 @@ public abstract class Engine extends JFrame implements Runnable {
 		try {
 
 			g = bufferStrategy.getDrawGraphics();
-			g.setColor(Color.BLACK);
+		//	g.setColor(Color.BLACK);
 
-			g.fillRect(0, 0, 3 * Camera.height, 3 * Camera.width);
+	//		g.fillRect(0, 0, 3 * Camera.height, 3 * Camera.width);
 			Graphics2D g2 = (Graphics2D) g;
 		// SCALE UP TODO	g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
 		// SCLAE DOWN TODO	g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -292,7 +292,6 @@ public abstract class Engine extends JFrame implements Runnable {
 			
 			AffineTransform at = new AffineTransform();
 			at.scale(Camera.sscale, Camera.sscale);
-				System.out.println(Camera.sscale);
 			//if (Camera.scale != 1.0) {
 				AffineTransformOp t = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 				g2.transform(t.getTransform());

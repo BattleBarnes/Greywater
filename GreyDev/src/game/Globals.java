@@ -40,8 +40,8 @@ public class Globals {
 	 * @return Point whose x and y value are the array indices of the tile in question.
 	 */
 	public static Point findTile(double x, double y){
-		int xt = (int) Math.round(x / tileWidth);
-		int yt = (int) Math.round(y/tileHeight);
+		int xt = (int) Math.floor(x / tileWidth);
+		int yt = (int) Math.floor(y/tileHeight);
 		return new Point(xt,yt);
 	}
 	

@@ -22,11 +22,11 @@ public class Slot extends Entity {
 	/**
 	 * Constructor!
 	 * @param slot - slot image
-	 * @param d - slot location on screen
-	 * @param e - also denotes physical hitbox location for mouse collisions.
+	 * @param x - slot location on screen
+	 * @param y - also denotes physical hitbox location for mouse collisions.
 	 */
-	public Slot(Sprite slot, double d, double e) {
-		physicsComponent = new Tangible(d, e, slot.getWidth(), slot.getHeight(), 0);
+	public Slot(Sprite slot, double x, double y) {
+		physicsComponent = new Tangible(x, y, slot.getWidth(), slot.getHeight(), 0);
 		graphicsComponent = slot;
 	}
 
@@ -59,6 +59,7 @@ public class Slot extends Entity {
 	 * Draw the slot and any item held by the slot.
 	 */
 	public void render(Graphics g) {
+	
 		graphicsComponent.render(g, (int)getX(), (int)getY());
 		if (held != null)
 			held.render(g);
