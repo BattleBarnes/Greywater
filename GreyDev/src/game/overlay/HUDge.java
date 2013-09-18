@@ -56,10 +56,6 @@ public class HUDge {
 		inv.render(g);
 
 		hud.render(g, 0, (int) (Camera.actHeight - hud.getHeight())); //draw hudbody
-		//g.drawRect((int)(Camera.actWidth/2 - 45), (Camera.actHeight - hud.getHeight()), 90,90);
-		Point2D p = InputHandler.getScaledMouse();
-		if(p!=null)
-		g.drawOval((int) p.getX(), (int) p.getY(), 100, 100);
 		health.render(g, 0, (int) (Camera.actHeight - hud.getHeight()) ); //draw the health indicator needle
 		mana.render(g, 0, (int) (Camera.actHeight - hud.getHeight()) ); //and mana needle
 		FontMetrics fm = g.getFontMetrics(menuFont); 

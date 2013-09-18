@@ -2,6 +2,8 @@ package game.entities.components;
 
 import java.awt.geom.Point2D;
 
+import sun.security.util.Length;
+
 /**
  * Mathematical vector class. Adapted from several sources, including Java3D's version
  * and libgdx's version. None of them did exactly what I want, so I made my own Vector.
@@ -12,7 +14,7 @@ import java.awt.geom.Point2D;
  */
 
 public class Vec2D extends Point2D.Double {
-
+	
 	/**
 	 * Default constructor, generates a vector with length zero at 0,0
 	 */
@@ -146,5 +148,37 @@ public class Vec2D extends Point2D.Double {
         double yr2 = eR.getY() * eR.getY();
         return new Vec2D(p.x / xr2, p.y / yr2).normalize();
     }
+    
+    public Vec2D alignToCompass(){
+    	if(getX() == 0 && getY() == 0)
+    		return null;
+    	double angle = (1.)* Math.toDegrees(Math.atan2(y, x));
+    	if(angle < 0)
+			angle += 360;
+    	System.out.println("pre " + angle);
+		if(angle >= 337.5 || angle < 22.5 )
+			angle = 0;
+		else if(angle >= 22.5 && angle < 67.5  )
+			angle = 45;
+		else if(angle >= 67.5 && angle < 105 )
+			angle = 90;
+		else if(angle >= 105 && angle < 165)
+			angle = 135;
+		else if(angle >=  165 && angle < 195)
+			angle = 180;
+		else if(angle >= 202.5 && angle < 247.50)
+			angle = 225;
+		else if(angle >= 247.5 && angle < 292.5)
+			angle = 270;
+		else if(angle >= 292.5 && angle < 337.5 )
+			angle = 315;
+    	System.out.println("post " + angle);
+		double length = getLength();
+     	super.setLocation(length * Math.cos(angle), length * Math.sin(angle));
+    	
+    	return this;
+    	
+    }
+    
 
 }

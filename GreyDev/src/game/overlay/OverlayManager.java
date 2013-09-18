@@ -2,14 +2,12 @@ package game.overlay;
 
 import game.Core;
 import game.Globals;
-import game.engine.Camera;
 import game.engine.InputHandler;
 import game.engine.State;
 import game.entities.Player;
 import game.entities.components.Sprite;
 import game.entities.items.Item;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 

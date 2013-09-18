@@ -24,7 +24,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
 
 public class StartMenu {
 
@@ -81,7 +80,7 @@ public class StartMenu {
 			g.setFont(menuFont);
 			String s0 = "You Escaped! You win!";
 			int strw = fm.stringWidth(s0);
-			g.drawString(s0, (int) (Camera.width / 3 - strw / 2), Camera.actHeight / 3 + 50);
+			g.drawString(s0, (int) (Camera.actWidth / 3 - strw / 2), Camera.actHeight / 3 + 50);
 			return;
 
 		}
@@ -97,13 +96,13 @@ public class StartMenu {
 				options[i].render(g, 0, 0); // and draw them
 
 				if (option == i) // if this element is the currently selected one, render the bullet at that location.
-					cursor.render(g, 190, (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale * i)); // TODO come back to this when the menu is finished for each resolution
+					cursor.render(g, 190, (int) (5 * Camera.actHeight / 15 + 99 * i)); // TODO come back to this when the menu is finished for each resolution
 			}
 		}
 		// if we're on the how to play screen, render that information instead
 		else if (howPlayScrn) {
 			g.setColor(Color.ORANGE);
-			menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, (int) (60 * Camera.scale * Camera.scale));
+			menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, (int) (60));
 			fm = g.getFontMetrics(menuFont);
 			g.setFont(menuFont);
 
@@ -121,18 +120,18 @@ public class StartMenu {
 			// draw the strings
 			for (int i = 0; i < s.length; i++) {
 				int strw = fm.stringWidth(s[i]);
-				g.drawString(s[i], (int) (Camera.width / 2 - strw / 2), 100 + 70 * i);
+				g.drawString(s[i], (int) (Camera.actWidth / 2 - strw / 2), 100 + 70 * i);
 			}
 			// render the back button TODO come back when the new assets happen
-			back.render(g, (int) (Camera.width / 2 - 105 * Camera.scale), (int) (Camera.actHeight - back.getHeight() * Camera.scale));
+			back.render(g, (int) (Camera.actWidth / 2 - 105 ), (int) (Camera.actHeight - back.getHeight()));
 
 			// draw the cursor next to the back button
-			cursor.render(g, Camera.width / 2 - 160, (int) (Camera.actHeight - back.getHeight() * Camera.scale));
+			cursor.render(g, Camera.actWidth / 2 - 160, (int) (Camera.actHeight - back.getHeight() ));
 
 		}// otherwise, render the "credits" screen!
 		else if (creditsScrn) {
-			menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, (int) (50 * Camera.scale));
-			System.out.println(50 * Camera.scale * Camera.scale * Camera.scale);
+			menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, (int) (50  ));
+			System.out.println(50      );
 			g.setColor(Color.ORANGE);
 			g.setFont(menuFont);
 			fm = g.getFontMetrics(menuFont);
@@ -156,12 +155,12 @@ public class StartMenu {
 			Graphics2D g2 = (Graphics2D) g;
 			for (int i = 0; i < s.length; i++) {
 				int strw = fm.stringWidth(s[i]);
-				g2.drawString(s[i], (int) (Camera.width / 2 - strw / 2), (int) (50 + 60 * Camera.scale * i)); // TODO fix for resolution differences
+				g2.drawString(s[i], (int) (Camera.actWidth / 2 - strw / 2), (int) (50 + 60   * i)); // TODO fix for resolution differences
 
 			}
 			// render the back button and cursor TODO come back when new art assets for differnet resolutions happen
-			back.render(g, (int) (Camera.width / 2 - back.getWidth() * Camera.scale), (int) (Camera.actHeight - back.getHeight() * Camera.scale));
-			cursor.render(g, Camera.width / 2 - 160, (int) (Camera.actHeight - back.getHeight() * Camera.scale));
+			back.render(g, (int) (Camera.actWidth / 2 - back.getWidth()  ), (int) (Camera.actHeight - back.getHeight()  ));
+			cursor.render(g, Camera.actWidth / 2 - 160, (int) (Camera.actHeight - back.getHeight()  ));
 
 		}
 	}
@@ -177,25 +176,25 @@ public class StartMenu {
 				option++; // move cursor down if not at bottom
 			} else if (InputHandler.use.keyTapped) {
 				choose(); // if they hit enter, choose that selection
-			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale)) {
+			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99  )) {
 				option = 0;
 
 				if (InputHandler.leftClick.keyTapped) {
 					choose();
 				}
-			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale * 2)) {
+			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99  ) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99   * 2)) {
 				option = 1;
 
 				if (InputHandler.leftClick.keyTapped) {
 					choose();
 				}
-			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale * 2) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale * 3)) {
+			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99   * 2) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99   * 3)) {
 				option = 2;
 
 				if (InputHandler.leftClick.keyTapped) {
 					choose();
 				}
-			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale * 3) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99 * Camera.scale * 4)) {
+			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99   * 3) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99   * 4)) {
 				option = 3;
 
 				if (InputHandler.leftClick.keyTapped) {

@@ -35,9 +35,7 @@ public class Player extends Mob {
 
 	int lastPos = 0;
 	public boolean notPlayed = true;
-	long lasttime = 0;
-	long nowtime = 0;
-	long tdiff = 0;
+
 
 	/**
 	 * Constructor!
@@ -69,7 +67,6 @@ public class Player extends Mob {
 		if (graphicsComponent.isAnimating() && !attacking && physicsComponent.isMoving()) {
 			lastPos = graphicsComponent.seriesPosition;
 			if (lastPos == 0 || lastPos == 3) {
-				lasttime = System.currentTimeMillis();
 				if (notPlayed) {
 					notPlayed = false;
 					AudioLoader.playGrouped("footstep");
@@ -81,7 +78,7 @@ public class Player extends Mob {
 		if (InputHandler.leftClick.heldDown && !attacking) {
 			Point2D r =  InputHandler.leftClick.location;
 			Point2D p = Globals.isoToGrid(r.getX(), r.getY());
-			Point p2 = Globals.findTile(p.getX(), p.getY());
+			//Point p2 = Globals.findTile(p.getX(), p.getY());
 			
 			attRect = new Rectangle2D.Double(p.getX() - 90, p.getY() - 90, 180, 180);
 			this.physicsComponent.moveTo(p.getX(), p.getY());

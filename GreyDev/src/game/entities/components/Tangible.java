@@ -68,6 +68,8 @@ public class Tangible {
 		// yPos += Integer.signum(yDest - yPos) * speed;
 
 		direction.setLocation(destination.getX() - position.x, destination.getY() - position.getY());
+	//	direction.normalize();
+		direction.alignToCompass();
 		direction.normalize();
 		position.add(direction.multiply(speed));
 	}

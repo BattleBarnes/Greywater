@@ -17,7 +17,7 @@ public class Watchman extends Mob {
 
 	int lastPos;
 
-	public Watchman(int x, int y, Player p) {
+	public Watchman(double x, double y, Player p) {
 		name = "Watchman";
 		currDirection = "South";
 		this.graphicsComponent = new Sprite(name, name + "StandSouth");

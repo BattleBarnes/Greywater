@@ -9,7 +9,9 @@ import game.Globals;
 import game.engine.Camera;
 import game.entities.Mob;
 import game.entities.Player;
+import game.entities.Sweepy;
 import game.entities.Wall;
+import game.entities.Watchman;
 import game.entities.components.Entity;
 import game.entities.components.Sprite;
 import game.entities.components.Vec2D;
@@ -168,7 +170,8 @@ public class World {
 				if (walls[x][y] == null)
 					continue;
 				if (s != null && s.intersects(walls[x][y].getPhysicsShape())) {
-					walls[x][y].printName();
+					//walls[x][y].printName();
+					//System.out.println(s.getBounds2D());
 					return true;
 				}
 			}
@@ -284,11 +287,14 @@ public class World {
 					} else if (line.charAt(x) == 'C') {
 						walls[x][y] = new Wall(xCo, yCo, column, tileWidth * (2.0) / tileHeight, tileWidth, tileHeight, player, false);
 					} else if (line.charAt(x) == 'T') {
-						// Watchman w = new Watchman(xCo, yCo, player);
-						// w.addPathFinder(this); TODO
-						// mobList.add(w);
+					//	 Watchman w = new Watchman(xCo, yCo, player);
+					//	 w.addPathFinder(this); 
+					//	 w.init(this);
+					//	 mobList.add(w);
 					} else if (line.charAt(x) == 'X') {
-						// mobList.add(new Sweepy(xCo,yCo,player));
+						Sweepy sw = new Sweepy(xCo,yCo,player);
+					//	sw.init(this);
+					//	mobList.add(sw);
 					}
 				}
 			}

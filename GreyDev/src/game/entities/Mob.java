@@ -91,8 +91,8 @@ public abstract class Mob extends Entity {
 	public void walk() {
 
 		// direction = Globals.getIntDir(physicsComponent.xDest - getX(), physicsComponent.yDest - getY());
-		direction = Globals.getIntDir(physicsComponent.destination.getX() - getX(), physicsComponent.destination.getY() - getY());
-
+		//direction = Globals.getIntDir(physicsComponent.destination.getX() - getX(), physicsComponent.destination.getY() - getY());
+		direction = Globals.getIntDir(physicsComponent.direction.getX(), physicsComponent.direction.getY());
 		if (physicsComponent.isMoving() && !attacking) { // display animation walk loop.
 			graphicsComponent.loopImg(walkRate, "Walk" + Globals.getStringDir(direction));
 			currDirection = Globals.getStringDir(direction);

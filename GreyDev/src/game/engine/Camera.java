@@ -66,8 +66,8 @@ public class Camera  {
 		if(x  + xOffset == xPos && y + yOffset == yPos)
 			return;
 
-		yOffset = y - height/3;
-		xOffset =  x - width/2 + 50;
+		yOffset = y - actHeight/3;
+		xOffset =  x - actWidth/2 + 50;
 	}
 	
 	

@@ -260,7 +260,7 @@ public abstract class Engine extends JFrame implements Runnable {
 	 */
 	public void fullScreenRender(Graphics g) {
 		// clear the background
-		g.setColor(Color.pink);
+		g.setColor(Color.black);
 		g.fillRect(0, 0, cam.width, cam.height);
 
 		gameRender(g);

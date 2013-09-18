@@ -10,11 +10,11 @@ import java.awt.Rectangle;
 
 public class Sweepy extends Mob {
 
-	public Sweepy(int x, int y, Player p) {
+	public Sweepy(double x, double y, Player p) {
 		name = "Sweepy";
 		currDirection = "South";
 		this.graphicsComponent = new Sprite(name, name+"South");
-		this.physicsComponent = new Tangible(x, y, 30, 30, 1);
+		this.physicsComponent = new Tangible(x, y, 30, 30, .4);
 
 		spriteXOff = 0;
 		spriteYOff = 0;
@@ -34,18 +34,18 @@ public class Sweepy extends Mob {
 	//		Globals.state = State.gameWon;
 	//	}
 
-		if (validSight) { // sets the physicsComponent moving
+		//if (validSight) { // sets the physicsComponent moving
 			//physicsComponent.moveTo(getX() + xMoveBy, getY() + yMoveBy);
 
 			
-			direction = Globals.getIntDir(target.getX() - getX()*1.0, 1.0*target.getY() - getY());
+			direction = Globals.getIntDir(physicsComponent.direction.getX(), physicsComponent.direction.getY());
 
 			if (physicsComponent.isMoving() && !attacking) { // display animation walk loop.
 				graphicsComponent.loopImg(walkRate, Globals.getStringDir(direction));
 				currDirection = Globals.getStringDir(direction);
 			}
-		}
-		//System.out.println("SweepyData: XMB: " + xMoveBy +" YMB: " +yMoveBy + " StrDir: " +currDirection);
+	//	}
+		System.out.println("SweepyData: " + physicsComponent.direction.toString() + "StrDir " +currDirection);
 
 
 	}
