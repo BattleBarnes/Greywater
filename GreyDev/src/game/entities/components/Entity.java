@@ -103,23 +103,23 @@ public abstract class Entity {
 	 * @return the Shape used for collision detection
 	 */
 	public Rectangle2D getPhysicsShape() {
-		return physicsComponent.getPhysicsShape();
+		return physicsComponent.getHitBox();
 	}
 
 	public double getX() {
-		return physicsComponent.position.x;
+		return physicsComponent.getHitBox().getX();
 	}
 
 	public double getY() {
-		return physicsComponent.position.y;
+		return physicsComponent.getHitBox().getY();
 	}
 
 	/**
 	 * @return The approximate depth in Z space of the entity. Used for render sorting.
 	 */
 	public double getDepth() {
-		double x = physicsComponent.getPhysicsShape().getCenterX();
-		double y = physicsComponent.getPhysicsShape().getCenterY();
+		double x = physicsComponent.getHitBox().getCenterX();
+		double y = physicsComponent.getHitBox().getCenterY();
 		return (x + y) * .866;
 	}
 }

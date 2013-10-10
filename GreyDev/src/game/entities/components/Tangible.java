@@ -31,9 +31,9 @@ public class Tangible {
 
 	/* ****** POSITIONAL VARIABLES ****** */
 	public Point2D destination;
-	public double speed = 0; // how fast it goes from position to dest. Default - 0;
-	public Vec2D direction;
-	public Vec2D position;
+	private double speed = 0; // how fast it goes from position to dest. Default - 0;
+	private double xDelta = 0.;
+	private double yDelta = 0.;
 
 	// physics object
 	private Rectangle2D hitBox;
@@ -52,26 +52,24 @@ public class Tangible {
 		destination = new Point2D.Double(x, y);
 		this.speed = s;
 		hitBox = new Rectangle2D.Double(x,y, hitWidth, hitHeight);
-		position = new Vec2D(x,y);
-		direction = new Vec2D(x,y);
+	//	position = new Vec2D(x,y);
+	//	direction = new Vec2D(x,y);
 	}
 
 	/**
 	 * Used to move the object if it has a destination. If not, does nothing.
 	 */
 	public void tick() {
-		// int xPos = hitBox.x;
-		// int yPos = hitBox.y;
-		// if (xPos != xDest)
-		// xPos += Integer.signum(xDest - xPos) * speed;
-		// if (yPos != yDest)
-		// yPos += Integer.signum(yDest - yPos) * speed;
-
-		direction.setLocation(destination.getX() - position.x, destination.getY() - position.getY());
-	//	direction.normalize();
-		direction.alignToCompass();
-		direction.normalize();
-		position.add(direction.multiply(speed));
+		
+		if(hitBox.getX() != destination.getX())
+			xDelta = Integer.signum((int) (destination.getX() - hitBox.getX())) * speed ;
+		if(hitBox.getY() != destination.getY())
+			yDelta = Integer.signum((int) (destination.getY() - hitBox.getY())) * speed;
+		
+		updateHitSpace(xDelta + hitBox.getX(), yDelta + hitBox.getY());
+		xDelta = 0;
+		yDelta = 0;
+		
 	}
 
 	/**
@@ -81,7 +79,7 @@ public class Tangible {
 	 * @param y - new y co-ordinate
 	 */
 	public void updateHitSpace(double x, double y) {
-		position.setLocation(x,y);
+		hitBox.setRect(x,y, hitBox.getWidth(), hitBox.getHeight());
 	}
 
 	/**
@@ -109,28 +107,28 @@ public class Tangible {
 	 * Stops all movement immediately.
 	 */
 	public void stopMovement() {
-		destination.setLocation(position);
+		destination.setLocation(hitBox.getX(), hitBox.getY());
 	}
 
 	/**
 	 * Stops X movement immediately
 	 */
 	public void stopXMovement() {
-		destination.setLocation(position.x, destination.getY());
+		destination.setLocation(hitBox.getX(), destination.getY());
 	}
 
 	/**
 	 * Stops Y movement immediately
 	 */
 	public void stopYMovement() {
-		destination.setLocation(destination.getX(), position.y);
+		destination.setLocation(destination.getX(), hitBox.getY());
 	}
 
 	/**
 	 * @return the Rectangle used for collision detection.
 	 */
-	public Rectangle2D getPhysicsShape() {
-		hitBox.setRect(position.x, position.y, hitBox.getWidth(), hitBox.getHeight());
+	public Rectangle2D getHitBox() {
+	//	hitBox.setRect(position.x, position.y, hitBox.getWidth(), hitBox.getHeight());
 		return hitBox;
 	}
 
@@ -138,8 +136,8 @@ public class Tangible {
 	 * @return Whether or not the physicscomponent still has distance to traverse.
 	 */
 	public boolean isMoving() {
-		if ((destination.getX() - position.x) < 2. && (destination.getX() - position.x) > -2.)
-			if((destination.getY() - position.y < 2.) && (destination.getY() - position.y) > -2.)
+		if ((destination.getX() - hitBox.getX()) < 2. && (destination.getX() - hitBox.getX()) > -2.)
+			if((destination.getY() - hitBox.getY() < 2.) && (destination.getY() - hitBox.getY()) > -2.)
 				return false;
 			
 		return true;

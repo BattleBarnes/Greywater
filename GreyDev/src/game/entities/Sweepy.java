@@ -45,7 +45,7 @@ public class Sweepy extends Mob {
 				currDirection = Globals.getStringDir(direction);
 			}
 	//	}
-		System.out.println("SweepyData: " + physicsComponent.direction.toString() + "StrDir " +currDirection);
+	//	System.out.println("SweepyData: " + physicsComponent.direction.toString() + "StrDir " +currDirection);
 
 
 	}
@@ -54,7 +54,7 @@ public class Sweepy extends Mob {
 	@Override
 	protected void getInput() {
 		
-		physicsComponent.destination.setLocation(target.getPhysics().position);
+		physicsComponent.destination.setLocation(target.getX(), target.getY());
 	
 //		if(Math.abs(xMoveBy) < 2*getPhysicsShape().width && Math.abs(yMoveBy) < 2*getPhysicsShape().width){
 //			this.physicsComponent.stopMovement();

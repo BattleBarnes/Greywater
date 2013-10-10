@@ -36,29 +36,30 @@ public class Player extends Mob {
 	int lastPos = 0;
 	public boolean notPlayed = true;
 
-
 	/**
 	 * Constructor!
 	 * 
-	 * @param x - Starting x location
-	 * @param y - Starting y location
+	 * @param x
+	 *            - Starting x location
+	 * @param y
+	 *            - Starting y location
 	 */
 	public Player(int x, int y, InventoryMenu m) {
 		name = "Tavish";
 		currDirection = "South";
 		this.graphicsComponent = new Sprite(name, name + "StandSouth");
-		this.physicsComponent = new Tangible(x, y,  35, 35, 1.);
+		this.physicsComponent = new Tangible(x, y, 35, 35, 1.);
 
-		spriteXOff = (int) (-graphicsComponent.getWidth() / 2 - 65 - 35) ;
+		spriteXOff = (int) (-graphicsComponent.getWidth() / 2 - 65 - 35);
 		spriteYOff = (int) (-graphicsComponent.getHeight() + 30 + 35);
 		inv = m;
 		this.walkRate = 1;
 	}
 
 	/**
-	 * Gets player input from the InputHandler class (static calls).
-	 * Uses direction method from Globals.java to determine which way player is facing (NSEW...)
-	 * and sets the graphics component accordingly.
+	 * Gets player input from the InputHandler class (static calls). Uses
+	 * direction method from Globals.java to determine which way player is
+	 * facing (NSEW...) and sets the graphics component accordingly.
 	 */
 	protected void getInput() {
 		damage(-inv.buff);
@@ -76,31 +77,42 @@ public class Player extends Mob {
 		}
 
 		if (InputHandler.leftClick.heldDown && !attacking) {
-			Point2D r =  InputHandler.leftClick.location;
+			Point2D r = InputHandler.leftClick.location;
 			Point2D p = Globals.isoToGrid(r.getX(), r.getY());
-			//Point p2 = Globals.findTile(p.getX(), p.getY());
-			
+			// Point p2 = Globals.findTile(p.getX(), p.getY());
+
+			pathFinder.setNewPath(new Point2D.Double(getX(), getY()), p);
+
 			attRect = new Rectangle2D.Double(p.getX() - 90, p.getY() - 90, 180, 180);
 			this.physicsComponent.moveTo(p.getX(), p.getY());
-			
-		} else if (InputHandler.spaceBar.heldDown && !attacking) {// if spacebar attack
-			Rectangle2D r = this.getPhysicsShape();
-			attRect = new Rectangle2D.Double(r.getX() - 90, r.getY() - 90, r.getWidth() + 180, r.getHeight() + 180);
-			
-		} else if (target != null) // if there is a target assigned, kill it
-			attack((Mob) target);
-		else { // otherwise, not attacking
-			attRect = null;
-			attacking = false;
+
+		} else {
+			if (InputHandler.spaceBar.heldDown && !attacking) {// if spacebar
+																// attack
+				Rectangle2D r = this.getPhysicsShape();
+				attRect = new Rectangle2D.Double(r.getX() - 90, r.getY() - 90, r.getWidth() + 180, r.getHeight() + 180);
+
+			} else if (target != null) // if there is a target assigned, kill it
+				attack((Mob) target);
+			else { // otherwise, not attacking
+				attRect = null;
+				attacking = false;
+			}
+
+			if (!getPhysics().isMoving()) {
+				Point2D newPoint = pathFinder.getNextLoc();
+				if (newPoint != null)
+					physicsComponent.destination = newPoint;
+			}
 		}
 
 		inv.update();
 	}
 
 	public void render(Graphics g) {
-		if (Globals.DEVMODE >= 1){
+		if (Globals.DEVMODE >= 1) {
 			super.render(g);
-		}else {
+		} else {
 			g.setColor(Color.RED);
 			Rectangle2D r = this.getPhysicsShape();
 			g.drawRect((int) r.getX() - 500, (int) r.getY(), (int) r.getWidth(), (int) r.getHeight());
@@ -159,7 +171,10 @@ public class Player extends Mob {
 			attRect = null;
 			notPlayed = true;
 		} else {
-			if (lastPos == 2 && graphicsComponent.seriesPosition == 0) { // if ending (last frame)
+			if (lastPos == 2 && graphicsComponent.seriesPosition == 0) { // if
+																			// ending
+																			// (last
+																			// frame)
 				attacking = false;
 				target = null;
 				lastPos = 0;

@@ -18,11 +18,11 @@ public abstract class Mob extends Entity {
 	protected String currDirection = "South";
 	protected String name;
 	public Entity target;
-	// public Point destination;
+
 	boolean walks = true;
 	public boolean playerFriend;
 
-	PathFinder p;
+	PathFinder pathFinder;
 
 	protected int HP = 100;
 	protected double walkRate = 1; // used to determine how fast a mob's walk
@@ -30,10 +30,7 @@ public abstract class Mob extends Entity {
 	protected Line2D sight;
 	protected boolean validSight;
 	public int sightRange;
-
-	/* **** POSITIONING VARIABLES ***** */
-	public double xLast; // last valid (non colliding) x position
-	public double yLast; // last valid (non colliding) y position
+	
 	boolean attacking = false;
 	protected InventoryMenu inv;
 	public InventoryMenu currentLoot;
@@ -41,7 +38,10 @@ public abstract class Mob extends Entity {
 
 	public void init(World w) {
 		world = w;
+		this.pathFinder = new PathFinder(w);
 	}
+	
+	
 
 	/**
 	 * Generic method for moving entities: Saves last valid position, moves the
@@ -50,28 +50,11 @@ public abstract class Mob extends Entity {
 	 */
 	public void tick() {
 
-		xLast = getX(); // last location was valid or it would have been undone already
-		yLast = getY();
+
 		if (HP > 0)
 			getInput(); // get input from AI or controls or whatever
 		super.tick();
-		if (!validateNextPos(getPhysicsShape())) {
-			System.out.println("Colliding!");
-			double width = getPhysicsShape().getWidth();
-			double height = getPhysicsShape().getHeight();
-
-			Rectangle2D r = new Rectangle2D.Double(xLast, getY(), width, height);
-			if (!validateNextPos(r)) { // if xLast didn't fix it, y is the problem
-				physicsComponent.destination.setLocation(physicsComponent.destination.getX(), yLast);
-				physicsComponent.position.y = yLast;
-			}
-			r = new Rectangle2D.Double(getX(), yLast, width, height);
-			if (!validateNextPos(r)){ //if yLast didn't fix it, x is the problem
-				physicsComponent.destination.setLocation(xLast, physicsComponent.destination.getX());
-				physicsComponent.position.x = xLast;
-			}
-		}
-
+		
 		if (!physicsComponent.isMoving())
 			physicsComponent.stopMovement();
 
@@ -90,39 +73,17 @@ public abstract class Mob extends Entity {
 	 */
 	public void walk() {
 
-		// direction = Globals.getIntDir(physicsComponent.xDest - getX(), physicsComponent.yDest - getY());
-		//direction = Globals.getIntDir(physicsComponent.destination.getX() - getX(), physicsComponent.destination.getY() - getY());
-		direction = Globals.getIntDir(physicsComponent.direction.getX(), physicsComponent.direction.getY());
+
+		direction = Globals.getIntDir(physicsComponent.destination.getX() - getX(), physicsComponent.destination.getY() - getY());
+		
 		if (physicsComponent.isMoving() && !attacking) { // display animation walk loop.
-			graphicsComponent.loopImg(walkRate, "Walk" + Globals.getStringDir(direction));
 			currDirection = Globals.getStringDir(direction);
+			graphicsComponent.loopImg(walkRate, "Walk" + currDirection);
+			
 		} else if (!attacking) {
 			graphicsComponent.loopImg(.5, "Stand" + currDirection);
 		}
 
-	}
-
-	/**
-	 * Stops movement (for collisions)
-	 * 
-	 * @param x - if true, stop movement in the x direction
-	 * @param y - if true, stop movement in the y direction
-	 */
-	public void undoMove(boolean x, boolean y) {
-		if (x && y) {
-			physicsComponent.updateHitSpace(xLast, yLast);
-			physicsComponent.stopMovement();
-
-		} else if (x) {
-			physicsComponent.updateHitSpace(xLast, yLast);
-			physicsComponent.stopXMovement();
-
-		} else if (y) {
-			physicsComponent.updateHitSpace(xLast, yLast);
-			physicsComponent.stopYMovement();
-		}
-
-		physicsComponent.tick();
 	}
 
 	/**
@@ -150,13 +111,9 @@ public abstract class Mob extends Entity {
 		validSight = false;
 	}
 
-	public void addPathFinder(World l) {
-		p = new PathFinder(l);
-	}
 
 	/**
 	 * Change the Mob's HP by the given amount.
-	 * 
 	 * @param damage - how much to change mob hp by
 	 */
 	public void damage(int damage) {
@@ -188,15 +145,6 @@ public abstract class Mob extends Entity {
 		if (!isAlive()) {
 			interactor.currentLoot = inv;
 		}
-	}
-
-	/**
-	 * 
-	 * @return whether or not the current position is valid (not colliding with the world)
-	 *         (True = not colliding, valid; False =  colliding, invalid)
-	 */
-	public boolean validateNextPos(Rectangle2D hitbox) {
-		return !world.checkWorldCollision(hitbox);
 	}
 
 }

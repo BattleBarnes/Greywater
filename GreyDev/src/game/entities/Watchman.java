@@ -32,10 +32,6 @@ public class Watchman extends Mob {
 		inv = new AIInventory();
 	}
 
-	public void addPathFinder(World l) {
-		p = new PathFinder(l);
-	}
-
 	@Override
 	protected void getInput() {
 		sight = new Line2D.Double(target.getX(), target.getY(), getX(), getY());
@@ -91,20 +87,20 @@ public class Watchman extends Mob {
 
 		if (((physicsComponent.destination == null && validSight) || (Globals.distance(sight.getP1(), sight.getP2()) < 300)) && System.nanoTime() % 47 == 0) {
 			// System.out.println("Pathfind");
-			p.setNewPath(new Point2D.Double(getX(), getY()), new Point2D.Double(target.getX(), target.getY()));
-			Point2D newPoint = p.getNextLoc();
+			pathFinder.setNewPath(new Point2D.Double(getX(), getY()), new Point2D.Double(target.getX(), target.getY()));
+			Point2D newPoint = pathFinder.getNextLoc();
 			if (newPoint != null)
 				physicsComponent.destination = newPoint;
 		}
 		if (physicsComponent.destination != null && getX() == physicsComponent.destination.getX() && getY() == physicsComponent.destination.getY()) {
-			Point2D newPoint = p.getNextLoc();
+			Point2D newPoint = pathFinder.getNextLoc();
 			if (newPoint != null)
 				physicsComponent.destination = newPoint;
 
 		}
 		if (physicsComponent.destination == null && validSight) {
 			// System.out.println("Pathfind");
-			p.setNewPath(new Point2D.Double(getX(), getY()), new Point2D.Double(target.getX(), target.getY()));
+			pathFinder.setNewPath(new Point2D.Double(getX(), getY()), new Point2D.Double(target.getX(), target.getY()));
 			return;
 		}
 		if (physicsComponent.destination == null && !validSight) {

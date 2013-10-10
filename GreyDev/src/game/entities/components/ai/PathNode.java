@@ -34,8 +34,12 @@ public class PathNode {
 	public void costToGoal(Point2D goal)
 	// calculate _floor_ of the straight line dist. to the goal
 	{
-		double dist = coord.distance(goal.getX(), goal.getY());
-		costToGoal = Math.floor(dist);
+		//double dist = coord.distance(goal.getX(), goal.getY());
+	//	costToGoal = Math.floor(dist);
+		double dx = Math.abs(this.coord.getX() - goal.getX());
+		double dy = Math.abs(this.coord.getY() - goal.getY());
+		costToGoal =  Math.max(dx, dy);
+		
 		// System.out.println(coord + " to " + goal + ": " + costToGoal);
 	}
 

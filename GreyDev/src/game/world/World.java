@@ -74,6 +74,7 @@ public class World {
 		mobList = new ArrayList<Mob>();
 		player = p;
 		player.init(this);
+		//player.addPathFinder(this);
 		mobList.add(p);
 
 		loadEnviro(9);
