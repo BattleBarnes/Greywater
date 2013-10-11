@@ -88,9 +88,7 @@ public class HUDge {
 		mana.forceImage("mp"+mpVal);
 		
 		if(InputHandler.leftClick.keyTapped){ 
-			System.out.println("Tap");
 			if(inv.getPhysicsShape().contains(InputHandler.leftClick.location)){ //if clicked the inventory button
-				System.out.println("Contain");
 				if(Globals.state != State.gameMenu) //toggle the inventory screen
 					Globals.state = State.gameMenu;
 				else

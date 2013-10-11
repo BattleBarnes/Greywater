@@ -40,7 +40,6 @@ public class PathNode {
 		double dy = Math.abs(this.coord.getY() - goal.getY());
 		costToGoal =  Math.max(dx, dy);
 		
-		// System.out.println(coord + " to " + goal + ": " + costToGoal);
 	}
 
 	public double getScore() {
@@ -104,12 +103,17 @@ public class PathNode {
 		return newNode;
 	} // end of makeNode()
 
-	public ArrayList<Point2D> buildPath(){
+	public ArrayList<Point2D> buildPath(World wd){
 		ArrayList<Point2D> path = new ArrayList<Point2D>();
 		path.add(coord);
+		Point activeTile = Globals.findTile(coord.getX(), coord.getY());
+		wd.tileMap[activeTile.x][activeTile.y].selected = true;
 		PathNode temp = parent;
 		while (temp != null) {
 			path.add(0, temp.getPoint()); // add at start to reverse the path
+			//path.add(temp.getPoint());
+			activeTile = Globals.findTile(temp.getPoint().getX(), temp.getPoint().getY());
+			wd.tileMap[activeTile.x][activeTile.y].selected = true;
 			temp = temp.getParent();
 		}
 		return path;

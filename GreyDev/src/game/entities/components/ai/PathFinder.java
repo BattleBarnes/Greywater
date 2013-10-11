@@ -22,7 +22,6 @@ public class PathFinder {
 	public void setNewPath(Point2D start, Point2D goal) {
 		path = aStar(start, goal);
 		pathIndex = 0;
-		System.out.println(retries);
 		retries = 0;
 	}
 
@@ -51,11 +50,11 @@ public class PathFinder {
 			bestNode = open.pop();
 			
 			if(retries >= MAXRETRIES){
-				return bestNode.buildPath();
+				return bestNode.buildPath(world);
 			}
 
 			if (Globals.distance(goal, bestNode.getPoint()) < Globals.tileHeight + 20 || Globals.distance(goal, bestNode.getPoint()) < Globals.tileHeight - 20) { // goal!
-				return bestNode.buildPath(); // return a path to that goal
+				return bestNode.buildPath(world); // return a path to that goal
 				
 			} else {
 				for (int i = 0; i < 8; i++) { // try every direction

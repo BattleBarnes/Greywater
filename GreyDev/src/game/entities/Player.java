@@ -54,6 +54,7 @@ public class Player extends Mob {
 		spriteYOff = (int) (-graphicsComponent.getHeight() + 30 + 35);
 		inv = m;
 		this.walkRate = 1;
+		System.out.println("Initial loc " + x + " " + y);
 	}
 
 	/**
@@ -84,7 +85,6 @@ public class Player extends Mob {
 			pathFinder.setNewPath(new Point2D.Double(getX(), getY()), p);
 
 			attRect = new Rectangle2D.Double(p.getX() - 90, p.getY() - 90, 180, 180);
-			this.physicsComponent.moveTo(p.getX(), p.getY());
 
 		} else {
 			if (InputHandler.spaceBar.heldDown && !attacking) {// if spacebar
@@ -101,8 +101,13 @@ public class Player extends Mob {
 
 			if (!getPhysics().isMoving()) {
 				Point2D newPoint = pathFinder.getNextLoc();
-				if (newPoint != null)
+				if (newPoint != null){
+					System.out.println();
 					physicsComponent.destination = newPoint;
+					System.out.println(newPoint);
+					physicsComponent.moveTo(newPoint.getX(),newPoint.getY());
+				}
+					
 			}
 		}
 
@@ -187,8 +192,8 @@ public class Player extends Mob {
 					damMod += inv.getWeap().getDamageMod();
 				}
 				int chance = Globals.D(20);
-				// System.out.println("Nat" + chance);
-				if (chance + hitMod > 2) {
+					System.out.println(this.name + " rolled " + chance + " to hit.");
+					if (chance + hitMod > 2) {
 					damage += damMod + Globals.D(6) + Globals.D(6) + Globals.D(6) + Globals.D(6);
 					enemy.damage(damage);
 				}

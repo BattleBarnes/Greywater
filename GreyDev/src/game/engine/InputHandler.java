@@ -61,9 +61,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 			xPos = loc.getX();
 			yPos = loc.getY();
 			location = loc;
-			
-		//	System.out.println("Click " + p.getX() + "," + p.getY());
-			
+						
 			if(pressed != heldDown){
 				heldDown = pressed; //if button is not pressed, then it is not held down, and vice versa
 			}

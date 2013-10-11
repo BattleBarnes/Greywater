@@ -13,16 +13,17 @@
 package game.world;
 
 import game.Globals;
-import game.engine.Camera;
 import game.entities.components.Entity;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
 
+import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.geom.Point2D;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 
 public class Tile extends Entity {
-	
+	public boolean selected = false;
 	/**
 	 * Constructor!
 	 * 
@@ -45,6 +46,20 @@ public class Tile extends Entity {
 	 * @param g - Graphics device
 	 */
 	public void render(Graphics g){
+		Rectangle2D r = this.getPhysicsShape();
+
+		if (Globals.DEVMODE != 1) {
+			
+			if(selected){
+				g.setColor(Color.WHITE);
+				g.fillRect((int) r.getX() - 500, (int) r.getY(), (int) r.getWidth(), (int) r.getHeight());
+			}
+			
+			g.setColor(Color.PINK);
+			g.drawRect((int) r.getX() - 500, (int) r.getY(), (int) r.getWidth(), (int) r.getHeight());
+			
+		}
+	
 		
 		graphicsComponent.tick(); //maybe walls are animated
 		super.render(g);

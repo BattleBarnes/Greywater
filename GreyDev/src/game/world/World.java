@@ -172,7 +172,6 @@ public class World {
 					continue;
 				if (s != null && s.intersects(walls[x][y].getPhysicsShape())) {
 					//walls[x][y].printName();
-					//System.out.println(s.getBounds2D());
 					return true;
 				}
 			}
