@@ -19,11 +19,10 @@ import game.entities.components.Tangible;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 
 public class Tile extends Entity {
-	public boolean selected = false;
+
 	/**
 	 * Constructor!
 	 * 
@@ -33,41 +32,26 @@ public class Tile extends Entity {
 	 */
 	public Tile(Sprite graphicsComponent, double xPos, double yPos) {
 		this.graphicsComponent = graphicsComponent;
-		//width is half because graphics component is isometric - 2:1 W:H ratio, needs fixing for square flatspace
-		//speed is 0 because tiles don't move, silly
-		this.physicsComponent = new Tangible(xPos, yPos, graphicsComponent.getWidth()/2, graphicsComponent.getHeight(), 0); 
-		
+		// width is half because graphics component is isometric - 2:1 W:H ratio, needs fixing for square flatspace
+		// speed is 0 because tiles don't move, silly
+		this.physicsComponent = new Tangible(xPos, yPos, graphicsComponent.getWidth() / 2, graphicsComponent.getHeight(), 0);
+
 	}
 
-
 	/**
-	 * Ticks the graphics component in case it is animated.
-	 *  Draws the current sprite for this entity by calling the superclass's render method
+	 * Ticks the graphics component in case it is animated. Draws the current sprite for this entity by calling the superclass's render method
+	 * 
 	 * @param g - Graphics device
 	 */
-	public void render(Graphics g){
+	public void render(Graphics g) {
 		Rectangle2D r = this.getPhysicsShape();
 
 		if (Globals.DEVMODE != 1) {
-			
-			if(selected){
-				g.setColor(Color.WHITE);
-				g.fillRect((int) r.getX() - 500, (int) r.getY(), (int) r.getWidth(), (int) r.getHeight());
-			}
-			
 			g.setColor(Color.PINK);
 			g.drawRect((int) r.getX() - 500, (int) r.getY(), (int) r.getWidth(), (int) r.getHeight());
-			
 		}
-	
-		
-		graphicsComponent.tick(); //maybe walls are animated
+		graphicsComponent.tick(); // maybe walls are animated
 		super.render(g);
 	}
-
-	
-	
-
-
 
 }

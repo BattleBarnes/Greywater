@@ -112,5 +112,36 @@ public class BGMusicPlayer implements Runnable {
 		return playing;
 	}
 
+	
+	public void newSong(File inputFile){
+		try{
+			
+			if(player != null){
+				line.stop();
+				line.flush();
+				line.close();
+			//	player.join();
+				playing = false;
+			}
+			
+			file = inputFile;
+			stream = AudioSystem.getAudioInputStream (inputFile);
+			AudioFormat format = stream.getFormat();
+			
+			frameSize = format.getFrameSize(); 
+			
+			DataLine.Info info =new DataLine.Info (SourceDataLine.class, format); 
+			line = (SourceDataLine) AudioSystem.getLine (info);
+			
+			line.open(); 
+			start();
+			//player = new Thread(this);       
+		}
+		catch(Exception e){
+			System.out.println("That is not a valid file.");
+			e.printStackTrace();
+		}
+	}
+	
 }
 

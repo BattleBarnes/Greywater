@@ -5,8 +5,9 @@ import game.engine.State;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
 
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 public class Sweepy extends Mob {
 
@@ -14,7 +15,7 @@ public class Sweepy extends Mob {
 		name = "Sweepy";
 		currDirection = "South";
 		this.graphicsComponent = new Sprite(name, name+"South");
-		this.physicsComponent = new Tangible(x, y, 30, 30, .4);
+		this.physicsComponent = new Tangible(x, y, 30, 30, 2);
 
 		spriteXOff = 0;
 		spriteYOff = 0;
@@ -28,24 +29,22 @@ public class Sweepy extends Mob {
 	
 	@Override
 	public void walk() {
-	//	Rectangle r = this.physicsComponent.getPhysicsShape();
+		Rectangle2D r = this.physicsComponent.getHitBox();
 		//2200, 250,
-	//	if(r.x > 2000 && r.x < 2600 && r.y < 200){
-	//		Globals.state = State.gameWon;
-	//	}
+		if(r.getX() > 2000 && r.getX() < 2600 && r.getY() < 200){
+			Globals.state = State.gameWon;
+		}
 
-		//if (validSight) { // sets the physicsComponent moving
-			//physicsComponent.moveTo(getX() + xMoveBy, getY() + yMoveBy);
+	
 
 			
-			direction = Globals.getIntDir(physicsComponent.direction.getX(), physicsComponent.direction.getY());
+			direction = Globals.getIntDir(physicsComponent.destination.getX() - getX(), physicsComponent.destination.getY() - getY());
 
 			if (physicsComponent.isMoving() && !attacking) { // display animation walk loop.
 				graphicsComponent.loopImg(walkRate, Globals.getStringDir(direction));
 				currDirection = Globals.getStringDir(direction);
 			}
-	//	}
-	//	System.out.println("SweepyData: " + physicsComponent.direction.toString() + "StrDir " +currDirection);
+
 
 
 	}
@@ -53,24 +52,32 @@ public class Sweepy extends Mob {
 
 	@Override
 	protected void getInput() {
-		
-		physicsComponent.destination.setLocation(target.getX(), target.getY());
-	
-//		if(Math.abs(xMoveBy) < 2*getPhysicsShape().width && Math.abs(yMoveBy) < 2*getPhysicsShape().width){
-//			this.physicsComponent.stopMovement();
-//			xMoveBy = 0;
-//			yMoveBy = 0;
-//		}
+		sight = new Line2D.Double(this.getLocation(), target.getLocation());
+		validateSight();
+	//	physicsComponent.destination.setLocation(target.getX(), target.getY());
+		if(!pathFinder.hasPath() && target.getLocation().distance(this.getLocation()) > 100 && validSight){
+			pathFinder.setNewPath(this.getLocation(), target.getLocation());
+			System.out.println(name + " began pathfinding...");
+		}
+		else if (!physicsComponent.isMoving()) {
+			Point2D newPoint = pathFinder.getNextLoc();
+			if (newPoint != null) {
+				physicsComponent.destination = newPoint;
+				physicsComponent.moveTo(newPoint.getX(), newPoint.getY());
+			}
 
-		//System.out.println("SweepyData GETINPUT: XMB: " + xMoveBy +" YMB: " +yMoveBy + " StrDir: " +currDirection);
-		
-
-			
+		}
 	}
 
 	@Override
 	protected void attack(Mob enemy) {
 		return;
+	}
+
+	
+	@Override
+	public boolean interact() {
+		return false;
 	}
 
 

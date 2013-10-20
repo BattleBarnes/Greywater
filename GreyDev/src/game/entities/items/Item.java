@@ -1,7 +1,5 @@
 package game.entities.items;
 
-import game.engine.Camera;
-import game.entities.Mob;
 import game.entities.components.Entity;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;

@@ -1,12 +1,11 @@
 
 package game.overlay;
 
-import java.awt.Graphics;
-
-import game.engine.Camera;
 import game.entities.components.Entity;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
+
+import java.awt.Graphics;
 
 /**
  * Button.java

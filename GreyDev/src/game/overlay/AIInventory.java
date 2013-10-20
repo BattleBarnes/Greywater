@@ -19,6 +19,8 @@ import java.util.Random;
  */
 public class AIInventory extends InventoryMenu {
 
+	//public Button close = new Button(new Sprite("Close", "Close"), Camera.actWidth / 4, 300, 37, 37) ;
+	
 	public AIInventory() {
 		super(4, 4);
 		Random rand = new Random();
@@ -36,6 +38,7 @@ public class AIInventory extends InventoryMenu {
 		if (selectedItem != null) {
 			selectedItem.render(g); // dragged item
 		}
+	//	close.render(g);
 	}
 	
 	/**
@@ -76,7 +79,8 @@ public class AIInventory extends InventoryMenu {
 
 		if (InputHandler.leftClick.keyTapped) {
 			grabItem(InputHandler.leftClick.location); // pick up item from inventory
-			System.out.println(selectedItem);
+			if(selectedItem!= null)
+				InputHandler.leftClick.heldDown = false;
 		} else {
 			if (Globals.state == State.gameMenu) {
 				Slot s = calcSlot(InputHandler.getScaledMouse());

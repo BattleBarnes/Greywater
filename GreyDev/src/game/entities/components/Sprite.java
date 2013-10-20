@@ -21,7 +21,6 @@
 package game.entities.components;
 
 import game.Core;
-import game.engine.Camera;
 import game.engine.ImageLoader;
 
 import java.awt.AlphaComposite;
@@ -29,6 +28,8 @@ import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Sprite {
 	
@@ -48,8 +49,10 @@ public class Sprite {
 	private int animPeriod_Millis;
 	
 	//series length and position trackers (not time, image-count)
-	public int seriesPosition;
+	public int seriesPosition;//TODO private
 	private int seriesLength;
+	
+	private List<AnimListener> listeners;
 		
 	
 	/**Constructor for sprites.
@@ -62,6 +65,7 @@ public class Sprite {
 		this.name = name;
 		currImgName = imgName;
 		forceImage(imgName);
+		listeners = new ArrayList<AnimListener>();
 	}
 		
 	/**
@@ -94,12 +98,18 @@ public class Sprite {
 	public void tick(){
 		if(isTicking){
 			totalAnimTime_Millis = (long) ((totalAnimTime_Millis + animPeriod_Millis) % sequenceDuration_Millis);
+			int originalSeriesPos = seriesPosition;
 			seriesPosition = (int) (totalAnimTime_Millis / cycleLength_Millis);
+			if(originalSeriesPos!= seriesPosition && (seriesPosition ==3 || seriesPosition == 0))
+				fireEvent(currImgName, false, false);
 		}
-		if(seriesPosition >= seriesLength-1 && !isLooping)
+		if(seriesPosition >= seriesLength-1 && !isLooping && seriesLength-1 > -1)
 			stopAnim(); //if it isn't looping, stop
-		if(seriesPosition >= seriesLength&& isLooping)
+		if(seriesPosition > seriesLength&& isLooping){
 			seriesPosition = 0; //if it is looping, go back to beginning
+			fireEvent(currImgName,true,false);
+			fireEvent(currImgName,false,true);
+		}
 	}
 	
 	/**
@@ -125,14 +135,14 @@ public class Sprite {
 		if(currImgName.equalsIgnoreCase(name+ident)){
 			return;
 		}
-		
+		fireEvent(name+ident,false,true);
 		isLooping = true;
 		isTicking = true;
 		seriesPosition = 0;
 		totalAnimTime_Millis = 0;
 		sequenceDuration_Millis = duration_seconds * 1000;
 		seriesLength = ImageLoader.getSeriesCount(name + ident);
-		cycleLength_Millis = sequenceDuration_Millis / seriesLength;
+		cycleLength_Millis = sequenceDuration_Millis / (seriesLength);
 		currImgName = name+ident;
 	}
 	
@@ -142,12 +152,16 @@ public class Sprite {
 	 * @param ident - Images are loaded as name+ident (Tavish + _Walk_North)
 	 */
 	public void animate(double duration_seconds, String ident){
+		fireEvent(name+ident, false,true);
 		isLooping = false;
 		isTicking = true;
+		if(currImgName.equalsIgnoreCase(name+ident)){
+			return;
+		}
 		seriesPosition = 0;
 		totalAnimTime_Millis = 0;
 		sequenceDuration_Millis = duration_seconds * 1000;
-		seriesLength = ImageLoader.getSeriesCount(name + ident);
+		seriesLength = ImageLoader.getSeriesCount(name + ident)+1;
 		cycleLength_Millis = sequenceDuration_Millis / seriesLength;
 		currImgName = name+ident;
 	}
@@ -184,9 +198,24 @@ public class Sprite {
 	private void stopAnim(){
 		isTicking = false;
 		isLooping = false;
+		seriesPosition= 0;
+		fireEvent(currImgName,true,false);
 	}
 	
-
+	 public void addAnimListener(AnimListener listener) {
+	        listeners.add(listener);
+	    }
+	    
+	 public void removeAnimListener(AnimListener listener) {
+	        listeners.remove(listener);
+	    }
+	 
+	   public void fireEvent(String message, boolean ending, boolean starting) {
+	        AnimEvent event = new AnimEvent(this,message,ending,starting);
+	        for (AnimListener listener : listeners) {
+	            listener.handleEvent(event);
+	        }
+	    }
 
 	
 }

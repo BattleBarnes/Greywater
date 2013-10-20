@@ -2,7 +2,6 @@ package game.engine.audio;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;

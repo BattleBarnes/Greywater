@@ -1,21 +1,21 @@
 package game.entities;
 
 import game.Globals;
-import game.engine.audio.AudioLoader;
+import game.engine.Camera;
+import game.engine.audio.SoundLoader;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
-import game.entities.components.ai.PathFinder;
 import game.overlay.AIInventory;
-import game.world.World;
 
-import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
+import java.awt.geom.Rectangle2D;
+import java.util.Random;
 
 public class Watchman extends Mob {
 
 	int lastPos;
+	public Rectangle2D attBox;
 
 	public Watchman(double x, double y, Player p) {
 		name = "Watchman";
@@ -34,22 +34,30 @@ public class Watchman extends Mob {
 
 	@Override
 	protected void getInput() {
-		sight = new Line2D.Double(target.getX(), target.getY(), getX(), getY());
 
-		if (Globals.distance(new Point2D.Double(getX(), getY()), new Point2D.Double(target.getX(), target.getY())) < 90 && validSight && ((Mob) target).isAlive()) {
-			attack((Mob) target);
-			return;
-		}
+		Thread finder;
 
-		if (Globals.distance(new Point2D.Double(getX(), getY()), new Point2D.Double(target.getX(), target.getY())) < 500 && HP > 0) {
-			AudioLoader.playSingle("click", false);
-		}
-		// else
-		// AudioLoader.stopSingle("click");
+		finder = new Thread(new Runnable() {
+			public void run() {
+				
 
-		attacking = false;
+				sight = new Line2D.Double(target.getX(), target.getY(), getX(), getY());
+				validateSight();
 
-		pathFind();
+				if (Globals.distance(new Point2D.Double(getX(), getY()), new Point2D.Double(target.getX(), target.getY())) < 90 && validSight && ((Mob) target).isAlive()) {
+					attack((Mob) target);
+					System.out.println(name + " attacked " + ((Mob)target).name);
+					return;
+				}
+
+				attacking = false;
+
+				pathFind();
+
+			}
+		});
+		finder.setPriority(Thread.MIN_PRIORITY);
+		finder.start();
 	}
 
 	@Override
@@ -85,7 +93,7 @@ public class Watchman extends Mob {
 
 	private void pathFind() {
 
-		if (((physicsComponent.destination == null && validSight) || (Globals.distance(sight.getP1(), sight.getP2()) < 300)) && System.nanoTime() % 47 == 0) {
+		if (((physicsComponent.destination.distance(this.getLocation())<10 && validSight) || ((Globals.distance(sight.getP1(), sight.getP2()) < 300)) && System.nanoTime() % 47 == 0) ){
 			// System.out.println("Pathfind");
 			pathFinder.setNewPath(new Point2D.Double(getX(), getY()), new Point2D.Double(target.getX(), target.getY()));
 			Point2D newPoint = pathFinder.getNextLoc();
@@ -99,7 +107,6 @@ public class Watchman extends Mob {
 
 		}
 		if (physicsComponent.destination == null && validSight) {
-			// System.out.println("Pathfind");
 			pathFinder.setNewPath(new Point2D.Double(getX(), getY()), new Point2D.Double(target.getX(), target.getY()));
 			return;
 		}
@@ -111,7 +118,17 @@ public class Watchman extends Mob {
 
 	public void damage(int dmg) {
 		super.damage(dmg);
-		AudioLoader.playSingle("hit", false);
+		Random r = new Random();
+		int num = r.nextInt(3)+1;
+		SoundLoader.playSingle("Wrench"+num);
 	}
 
+	public boolean interact() {
+		return false;
+	}
+
+	public Rectangle2D getAttbox(){
+		Point2D p = Globals.getIsoCoords(getX() + spriteXOff, getY() + spriteYOff);
+		return new Rectangle2D.Double((int) Math.round(p.getX() - Camera.xOffset),(int)Math.round(p.getY() - Camera.yOffset), graphicsComponent.getWidth(), graphicsComponent.getHeight() );
+	}
 }

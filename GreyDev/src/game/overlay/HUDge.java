@@ -4,13 +4,13 @@ import game.Globals;
 import game.engine.Camera;
 import game.engine.InputHandler;
 import game.engine.State;
+import game.engine.audio.SoundLoader;
 import game.entities.components.Sprite;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.geom.Point2D;
 /**
  * HUDge.java
  * @author Jeremy Barnes 4/25/13
@@ -89,6 +89,8 @@ public class HUDge {
 		
 		if(InputHandler.leftClick.keyTapped){ 
 			if(inv.getPhysicsShape().contains(InputHandler.leftClick.location)){ //if clicked the inventory button
+				SoundLoader.playSingle("Click");
+				InputHandler.leftClick.heldDown = false;
 				if(Globals.state != State.gameMenu) //toggle the inventory screen
 					Globals.state = State.gameMenu;
 				else

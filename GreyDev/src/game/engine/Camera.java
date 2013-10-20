@@ -8,8 +8,6 @@
 
 package game.engine;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 public class Camera  {
@@ -69,6 +67,7 @@ public class Camera  {
 		yOffset = y - actHeight/3;
 		xOffset =  x - actWidth/2 + 50;
 	}
+	
 	
 	
 	public Rectangle getViewArea(){

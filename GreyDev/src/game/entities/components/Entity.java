@@ -64,7 +64,6 @@ public abstract class Entity {
 
 	/**
 	 * Draws the current sprite for this entity.
-	 * 
 	 * @param g - Graphics object
 	 */
 	public void render(Graphics g) {
@@ -77,23 +76,12 @@ public abstract class Entity {
 	
 		if(Globals.DEVMODE > 0){
 			Point2D p = Globals.getIsoCoords(getX() + spriteXOff, getY() + spriteYOff);
-			//Point2D p = Globals.getIsoCoords(getX(), getY());
 			graphicsComponent.render(g, (int) Math.round(p.getX() - Camera.xOffset), (int)Math.round(p.getY() - Camera.yOffset));
 		}
 	}
-
+	
 	/**
-	 * Stops movement, teleports Entity to given coordinates.
-	 * @param x - x coordinate
-	 * @param y - y coordinate
-	 */
-	public void setLocation(double x, double y) {
-		physicsComponent.updateHitSpace(x,y);
-		physicsComponent.stopMovement();
-	}
-
-	/**
-	 * @return the Tangible used for collisions and positioning
+	 * @return the physicsComponent for filthy outsiders
 	 */
 	public Tangible getPhysics() {
 		return physicsComponent;
@@ -112,6 +100,10 @@ public abstract class Entity {
 
 	public double getY() {
 		return physicsComponent.getHitBox().getY();
+	}
+	
+	public Point2D getLocation(){
+		return new Point2D.Double(getX(), getY());
 	}
 
 	/**

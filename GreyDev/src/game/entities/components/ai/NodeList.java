@@ -1,6 +1,5 @@
 package game.entities.components.ai;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 

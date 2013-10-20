@@ -3,9 +3,8 @@ package game.entities.components.ai;
 import game.Globals;
 import game.world.World;
 
-import java.awt.Point;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class PathNode {
@@ -34,12 +33,12 @@ public class PathNode {
 	public void costToGoal(Point2D goal)
 	// calculate _floor_ of the straight line dist. to the goal
 	{
-		//double dist = coord.distance(goal.getX(), goal.getY());
-	//	costToGoal = Math.floor(dist);
+		// double dist = coord.distance(goal.getX(), goal.getY());
+		// costToGoal = Math.floor(dist);
 		double dx = Math.abs(this.coord.getX() - goal.getX());
 		double dy = Math.abs(this.coord.getY() - goal.getY());
-		costToGoal =  Math.max(dx, dy);
-		
+		costToGoal = Math.max(dx, dy);
+
 	}
 
 	public double getScore() {
@@ -60,60 +59,71 @@ public class PathNode {
 
 	public PathNode makeNeighbour(int direction, World wd)
 	/*
-	 * Return the neighbouring tile node in the quad direction, except when that
-	 * location is invalid according to WorldDisplay.
+	 * Return the neighbouring tile node in the quad direction, except when that location is invalid according to WorldDisplay.
 	 */
 	{
 		PathNode newNode = null;
 		double x = coord.getX();
 		double y = coord.getY();
-		
-		switch(direction){
-		case Globals.NORTH: newNode = makeNode(x, y - Globals.tileHeight, wd, direction); break;
-		case Globals.NORTHEAST: newNode = makeNode(x + Globals.tileWidth, y - Globals.tileHeight, wd, direction); break;
-		case Globals.EAST: newNode = makeNode(x + Globals.tileWidth, y, wd, direction); break;
-		case Globals.SOUTHEAST: newNode = makeNode(x + Globals.tileWidth, y + Globals.tileHeight, wd, direction); break;
-		case Globals.SOUTH: newNode = makeNode(x, y+Globals.tileHeight, wd, direction); break;
-		case Globals.SOUTHWEST: newNode = makeNode(x - Globals.tileWidth, y + Globals.tileHeight, wd, direction); break;
-		case Globals.WEST: newNode = makeNode(x - Globals.tileWidth, y, wd, direction); break;
-		case Globals.NORTHWEST: newNode = makeNode(x - Globals.tileWidth,  y - Globals.tileHeight , wd, direction); break;
-		default:System.out.println("makeNeighbour() error");
-			newNode = null;
-			break;
+
+		switch (direction) {
+			case Globals.NORTH:
+				newNode = makeNode(x, y - Globals.tileHeight, wd, direction);
+				break;
+			case Globals.NORTHEAST:
+				newNode = makeNode(x + Globals.tileWidth, y - Globals.tileHeight, wd, direction);
+				break;
+			case Globals.EAST:
+				newNode = makeNode(x + Globals.tileWidth, y, wd, direction);
+				break;
+			case Globals.SOUTHEAST:
+				newNode = makeNode(x + Globals.tileWidth, y + Globals.tileHeight, wd, direction);
+				break;
+			case Globals.SOUTH:
+				newNode = makeNode(x, y + Globals.tileHeight, wd, direction);
+				break;
+			case Globals.SOUTHWEST:
+				newNode = makeNode(x - Globals.tileWidth, y + Globals.tileHeight, wd, direction);
+				break;
+			case Globals.WEST:
+				newNode = makeNode(x - Globals.tileWidth, y, wd, direction);
+				break;
+			case Globals.NORTHWEST:
+				newNode = makeNode(x - Globals.tileWidth, y - Globals.tileHeight, wd, direction);
+				break;
+			default:
+				System.out.println("makeNeighbour() error");
+				newNode = null;
+				break;
 		}
-	
+
 		return newNode;
 	}
 
-	
 	/*
-	 * Create a neigbouring tile node. costFromStart is one more than the
-	 * current node's value, since the new node is one node further along the
-	 * path.
+	 * Create a neigbouring tile node. costFromStart is one more than the current node's value, since the new node is one node further along the path.
 	 */
-	private PathNode makeNode(double x, double y, World wd, int direction){
-		if (!wd.checkValidTile((int)x, (int)y))
+	private PathNode makeNode(double x, double y, World wd, int direction) {
+		// if (!wd.checkValidTile((int)x, (int)y))
+		// return null;
+		// if(wd.checkWorldCollision(new Rectangle2D.Double(coord.getX(), coord.getY() ,(x - coord.getX()) ,(y - coord.getY()) )))
+		// return null;
+
+		if (wd.checkWorldCollision(new Line2D.Double(this.getPoint(), new Point2D.Double(x, y))))
 			return null;
-			if(wd.checkWorldCollision(new Rectangle2D.Double(coord.getX() +10, coord.getY() +10 ,2*(x - coord.getX()) ,(y - coord.getY()) *2))){
-				return null;
-			}
 		PathNode newNode = new PathNode(new Point2D.Double(x, y));
-		newNode.setCostFromStart(getCostFromStart() + Math.pow(Globals.distance(newNode.getPoint(), this.getPoint()),2));
+		newNode.setCostFromStart(getCostFromStart() + Math.pow(Globals.distance(newNode.getPoint(), this.getPoint()), 2));
 		newNode.setParent(this);
 		return newNode;
 	} // end of makeNode()
 
-	public ArrayList<Point2D> buildPath(World wd){
+	public ArrayList<Point2D> buildPath(World wd) {
 		ArrayList<Point2D> path = new ArrayList<Point2D>();
 		path.add(coord);
-		Point activeTile = Globals.findTile(coord.getX(), coord.getY());
-		wd.tileMap[activeTile.x][activeTile.y].selected = true;
+
 		PathNode temp = parent;
 		while (temp != null) {
 			path.add(0, temp.getPoint()); // add at start to reverse the path
-			//path.add(temp.getPoint());
-			activeTile = Globals.findTile(temp.getPoint().getX(), temp.getPoint().getY());
-			wd.tileMap[activeTile.x][activeTile.y].selected = true;
 			temp = temp.getParent();
 		}
 		return path;

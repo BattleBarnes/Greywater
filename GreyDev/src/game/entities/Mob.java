@@ -1,6 +1,9 @@
 package game.entities;
 
 import game.Globals;
+import game.engine.audio.SoundLoader;
+import game.entities.components.AnimEvent;
+import game.entities.components.AnimListener;
 import game.entities.components.Entity;
 import game.entities.components.Sprite;
 import game.entities.components.ai.PathFinder;
@@ -8,15 +11,14 @@ import game.overlay.InventoryMenu;
 import game.world.World;
 
 import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
+import java.util.Random;
 
-public abstract class Mob extends Entity {
+public abstract class Mob extends Entity implements AnimListener {
 
 	public int direction; // current direction (N,S,E,W....) see Globals.java
 
 	protected String currDirection = "South";
-	protected String name;
+	public String name;
 	public Entity target;
 
 	boolean walks = true;
@@ -39,9 +41,9 @@ public abstract class Mob extends Entity {
 	public void init(World w) {
 		world = w;
 		this.pathFinder = new PathFinder(w);
+		graphicsComponent.addAnimListener(this);
 	}
-	
-	
+
 
 	/**
 	 * Generic method for moving entities: Saves last valid position, moves the
@@ -49,11 +51,24 @@ public abstract class Mob extends Entity {
 	 * hitBox.
 	 */
 	public void tick() {
-
-
+		if(HP <=0){
+			attacking = false;
+			if(graphicsComponent.getCurrentImageName().contains("Attack")){
+				graphicsComponent.animate(0.9, "Die");
+			}
+			//graphicsComponent = new Sprite(this.name, name + "Dead");
+			
+		}
+		
+		if (HP <= 0 && !graphicsComponent.isAnimating()) {
+			graphicsComponent = new Sprite(this.name, name + "Dead");
+			return;
+		}
+		
+		super.tick();
 		if (HP > 0)
 			getInput(); // get input from AI or controls or whatever
-		super.tick();
+		
 		
 		if (!physicsComponent.isMoving())
 			physicsComponent.stopMovement();
@@ -61,9 +76,8 @@ public abstract class Mob extends Entity {
 		if (HP > 0)
 			walk();
 
-		if (HP <= 0 && !graphicsComponent.isAnimating()) {
-			graphicsComponent = new Sprite(this.name, name + "Dead");
-		}
+	
+		
 
 	}
 
@@ -72,13 +86,17 @@ public abstract class Mob extends Entity {
 	 * shows the walk animation
 	 */
 	public void walk() {
-
-
-		direction = Globals.getIntDir(physicsComponent.destination.getX() - getX(), physicsComponent.destination.getY() - getY());
 		
+		if(attacking){
+			graphicsComponent.animate(.5, "Attack" + currDirection);
+			return;
+		}
+
 		if (physicsComponent.isMoving() && !attacking) { // display animation walk loop.
+			direction = Globals.getIntDir(physicsComponent.destination.getX() - getX(), physicsComponent.destination.getY() - getY());
 			currDirection = Globals.getStringDir(direction);
 			graphicsComponent.loopImg(walkRate, "Walk" + currDirection);
+			currentLoot = null;
 			
 		} else if (!attacking) {
 			graphicsComponent.loopImg(.5, "Stand" + currDirection);
@@ -106,9 +124,10 @@ public abstract class Mob extends Entity {
 	 * Sets validSight to whether or not the sight is valid.
 	 */
 	public void validateSight() {
-		if(sight != null && Globals.distance(sight.getP1(), sight.getP2()) < this.sightRange && !world.checkWorldCollision(sight))
+		if(sight != null && Globals.distance(sight.getP1(), sight.getP2()) <= this.sightRange && !world.checkWorldCollision(sight))
 			validSight = true;
-		validSight = false;
+		else
+			validSight = false;
 	}
 
 
@@ -118,11 +137,14 @@ public abstract class Mob extends Entity {
 	 */
 	public void damage(int damage) {
 		HP -= damage;
+		System.out.println(name + " took " + damage + " dmg ---> " + HP +" HP");
 		if (HP <= 0) {
 			graphicsComponent.animate(0.9, "Die");
 		}
 	}
 
+	public abstract boolean interact();
+	
 	public int getHP() {
 		return HP;
 	}
@@ -147,4 +169,16 @@ public abstract class Mob extends Entity {
 		}
 	}
 
+	@Override
+	public void handleEvent(AnimEvent e){
+		if(e.action.contains("Attack") && e.ending){
+			attacking = false;
+		}
+		else if(e.action.contains("Walk") && !e.beginning){
+			int num = 0;
+			num = new Random().nextInt(6)+1;
+			SoundLoader.playSingle(name+"Walk"+num);
+		}
+	}
+	
 }

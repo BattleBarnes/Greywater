@@ -23,7 +23,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 
 public class StartMenu {
 
@@ -36,16 +35,17 @@ public class StartMenu {
 	boolean creditsScrn = false;
 
 	/* Menu elements, buttons and the "cursor" */
-	Sprite cursor = new Sprite("Bullet", "Bullet");
-	Sprite title = new Sprite("Title", "Title");
-	Sprite credits = new Sprite("Credits", "Credits");
+	Sprite endscreen = new Sprite("Title", "Title");
+	Sprite title = new Sprite("NewTitle", "NewTitle");
+
 	Sprite newGame = new Sprite("NewGame", "NewGame");
-	Sprite howPlay = new Sprite("HowToPlay", "HowToPlay");
+	Sprite hnew = new Sprite("HNewGame", "HNewGame");
 	Sprite exit = new Sprite("Exit", "Exit");
-	Sprite back = new Sprite("Back", "Back");
+	Sprite hexit = new Sprite("HExit", "HExit");
+
 
 	// List of main menu option buttons, to allow easy for-looping
-	Sprite[] options = { newGame, howPlay, credits, exit };
+	Sprite[] options = { newGame,  exit };
 
 	// Currently selected option
 	int option = 0;
@@ -92,11 +92,13 @@ public class StartMenu {
 		if (titleScrn) {
 			title.render(g, 0, 0); // Greywater
 
-			for (int i = 0; i < 4; i++) { // loop through menu options
+			for (int i = 0; i < 2; i++) { // loop through menu options
 				options[i].render(g, 0, 0); // and draw them
 
-				if (option == i) // if this element is the currently selected one, render the bullet at that location.
-					cursor.render(g, 190, (int) (5 * Camera.actHeight / 15 + 99 * i)); // TODO come back to this when the menu is finished for each resolution
+				if (option == 0) // if this element is the currently selected one, render the bullet at that location.
+					hnew.render(g, 0, 0);
+				if(option == 1)
+					hexit.render(g, 0, 0);
 			}
 		}
 		// if we're on the how to play screen, render that information instead
@@ -109,60 +111,52 @@ public class StartMenu {
 			// set up the screentext
 			String s0 = "Ms Sweepy has gotten lost in the sewers again!";
 			String s1 = "The objective of the game is to find your robot - Ms Sweepy.";
-			String s2 = "Be careful of the Watchmen, the automated security drones --";
-			String s3 = "they attack indiscriminately. Find Sweepy and escape the sewers.";
-			String s4 = "CONTROLS";
-			String s5 = "WASD or Arrow Keys to move";
-			String s6 = "Spacebar or click to attack/loot enemies";
-			String s7 = "ESC to go to menu.";
-			String[] s = { s0, s1, s2, s3, "", s4, s5, s6, s7 };
+			String s2 = "Evade the Watchmen who patrol the sewers.";
+			String s3 = "Find Sweepy and escape the sewers.";
+			
+			String[] s = { s0, s1, s2, s3, "" };
 
 			// draw the strings
 			for (int i = 0; i < s.length; i++) {
 				int strw = fm.stringWidth(s[i]);
 				g.drawString(s[i], (int) (Camera.actWidth / 2 - strw / 2), 100 + 70 * i);
 			}
-			// render the back button TODO come back when the new assets happen
-			back.render(g, (int) (Camera.actWidth / 2 - 105 ), (int) (Camera.actHeight - back.getHeight()));
-
-			// draw the cursor next to the back button
-			cursor.render(g, Camera.actWidth / 2 - 160, (int) (Camera.actHeight - back.getHeight() ));
-
+			
 		}// otherwise, render the "credits" screen!
-		else if (creditsScrn) {
-			menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, (int) (50  ));
-			System.out.println(50      );
-			g.setColor(Color.ORANGE);
-			g.setFont(menuFont);
-			fm = g.getFontMetrics(menuFont);
-
-			// set up the screentext
-			String s0 = "Jill Graves - Graphics Wizard";
-			String s1 = "Dominique Barnes - Pixelmancer";
-			String s2 = "Grace Hammons - Imagemeister";
-			String s3 = "Jeremy Barnes - KeyboardMasher";
-			String s4 = "SPECIAL THANKS";
-			String s45 = "Alexandr Zhelanov - http://opengameart.org/";
-			String s5 = "Iwan Gabovitch - http://opengameart.org/";
-			String s6 = "Alvinwhatup2 - http://freesound.org/";
-			String s7 = "FreqMan - http://freesound.org/people/FreqMan/";
-			String s8 = "Brandon75689 - http://opengameart.org/";
-			String s9 = "VERY SPECIAL THANKS";
-			String s10 = "Coffee";
-			String[] s = { s0, s1, s2, s3, "", s4, s45, s5, s6, s7, s8, "", s9, s10 };
-
-			// draw the strings to screen
-			Graphics2D g2 = (Graphics2D) g;
-			for (int i = 0; i < s.length; i++) {
-				int strw = fm.stringWidth(s[i]);
-				g2.drawString(s[i], (int) (Camera.actWidth / 2 - strw / 2), (int) (50 + 60   * i)); // TODO fix for resolution differences
-
-			}
-			// render the back button and cursor TODO come back when new art assets for differnet resolutions happen
-			back.render(g, (int) (Camera.actWidth / 2 - back.getWidth()  ), (int) (Camera.actHeight - back.getHeight()  ));
-			cursor.render(g, Camera.actWidth / 2 - 160, (int) (Camera.actHeight - back.getHeight()  ));
-
-		}
+//		else if (creditsScrn) {
+//			menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, (int) (50  ));
+//			System.out.println(50      );
+//			g.setColor(Color.ORANGE);
+//			g.setFont(menuFont);
+//			fm = g.getFontMetrics(menuFont);
+//
+//			// set up the screentext
+//			String s0 = "Jill Graves - Graphics Wizard";
+//			String s1 = "Dominique Barnes - Pixelmancer";
+//			String s2 = "Grace Hammons - Imagemeister";
+//			String s3 = "Jeremy Barnes - KeyboardMasher";
+//			String s4 = "SPECIAL THANKS";
+//			String s45 = "Alexandr Zhelanov - http://opengameart.org/";
+//			String s5 = "Iwan Gabovitch - http://opengameart.org/";
+//			String s6 = "Alvinwhatup2 - http://freesound.org/";
+//			String s7 = "FreqMan - http://freesound.org/people/FreqMan/";
+//			String s8 = "Brandon75689 - http://opengameart.org/";
+//			String s9 = "VERY SPECIAL THANKS";
+//			String s10 = "Coffee";
+//			String[] s = { s0, s1, s2, s3, "", s4, s45, s5, s6, s7, s8, "", s9, s10 };
+//
+//			// draw the strings to screen
+//			Graphics2D g2 = (Graphics2D) g;
+//			for (int i = 0; i < s.length; i++) {
+//				int strw = fm.stringWidth(s[i]);
+//				g2.drawString(s[i], (int) (Camera.actWidth / 2 - strw / 2), (int) (50 + 60   * i)); // TODO fix for resolution differences
+//
+//			}
+//			// render the back button and cursor TODO come back when new art assets for differnet resolutions happen
+//			back.render(g, (int) (Camera.actWidth / 2 - back.getWidth()  ), (int) (Camera.actHeight - back.getHeight()  ));
+//			cursor.render(g, Camera.actWidth / 2 - 160, (int) (Camera.actHeight - back.getHeight()  ));
+//
+//		}
 	}
 
 	/**
@@ -172,35 +166,40 @@ public class StartMenu {
 		if (this.titleScrn) {
 			if (InputHandler.up.keyTapped && option > 0) {
 				option--; // move cursor up if not at top
-			} else if (InputHandler.down.keyTapped && option < 3) {
+			} else if (InputHandler.down.keyTapped && option < 2) {
 				option++; // move cursor down if not at bottom
-			} else if (InputHandler.use.keyTapped) {
+			} else if (InputHandler.use.keyTapped || InputHandler.leftClick.heldDown) {
 				choose(); // if they hit enter, choose that selection
-			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99  )) {
-				option = 0;
-
-				if (InputHandler.leftClick.keyTapped) {
-					choose();
-				}
-			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99  ) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99   * 2)) {
+			}else if(InputHandler.getMouse().getY() > 700){
 				option = 1;
-
-				if (InputHandler.leftClick.keyTapped) {
-					choose();
-				}
-			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99   * 2) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99   * 3)) {
-				option = 2;
-
-				if (InputHandler.leftClick.keyTapped) {
-					choose();
-				}
-			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99   * 3) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99   * 4)) {
-				option = 3;
-
-				if (InputHandler.leftClick.keyTapped) {
-					choose();
-				}
 			}
+			else
+				option = 0;
+//			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99  )) {
+//				option = 0;
+//
+//				if (InputHandler.leftClick.keyTapped) {
+//					choose();
+//				}
+//			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99  ) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99   * 2)) {
+//				option = 1;
+//
+//				if (InputHandler.leftClick.keyTapped) {
+//					choose();
+//				}
+//			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99   * 2) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99   * 3)) {
+//				option = 2;
+//
+//				if (InputHandler.leftClick.keyTapped) {
+//					choose();
+//				}
+//			} else if (InputHandler.getMouse().getY() > (int) (5 * Camera.actHeight / 15 + 99   * 3) && InputHandler.getMouse().getY() < (int) (5 * Camera.actHeight / 15 + 99   * 4)) {
+//				option = 3;
+//
+//				if (InputHandler.leftClick.keyTapped) {
+//					choose();
+//				}
+//			}
 		}
 		else if(InputHandler.leftClick.keyTapped || InputHandler.spaceBar.keyTapped){
 			choose();
@@ -225,16 +224,6 @@ public class StartMenu {
 				parent.initNewGame();
 				break;
 			case (1):
-				creditsScrn = false;
-				titleScrn = false;
-				howPlayScrn = true;
-				break;
-			case (2):
-				creditsScrn = true;
-				titleScrn = false;
-				howPlayScrn = false;
-				break;
-			case (3):
 				parent.exitGame();
 				break;
 		}

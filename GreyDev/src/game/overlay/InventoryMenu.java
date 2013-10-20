@@ -4,6 +4,7 @@ import game.Globals;
 import game.engine.Camera;
 import game.engine.InputHandler;
 import game.engine.State;
+import game.engine.audio.SoundLoader;
 import game.entities.components.Sprite;
 import game.entities.items.Crafting;
 import game.entities.items.Item;
@@ -147,29 +148,36 @@ public class InventoryMenu {
 		if (objectSelected) {// make selection follow the mouse
 			if (InputHandler.leftClick.keyTapped) {
 				placeItem(calcSlot(InputHandler.leftClick.location)); // place it if mouse
-				System.out.println("Tap place"); // click
+				InputHandler.leftClick.heldDown = false;
 				return;
 			}
 			selectedItem.move((int) InputHandler.getScaledMouse().getX(), (int) InputHandler.getScaledMouse().getY());
 
 		} else if (InputHandler.leftClick.keyTapped && Globals.state == State.gameMenu) {
 			grabItem(InputHandler.leftClick.location); // pick up item from inventory
-			System.out.println(selectedItem);
+		
+
 			if (!objectSelected && craftOutput.getPhysicsShape().contains(InputHandler.leftClick.location)) {
 				if (!craftOutput.isEmpty()) {
+					SoundLoader.playSingle("Craft");
 					objectSelected = true;
 					selectedItem = craftOutput.grabItem();
+					
 					for (Slot s : craftarea) {
 						s.grabItem();
 					}
+					InputHandler.leftClick.heldDown = false;
 				}
+				InputHandler.leftClick.heldDown = false;
 			}
+			
 		} else if (InputHandler.rightClick.keyTapped && Globals.state == State.gameMenu) {
 			Slot s = calcSlot(InputHandler.rightClick.location);
 			if (s != null && !s.isEmpty()) {
 				if (s.getItem().itemID == 1) {
 					buff = s.getItem().use();
 					s.grabItem();
+					SoundLoader.playSingle("Drink");
 				}
 			}
 		} else {
@@ -256,6 +264,7 @@ public class InventoryMenu {
 	 * Destroys the selected item.
 	 */
 	private void dropItem() {
+		
 		// if the item was in inventory previously, remove it and set it to null.
 		if (inv.indexOf(selectedItem) > 0 && inv.indexOf(selectedItem) < COLUMNS * (ROWS))
 			inv.set(inv.indexOf(selectedItem), null);
@@ -285,6 +294,7 @@ public class InventoryMenu {
 				selectedItem = i.grabItem(); // it is selected
 				if (selectedItem != null)
 					objectSelected = true;
+				InputHandler.leftClick.heldDown = false;
 			}
 		}
 
@@ -293,6 +303,7 @@ public class InventoryMenu {
 				selectedItem = i.grabItem(); // it is selected
 				if (selectedItem != null)
 					objectSelected = true;
+				InputHandler.leftClick.heldDown = false;
 			}
 		}
 
@@ -301,6 +312,7 @@ public class InventoryMenu {
 				selectedItem = i.grabItem(); // it is selected
 				if (selectedItem != null)
 					objectSelected = true;
+				InputHandler.leftClick.heldDown = false;
 			}
 		}
 
@@ -312,6 +324,7 @@ public class InventoryMenu {
 						s.grabItem();
 					}
 					objectSelected = true;
+					InputHandler.leftClick.heldDown = false;
 				}
 			}
 
@@ -328,6 +341,8 @@ public class InventoryMenu {
 		if (dest == null)
 			return;
 		if (dest.add(selectedItem)) {
+			if(selectedItem!= null && selectedItem.itemID == 1)
+				SoundLoader.playSingle("Glass");
 			selectedItem = null; // item is no longer selected
 			objectSelected = false;
 		}

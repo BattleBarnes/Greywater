@@ -38,7 +38,7 @@ public class Slot extends Entity {
 	public boolean add(Item i) {
 		if (held == null) { //only add if not currently holding something
 			held = i;
-			i.setLocation(getX(), getY()); //item gets same location as slot
+			i.getPhysics().updateHitSpace(getX(), getY()); //item gets same location as slot
 		} else 
 			return false;
 		

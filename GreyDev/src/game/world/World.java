@@ -14,15 +14,14 @@ import game.entities.Wall;
 import game.entities.Watchman;
 import game.entities.components.Entity;
 import game.entities.components.Sprite;
-import game.entities.components.Vec2D;
+import game.overlay.InventoryMenu;
+import game.overlay.OverlayManager;
 
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -60,31 +59,34 @@ public class World {
 
 	};
 
-	
-	public World(Sprite t, Player p) {
+	public World(Sprite t) {
 
-		tileHeight =  (Camera.scale * t.getHeight());
-		tileWidth =  (Camera.scale * t.getWidth() / 2); // same as tileHeight (square/flatspace)
+		tileHeight = (Camera.scale * t.getHeight());
+		tileWidth = (Camera.scale * t.getWidth() / 2); // same as tileHeight (square/flatspace)
 
 		Globals.tileHeight = (Camera.scale * t.getHeight());
 		Globals.tileWidth = (Camera.scale * t.getWidth() / 2); // same as tileHeight (square/flatspace)
 
 		tile = t;
 
+		InventoryMenu i = new InventoryMenu();
 		mobList = new ArrayList<Mob>();
-		player = p;
+		player = new Player(39, 3, i);
 		player.init(this);
-		//player.addPathFinder(this);
-		mobList.add(p);
-
+		OverlayManager.init(player);
+		// player.addPathFinder(this);
+		mobList.add(player);
+		Point2D p = Globals.getIsoCoords(player.getX(), player.getY());
+		Camera.moveTo((int) p.getX(), (int) p.getY());
 		loadEnviro(9);
 
 	}
 
 	public void render(Graphics g) {
 		// points used for render culling
-		Point origin = Globals.findTile((int) player.getX() - Camera.width, (int) player.getY() - Camera.height);
-		Point bottomRight = Globals.findTile((int) player.getX() + Camera.width, (int) player.getY() + 2 * Camera.height);
+		// long starter = System.currentTimeMillis();
+		Point origin = Globals.findTile((int) player.getX() - Camera.width / 2, (int) player.getY() - 2 * Camera.height / 3);
+		Point bottomRight = Globals.findTile((int) player.getX() + Camera.width / 2, (int) player.getY() + Camera.height);
 		if (origin.x < 0)
 			origin.setLocation(0, origin.y);
 		if (origin.y < 0)
@@ -95,31 +97,22 @@ public class World {
 		if (bottomRight.y > yHeight)
 			bottomRight.setLocation(bottomRight.x, yHeight);
 
-		// render loop
-		for (int x = origin.x; x < bottomRight.x; x++) {
-			for (int y = bottomRight.y; y >= origin.y; y--) {
-				try {
-					if (tileMap[x][y] != null)
-						;
-					tileMap[x][y].render(g);
-				} catch (Exception e) {
-				}
-				;
-			}
-		}
-
 		ArrayList<Entity> sortList = new ArrayList<Entity>();
 
 		for (Entity e : mobList) {
 			sortList.add(e);
 		}
 
+		// render loop
 		for (int x = origin.x; x < bottomRight.x; x++) {
 			for (int y = bottomRight.y; y >= origin.y; y--) {
 				try {
+					if (tileMap[x][y] != null)
+						tileMap[x][y].render(g);
 					if (walls[x][y] != null)
 						sortList.add(walls[x][y]);
 				} catch (Exception e) {
+					System.out.println("EXCEPTION IN WORLD RENDER LOOP");
 				}
 				;
 			}
@@ -130,24 +123,22 @@ public class World {
 		for (Entity e : sortList) {
 			e.render(g);
 		}
-
+		// long ender = System.currentTimeMillis();
+		// if (ender - starter > 0)
+		// System.out.println((System.currentTimeMillis() - starter) + "millis to complete tavish");
 	}
 
 	public void tick() {
 
 		// update mobs and if they are using AI, check to see if the player is visible to them
+
 		for (Mob e : mobList) {
 			e.tick();
-
-			Rectangle2D r = player.attRect;
-			if (r != null) {
-				player.interact((Mob) getEntityCollision(r, player));
-			}
-
-			// move the camera to follow the player
-			Point2D p = Globals.getIsoCoords(player.getX(), player.getY());
-			Camera.moveTo((int) p.getX(), (int) p.getY());
 		}
+
+		Point2D p = Globals.getIsoCoords(player.getX(), player.getY());
+		Camera.moveTo((int) p.getX(), (int) p.getY());
+
 	}
 
 	public boolean checkWorldCollision(Shape s) {
@@ -171,7 +162,7 @@ public class World {
 				if (walls[x][y] == null)
 					continue;
 				if (s != null && s.intersects(walls[x][y].getPhysicsShape())) {
-					//walls[x][y].printName();
+					// walls[x][y].printName();
 					return true;
 				}
 			}
@@ -195,7 +186,9 @@ public class World {
 				continue;
 			if (e == caller)
 				continue;
-			if (s.intersects(e.getPhysicsShape())) {
+			if (e.playerFriend)
+				continue;
+			if (s.intersects(((Watchman) e).getAttbox())) {
 				if (e.isAlive() && !(e.playerFriend))
 					return e;
 				else if (e.playerFriend)
@@ -257,7 +250,7 @@ public class World {
 						double xCo = x * tileWidth;
 						double yCo = y * tileHeight;
 
-						tileMap[x][y] = new Tile(floor[rand.nextInt(8)], xCo -x, yCo -y);
+						tileMap[x][y] = new Tile(floor[rand.nextInt(8)], xCo - x, yCo - y);
 					}
 				}
 			}
@@ -285,16 +278,23 @@ public class World {
 
 						walls[x][y] = new Wall(xCo - x, yCo - y, wall[choice], tileWidth * 2.0 / tileHeight, tileWidth, tileHeight, player, true);
 					} else if (line.charAt(x) == 'C') {
-						walls[x][y] = new Wall(xCo, yCo, column, tileWidth * (2.0) / tileHeight, tileWidth, tileHeight, player, false);
+						walls[x][y] = new Wall(xCo - x, yCo - y, column, tileWidth * (2.0) / tileHeight, tileWidth, tileHeight, player, false);
+					} else if (line.charAt(x) == 'E') {
+						walls[x][y] = new Wall(xCo - x, yCo - y, new Sprite("ex4", "ex4"), tileWidth * (2.0) / tileHeight, tileWidth, tileHeight, player, false);
+					} else if (line.charAt(x) == 'P') {
+						walls[x][y] = new Wall(xCo - x, yCo - y, new Sprite("ex3", "ex3"), tileWidth * (2.0) / tileHeight, tileWidth, tileHeight, player, false);
+					} else if (line.charAt(x) == 'I') {
+						walls[x][y] = new Wall(xCo - x, yCo - y, new Sprite("ex2", "ex2"), tileWidth * (2.0) / tileHeight, tileWidth, tileHeight, player, false);
+					} else if (line.charAt(x) == 'N') {
+						walls[x][y] = new Wall(xCo - x, yCo - y, new Sprite("ex1", "ex1"), tileWidth * (2.0) / tileHeight, tileWidth, tileHeight, player, false);
 					} else if (line.charAt(x) == 'T') {
-					//	 Watchman w = new Watchman(xCo, yCo, player);
-					//	 w.addPathFinder(this); 
-					//	 w.init(this);
-					//	 mobList.add(w);
+						Watchman w = new Watchman(xCo, yCo, player);
+						w.init(this);
+						mobList.add(w);
 					} else if (line.charAt(x) == 'X') {
-						Sweepy sw = new Sweepy(xCo,yCo,player);
-					//	sw.init(this);
-					//	mobList.add(sw);
+						Sweepy sw = new Sweepy(xCo, yCo, player);
+						sw.init(this);
+						mobList.add(sw);
 					}
 				}
 			}
@@ -306,5 +306,4 @@ public class World {
 			e1.printStackTrace();
 		}
 	}
-
 }

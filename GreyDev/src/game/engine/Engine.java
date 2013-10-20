@@ -237,7 +237,7 @@ public abstract class Engine extends JFrame implements Runnable {
 
 			secondselapsed += (endTime - startTime) / 1000000000.0;
 
-			if (secondselapsed >= 2) {
+			if (secondselapsed >= 10) {
 				System.out.println("Ticks per sec:" + tickCount / secondselapsed);
 				System.out.println("Time elapsed: " + secondselapsed);
 				System.out.println("Ticks total " + tickCount);

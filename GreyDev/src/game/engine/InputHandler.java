@@ -14,10 +14,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
 import javax.swing.event.MouseInputAdapter;
 
 public class InputHandler extends MouseInputAdapter implements KeyListener {
@@ -35,7 +33,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 		public int ticks; //how many times the button has been pressed
 		public int waitTicks; //how long the button has been considered toggled on
 		public boolean heldDown; //for mashing a button
-		public boolean keyTapped; //for one press buttons. (Discrete, not continuous)
+		public boolean keyTapped = false; //for one press buttons. (Discrete, not continuous)
 		public double xPos;
 		public double yPos;
 		public Point2D location;
@@ -47,6 +45,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 		public void toggle(boolean pressed){
 			if(pressed != heldDown){ 
 				heldDown = pressed; //if not pressed, not held down, and vice versa
+				keyTapped = pressed;
 			}
 			if(pressed)
 				ticks++;
@@ -64,6 +63,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 						
 			if(pressed != heldDown){
 				heldDown = pressed; //if button is not pressed, then it is not held down, and vice versa
+				keyTapped = pressed;
 			}
 			if(pressed)
 				ticks++; 
@@ -75,7 +75,7 @@ public class InputHandler extends MouseInputAdapter implements KeyListener {
 		 */
 		public void tick(){
 			//allows a button to be tapped for 1 tick
-			if(waitTicks < ticks){
+			if(waitTicks < ticks + 3 && keyTapped ){
 				waitTicks++;
 				keyTapped = true;
 			}

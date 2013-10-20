@@ -1,14 +1,12 @@
 package game.entities.components.ai;
 
-import game.Globals;
 import game.world.World;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class PathFinder {
-	private final int MAXRETRIES = 130;
+	private final int MAXRETRIES = 400;
 	int retries = 0;
 	ArrayList<Point2D> path;
 	private World world;
@@ -17,12 +15,21 @@ public class PathFinder {
 	public PathFinder(World w) {
 		path = new ArrayList<Point2D>();
 		world = w;
+
 	}
 
+	public boolean hasPath(){
+		if (pathIndex == path.size())
+			return false;
+
+		return true;
+	}
+	
 	public void setNewPath(Point2D start, Point2D goal) {
 		path = aStar(start, goal);
 		pathIndex = 0;
 		retries = 0;
+
 	}
 
 	public Point2D getNextLoc() {
@@ -46,18 +53,22 @@ public class PathFinder {
 		NodeList closed = new NodeList();
 
 		while (open.size() != 0) { // while some node still left to investigate
+			Thread.yield();
+
 			retries++;
 			bestNode = open.pop();
-			
-			if(retries >= MAXRETRIES){
+
+			if (retries >= MAXRETRIES) {
 				return bestNode.buildPath(world);
 			}
 
-			if (Globals.distance(goal, bestNode.getPoint()) < Globals.tileHeight + 20 || Globals.distance(goal, bestNode.getPoint()) < Globals.tileHeight - 20) { // goal!
+			 // goal!
+			if (Math.abs(bestNode.getPoint().getX() - goal.getX()) < 50.0 && Math.abs(bestNode.getPoint().getY() - goal.getY()) < 50.0)
 				return bestNode.buildPath(world); // return a path to that goal
-				
-			} else {
+
+			else {
 				for (int i = 0; i < 8; i++) { // try every direction
+					Thread.yield();
 					if ((newNode = bestNode.makeNeighbour(i, world)) != null) {
 						newCost = newNode.getCostFromStart();
 						PathNode oldVer = open.findNode(newNode.getPoint());
@@ -68,7 +79,7 @@ public class PathFinder {
 							continue;
 						else if (((oldVer = closed.findNode(newNode.getPoint())) != null) && (oldVer.getCostFromStart() <= newCost))
 							continue;
-						else if((oldVer != null) &&oldVer.getCostFromStart() <= 3000)
+						else if ((oldVer != null) && oldVer.getCostFromStart() <= 3000)
 							continue;
 						else { // store the new/improved node, removing the old one
 							newNode.costToGoal(goal);
@@ -82,6 +93,11 @@ public class PathFinder {
 			} // end of if-else
 			closed.add(bestNode);
 		}
+		System.out.println("*****");
+		System.out.println("Absolutely no path found. We tried boss..");
+		System.out.println("*****");
+		System.out.println();
 		return null; // no path found
 	}
+
 }
