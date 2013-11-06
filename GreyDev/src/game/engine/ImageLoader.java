@@ -39,6 +39,8 @@
  */
 package game.engine;
 
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -51,199 +53,191 @@ import java.util.StringTokenizer;
 import javax.imageio.ImageIO;
 
 public class ImageLoader {
-	
+
 	private static String filePath;
 	private static HashMap images = new HashMap();
 	private static String currentFolder;
-	
+
 	/**
-	 * Calls readFile on the text file provided to load images into memory from disk.
-	 * IMPORTANT NOTE: Do not provide individual files or call this constructor for multiple sprites.
-	 * Each sprite uses the same ImageLoader, they all call getter methods within this.
+	 * Calls readFile on the text file provided to load images into memory from disk. IMPORTANT NOTE: Do not provide individual files or call this
+	 * constructor for multiple sprites. Each sprite uses the same ImageLoader, they all call getter methods within this.
 	 * 
 	 * @param filepath - the filepath of the text file with image names in
 	 */
 	public static void init(String filepath) {
 		filePath = filepath;
-		
+
 		currentFolder = "Images/common/";
-		readFile("common/"+filePath); //common images
-	//	currentFolder = "Images/"+ Camera.width +"/";
-	//	readFile(Camera.width+"/"+filepath); //resolution specific images
+		readFile("common/" + filePath); // common images
+		// currentFolder = "Images/"+ Camera.width +"/";
+		// readFile(Camera.width+"/"+filepath); //resolution specific images
 	}
 
-/*
- * ********************** LOADING METHODS *********************************
- * These methods are used to get images (.pngs) into memory off the HDD
- */
-	
+	/*
+	 * ********************** LOADING METHODS ********************************* These methods are used to get images (.pngs) into memory off the HDD
+	 */
+
 	/**
-	 * Opens and parses a text file that indicates what needs to be opened.
-	 * Calls other loader methods as indicated.
+	 * Opens and parses a text file that indicates what needs to be opened. Calls other loader methods as indicated.
 	 * 
 	 * @param filePath - The path of the text file with the image information in it.
 	 * 
 	 * 
 	 */
-	private static void readFile(String fPath){
-		try{
-			
-			File file = new File("Images/"+fPath);
+	private static void readFile(String fPath) {
+		try {
+
+			File file = new File("Images/" + fPath);
 			System.out.println(file.getAbsolutePath());
 			BufferedReader br = new BufferedReader(new FileReader(file));
 
-			while(br.ready()){
+			while (br.ready()) {
 				String currLine = br.readLine();
-				if(currLine.length() == 0)//blank line
+				if (currLine.length() == 0)// blank line
 					continue;
-				if(currLine.startsWith("//")) //comment
+				if (currLine.startsWith("//")) // comment
 					continue;
-				if(currLine.startsWith("  ")) //nothing
+				if (currLine.startsWith("  ")) // nothing
 					continue;
-				if(currLine.startsWith("S")) //single Image
+				if (currLine.startsWith("S")) // single Image
 					loadSingle(currLine);
-				if(currLine.startsWith("G")) //group of individual images
+				if (currLine.startsWith("G")) // group of individual images
 					loadGroup(currLine);
-				if(currLine.startsWith("L"))
+				if (currLine.startsWith("L"))
 					loadLine(currLine);
-				if(currLine.startsWith("T"))
+				if (currLine.startsWith("T"))
 					loadSheet(currLine);
-				if(currLine.startsWith("A"))
+				if (currLine.startsWith("A"))
 					loadLonerSheet(currLine);
 			}
 
 			br.close();
 			br = null;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Loads in a single image, places it into the hashmap.
 	 * 
-	 * @param lineData - the line of the text file with info - 
-	 * 					 S Name,FilePath
+	 * @param lineData - the line of the text file with info - S Name,FilePath
 	 */
 	private static void loadSingle(String lineData) {
-		lineData = lineData.substring(2); //skip the line label (S)
+		lineData = lineData.substring(2); // skip the line label (S)
 
 		StringTokenizer st = new StringTokenizer(lineData, ",");
-		String imgName = st.nextToken(); //the name of the image, how we'll find it in the hash
-		
-		images.put(imgName, loadImage(st.nextToken()));//inset into hashmap
+		String imgName = st.nextToken(); // the name of the image, how we'll find it in the hash
+
+		images.put(imgName, loadImage(st.nextToken()));// inset into hashmap
 	}
 
 	/**
 	 * Loads in a group of images, puts into a set, puts the set into the HashMap of other Images
 	 * 
-	 * @param lineData - the corresponding text file line-
-	 * 					 G Name,Fnm1,Fnm2...
+	 * @param lineData - the corresponding text file line- G Name,Fnm1,Fnm2...
 	 */
-	private static void loadGroup(String lineData){
-		lineData = lineData.substring(2); //skip line label (g)
+	private static void loadGroup(String lineData) {
+		lineData = lineData.substring(2); // skip line label (g)
 
 		StringTokenizer st = new StringTokenizer(lineData, ",");
-		String name = st.nextToken(); //the name of the group
+		String name = st.nextToken(); // the name of the group
 
-		//ArrayList that will actually be in the Hashmap with the images inside it.
+		// ArrayList that will actually be in the Hashmap with the images inside it.
 		ArrayList imageSet = new ArrayList();
 
-		//get the images indicated by the current line
-		while(st.hasMoreTokens()){
-			//and put them into the arraylist
+		// get the images indicated by the current line
+		while (st.hasMoreTokens()) {
+			// and put them into the arraylist
 			imageSet.add(loadImage(st.nextToken()));
 		}
-		
-		//putting the image list into the set of all images.
+
+		// putting the image list into the set of all images.
 		images.put(name, imageSet);
 	}
 
 	/**
-	 * Loads in a group of images all contained with in an individual file (one PNG for instance)
-	 * so long as they are in a straight line, evenly spaced.
+	 * Loads in a group of images all contained with in an individual file (one PNG for instance) so long as they are in a straight line, evenly
+	 * spaced.
 	 * 
-	 * @param lineData - the corresponding text file line-
-	 * 					 L Name,FilePath,Cols
+	 * @param lineData - the corresponding text file line- L Name,FilePath,Cols
 	 */
-	private static void loadLine(String lineData){
-		lineData = lineData.substring(2); //skip line label (L)
+	private static void loadLine(String lineData) {
+		lineData = lineData.substring(2); // skip line label (L)
 
 		StringTokenizer st = new StringTokenizer(lineData, ",");
-		String name = st.nextToken(); //the name of the group
-		BufferedImage line = loadImage(st.nextToken()); //get the file
+		String name = st.nextToken(); // the name of the group
+		BufferedImage line = loadImage(st.nextToken()); // get the file
 		int width = line.getWidth();
 		int height = line.getHeight();
-		
-		//and divvy it up
+
+		// and divvy it up
 		ArrayList imageSet = new ArrayList();
-		
+
 		int frames = Integer.parseInt(st.nextToken());
-		int frameWidth = width/frames;
-		
-		for(int i = 0; i < frames; i++){
-			imageSet.add(line.getSubimage(i*frameWidth, 0, frameWidth, height));
+		int frameWidth = width / frames;
+
+		for (int i = 0; i < frames; i++) {
+			imageSet.add(createCompatibleImage(line.getSubimage(i * frameWidth, 0, frameWidth, height)));
 		}
-		images.put(name,imageSet);
+		images.put(name, imageSet);
 	}
-	
+
 	/**
 	 * Loads in a group of images contained in a 2D sprite sheet (single file)
 	 * 
-	 * @param lineData - the corresponding text file line- 
-	 * 					 T Filepath,number of rows, number of columns,RowName1, RowName2,...
+	 * @param lineData - the corresponding text file line- T Filepath,number of rows, number of columns,RowName1, RowName2,...
 	 */
-	private static void loadSheet(String lineData){
-		lineData = lineData.substring(2); //skip line label (T)
+	private static void loadSheet(String lineData) {
+		lineData = lineData.substring(2); // skip line label (T)
 
 		StringTokenizer st = new StringTokenizer(lineData, ",");
-		BufferedImage sheet = loadImage(st.nextToken()); //get the file
-		
-		//get the file data
+		BufferedImage sheet = loadImage(st.nextToken()); // get the file
+
+		// get the file data
 		int width = sheet.getWidth();
 		int height = sheet.getHeight();
 		int rows = Integer.parseInt(st.nextToken());
 		int framesPerRow = Integer.parseInt(st.nextToken());
-		int frameWidth = width/framesPerRow;
-		int frameHeight = height/rows;
-		
-		//and divvy it up		
-		for(int i = 0; i < rows; i++){
+		int frameWidth = width / framesPerRow;
+		int frameHeight = height / rows;
+
+		// and divvy it up
+		for (int i = 0; i < rows; i++) {
 			ArrayList imageSet = new ArrayList();
-			for(int j = 0; j < framesPerRow; j++){
-				imageSet.add(sheet.getSubimage(j*frameWidth, i*frameHeight, frameWidth, frameHeight));
+			for (int j = 0; j < framesPerRow; j++) {
+				imageSet.add(createCompatibleImage(sheet.getSubimage(j * frameWidth, i * frameHeight, frameWidth, frameHeight)));
 			}
 			String name = st.nextToken();
 			System.out.println(name + " sheet loaded");
-			images.put(name,imageSet);
+			images.put(name, imageSet);
 		}
 	}
-	
+
 	/**
-	 * Loads in a group of images contained in a 2D sprite sheet (single file) that are
-	 * stored separately and have no relation to each other. (Like tiles!)
+	 * Loads in a group of images contained in a 2D sprite sheet (single file) that are stored separately and have no relation to each other. (Like
+	 * tiles!)
 	 * 
-	 * @param lineData - the corresponding text file line- 
-	 * 					 A Filepath,number of rows, number of columns,Name1, Name2,...
+	 * @param lineData - the corresponding text file line- A Filepath,number of rows, number of columns,Name1, Name2,...
 	 */
-	private static void loadLonerSheet(String lineData){
-		lineData = lineData.substring(2); //skip line label (T)
+	private static void loadLonerSheet(String lineData) {
+		lineData = lineData.substring(2); // skip line label (T)
 
 		StringTokenizer st = new StringTokenizer(lineData, ",");
-		BufferedImage sheet = loadImage(st.nextToken()); //get the file
-		
-		//get the file data
+		BufferedImage sheet = loadImage(st.nextToken()); // get the file
+
+		// get the file data
 		int width = sheet.getWidth();
 		int height = sheet.getHeight();
 		int rows = Integer.parseInt(st.nextToken());
 		int framesPerRow = Integer.parseInt(st.nextToken());
-		int frameWidth = width/framesPerRow;
-		int frameHeight = height/rows;
-		//and divvy it up		
-		for(int i = 0; i < rows; i++){
-			for(int j = 0; j < framesPerRow; j++){
+		int frameWidth = width / framesPerRow;
+		int frameHeight = height / rows;
+		// and divvy it up
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < framesPerRow; j++) {
 				String name = st.nextToken();
-				images.put(name,sheet.getSubimage(j*frameWidth, i*frameHeight, frameWidth, frameHeight));
+				images.put(name, createCompatibleImage(sheet.getSubimage(j * frameWidth, i * frameHeight, frameWidth, frameHeight)));
 				System.out.println(name);
 
 			}
@@ -251,28 +245,31 @@ public class ImageLoader {
 	}
 
 	/**
-	 * Loads in image files with a given filepath. Used for the actual disk -> memory conversion.
-	 * Could also be used for evil if imgPath is called by outsiders using a hardcoded path.
+	 * Loads in image files with a given filepath. Used for the actual disk -> memory conversion. Could also be used for evil if imgPath is called by
+	 * outsiders using a hardcoded path.
 	 * 
 	 * @param imgPath - Filepath of the Image
 	 * @return Returns the drawable BufferedImage
 	 * @throws IOException if the Image isn't there, fuck you
 	 */
-	public static BufferedImage loadImage(String imgPath){
+	public static BufferedImage loadImage(String imgPath) {
 		BufferedImage I = null;
 		try {
-			I = ImageIO.read(new File(currentFolder+imgPath));
-		} catch (Exception e) {System.out.println("ERROR: Cannot load: " +currentFolder+imgPath);}
-		
+			I = createCompatibleImage(ImageIO.read(new File(currentFolder + imgPath)));
+			System.out.println("LoadImage Type(3?) " + I.getType());
+
+		} catch (Exception e) {
+			System.out.println("ERROR: Cannot load: " + currentFolder + imgPath);
+		}
+
 		return I;
 	}
-	
-/* 
- * ********************** ACCESSING METHODS *******************************
- * These methods are for internal use by Sprites, etc. They get images out of the image map
- * For display purposes, or give information about the image map for animating purposes.
- */
-	
+
+	/*
+	 * ********************** ACCESSING METHODS ******************************* These methods are for internal use by Sprites, etc. They get images
+	 * out of the image map For display purposes, or give information about the image map for animating purposes.
+	 */
+
 	/**
 	 * 
 	 * Gets an individual (S) image out for display purposes.
@@ -280,54 +277,59 @@ public class ImageLoader {
 	 * @param name - the name of the image. First value on the images.txt line
 	 * @return The image as a BufferedImage or null if the image isn't there
 	 */
-	public static BufferedImage getSingleImage(String name){
+	public static BufferedImage getSingleImage(String name) {
 		BufferedImage im;
-		
-		try{//find the image
+
+		try {// find the image
 			im = (BufferedImage) images.get(name);
-		}
-		catch(Exception e){ //if it doesn't exist, fuck you, nulls!!
+		} catch (Exception e) { // if it doesn't exist, fuck you, nulls!!
 			System.out.println("No images exist for " + name + " !!!!");
 			im = null;
 		}
 		return im;
 	}
-	
+
 	/**
-	 * Gets a single image out of a set of images grouped together.
-	 * For animating shit.
+	 * Gets a single image out of a set of images grouped together. For animating shit.
 	 * 
 	 * @param name - the name of the set. First value of the line of the text file.
 	 * @param position - which image in the set to display
 	 * @return the image
 	 */
-	public static BufferedImage getGroupedImage(String name, int position){
-		BufferedImage im; //the image to be returned;
+	public static BufferedImage getGroupedImage(String name, int position) {
+		BufferedImage im; // the image to be returned;
 
-		try{//get the image set out of the Hashmap
+		try {// get the image set out of the Hashmap
 			ArrayList imgSet = (ArrayList) images.get(name);
 			im = (BufferedImage) imgSet.get(position);
-		}
-		catch(Exception e){//if it isn't there, fuck you!
+		} catch (Exception e) {// if it isn't there, fuck you!
 			return (BufferedImage) images.get(name);
 		}
 		return im;
 	}
-	
-	 public static int getSeriesCount(String name){
-		 ArrayList imgSet = new ArrayList<>();
-		try{
+
+	public static int getSeriesCount(String name) {
+		ArrayList imgSet = new ArrayList();
+		try {
 			imgSet = (ArrayList) images.get(name);
-		}catch(ClassCastException e){
+		} catch (ClassCastException e) {
 			if (images.get(name) instanceof BufferedImage)
 				return 1;
 			System.out.println();
 		}
-	    if (imgSet == null) {
-	      System.out.println("404 " + name + " not found! (ImageLoader.java)");  
-	      return 0;
-	    }
-	    return imgSet.size();
-	  } // end of numImages()
-	
+		if (imgSet == null) {
+			System.out.println("404 " + name + " not found! (ImageLoader.java)");
+			return 0;
+		}
+		return imgSet.size();
+	} // end of numImages()
+
+	public static BufferedImage createCompatibleImage(BufferedImage image) {
+		BufferedImage target = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(image.getWidth(), image.getHeight(), image.getTransparency());
+		Graphics2D g2d = target.createGraphics();
+		g2d.drawImage(image, 0, 0, null);
+		g2d.dispose();
+		return target;
+	}
+
 }

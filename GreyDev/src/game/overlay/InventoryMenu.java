@@ -248,7 +248,7 @@ public class InventoryMenu {
 		}
 		int[] newItem = { s1, s2, s3, s4 };
 
-		if (craftOutput.isEmpty()) {
+		if (craftOutput.isEmpty()) {//TODO FIX THIS SHIT (only updates if craft out is empty, if remove items from recipe, nothing bad happens)
 
 			Item n = Crafting.craft(newItem); // see if the recipe in the craft area is a thing
 

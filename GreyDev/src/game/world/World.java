@@ -85,17 +85,19 @@ public class World {
 	public void render(Graphics g) {
 		// points used for render culling
 		// long starter = System.currentTimeMillis();
+
 		Point origin = Globals.findTile((int) player.getX() - Camera.width / 2, (int) player.getY() - 2 * Camera.height / 3);
 		Point bottomRight = Globals.findTile((int) player.getX() + Camera.width / 2, (int) player.getY() + Camera.height);
+
 		if (origin.x < 0)
 			origin.setLocation(0, origin.y);
 		if (origin.y < 0)
 			origin.setLocation(origin.x, 0);
 
-		if (bottomRight.x > xLength)
-			bottomRight.setLocation(xLength, bottomRight.y);
-		if (bottomRight.y > yHeight)
-			bottomRight.setLocation(bottomRight.x, yHeight);
+		if (bottomRight.x >= xLength)
+			bottomRight.setLocation(xLength-1, bottomRight.y);
+		if (bottomRight.y >= yHeight )
+			bottomRight.setLocation(bottomRight.x, yHeight-1);
 
 		ArrayList<Entity> sortList = new ArrayList<Entity>();
 
@@ -107,12 +109,15 @@ public class World {
 		for (int x = origin.x; x < bottomRight.x; x++) {
 			for (int y = bottomRight.y; y >= origin.y; y--) {
 				try {
-					if (tileMap[x][y] != null)
+					if (tileMap[x][y] != null){
+					//	renderct++;
 						tileMap[x][y].render(g);
+					}
 					if (walls[x][y] != null)
 						sortList.add(walls[x][y]);
 				} catch (Exception e) {
 					System.out.println("EXCEPTION IN WORLD RENDER LOOP");
+					e.printStackTrace();
 				}
 				;
 			}
@@ -121,11 +126,10 @@ public class World {
 		Collections.sort(sortList, spriteSorter);
 
 		for (Entity e : sortList) {
+		//	renderct++;
 			e.render(g);
 		}
-		// long ender = System.currentTimeMillis();
-		// if (ender - starter > 0)
-		// System.out.println((System.currentTimeMillis() - starter) + "millis to complete tavish");
+	
 	}
 
 	public void tick() {

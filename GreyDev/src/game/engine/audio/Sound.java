@@ -19,7 +19,7 @@ public class Sound {
 		AudioInputStream audioInputStream;
 		try {
 			System.out.println();
-			audioInputStream = AudioSystem.getAudioInputStream(new File("C:/Users/Barnes/Code/GitHub/Greywater/GreyDev/Audio/"+file));
+			audioInputStream = AudioSystem.getAudioInputStream(new File("Audio/" + file));
 
 			af = audioInputStream.getFormat();
 			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
@@ -27,7 +27,8 @@ public class Sound {
 			info = new DataLine.Info(Clip.class, af, size);
 			audioInputStream.read(audio, 0, size);
 		} catch (Exception e) {
-			System.out.println("lololol");
+			System.out.println(file + " had an issue" );
+			e.printStackTrace();
 		}
 	}
 

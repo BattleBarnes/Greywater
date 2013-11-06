@@ -16,6 +16,8 @@ import game.world.World;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.io.File;
 
 public class Core extends Engine {
@@ -31,21 +33,35 @@ public class Core extends Engine {
 
 	public Core(long anim_period) {
 		super(anim_period);
+		
+		System.out.println("Available Mem");
+		System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getAvailableAcceleratedMemory());
+		System.out.println("FSEM?");
+		System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().isFullScreenSupported());
+		System.out.println();
+		System.out.println(System.getProperties().toString());
 
-		System.setProperty("sun.java2d.translaccel", "true");
-		System.setProperty("sun.java2d.ddforcevram", "true");
-		System.setProperty("sun.java2d.opengl", "true");
+
+		
+		
 	}
 
 	public static void main(String[] args) {
+		System.setProperty("apple.awt.graphics.UseQuartz","false");
+		System.setProperty("sun.java2d.opengl", "true");
+		System.setProperty("sun.java2d.translaccel", "true");
+	//	System.setProperty("sun.java2d.ddforcevram", "true");
+
+		
 
 		// set up the fps and period of animation.
 		// I stole these from the cs3023 examples, because I'm not sure what the
 		// anim period should be, we can tinker with it.
-		int framesPerSecond = 120;
+		int framesPerSecond = 60;
 
 		long animPeriod = (long) (1000.0 / framesPerSecond); // period of animation (1/freq) in milliseconds
 		System.out.println("fps: " + framesPerSecond + " period: " + animPeriod);
+
 
 		new Core(animPeriod * 1000000L); // milliseconds -> nanoseconds
 	}
@@ -58,11 +74,7 @@ public class Core extends Engine {
 			l.render(g); // all game objects are in the level
 		
 		OverlayManager.render(g);
-//		long currentTime = System.currentTimeMillis();
-//		if()
-//			panel.render(g, Camera.actHeight/2-200, Camera.actWidth/2 -panel.getWidth());
-//			newGame = (System.currentTimeMillis() - currentTime) < 10000;
-//		}
+
 		
 		if(System.currentTimeMillis() - startTime < 10000){
 			Font menuFont = new Font("Baskerville Old Face", Font.TRUETYPE_FONT, 18);
@@ -95,11 +107,11 @@ public class Core extends Engine {
 	 * Updates game state
 	 */
 	protected void gameTick() {
-		if(!bgp.playing() && Globals.state == State.mainMenu){
+		//if(!bgp.playing() && Globals.state == State.mainMenu){
 		//	bgp.newSong(new File("Audio/OldtownGreywater.wav"));
-			System.out.println("newsong");
+			//System.out.println("newsong");
 		//	bgp.start();
-		}
+	//	}
 //			 bgp = new BGMusicPlayer(new File("Audio/cave.wav"));
 //			 bgp.start();
 		//	bgp.newSong(new File("Audio/OldtownGreywater.wav"));

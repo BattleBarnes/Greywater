@@ -13,6 +13,7 @@
 package game.engine;
 
 import game.Globals;
+import game.utils.Logger;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -24,7 +25,11 @@ import java.awt.Window;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferStrategy;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 
+import javax.print.attribute.standard.JobMessageFromOperator;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -37,9 +42,9 @@ public abstract class Engine extends JFrame implements Runnable {
 	 * Number of frames with a delay of 0 ms before the animation thread yields
 	 * to other running threads.
 	 */
-	private static final int NO_DELAYS_PER_YIELD = 15;
+	private static final int NO_DELAYS_PER_YIELD = 50;//15;
 
-	private static int MAX_FRAME_SKIPS = 59; // no. of frames that can be skipped in any one animation loop
+	private static int MAX_FRAME_SKIPS = 60; // no. of frames that can be skipped in any one animation loop
 	// i.e the games state is updated but not rendered
 
 	private Thread animator; // the thread that performs the animation
@@ -55,6 +60,7 @@ public abstract class Engine extends JFrame implements Runnable {
 
 	protected Camera cam; // Graphics devices
 	private Graphics g;
+	private Logger log;
 
 	/* *************************************************************************** Initialization in all its many forms ********************************************** */
 
@@ -65,12 +71,21 @@ public abstract class Engine extends JFrame implements Runnable {
 	 * @param w - Whether or not the game is to be played in a window (vs FSEM)
 	 */
 	public Engine(long animPeriod_ns) {
+		try {
+			JFileChooser jfc = new JFileChooser();
+			jfc.showSaveDialog(null);
+			log = new Logger(jfc.getSelectedFile());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "NOOOO PRINTER");
+		}
+		System.setOut(log);
+		System.setErr(log);
 		animPeriodNano = animPeriod_ns;
 
 		Globals.state = State.mainMenu;
 
 		initFullScreen();
-
 		init();
 		startGame();
 
@@ -180,6 +195,9 @@ public abstract class Engine extends JFrame implements Runnable {
 	 * to sleep so it doesn't cycle out of control.
 	 */
 	public void run() {
+		
+		
+	
 		long startTime = System.nanoTime();
 		long endTime;
 		long spareTime, sleepTime;
@@ -238,6 +256,9 @@ public abstract class Engine extends JFrame implements Runnable {
 			secondselapsed += (endTime - startTime) / 1000000000.0;
 
 			if (secondselapsed >= 10) {
+				System.out.println();
+				System.out.println();
+				System.out.println("*******************************");
 				System.out.println("Ticks per sec:" + tickCount / secondselapsed);
 				System.out.println("Time elapsed: " + secondselapsed);
 				System.out.println("Ticks total " + tickCount);
@@ -245,6 +266,10 @@ public abstract class Engine extends JFrame implements Runnable {
 
 				System.out.println("FPS:" + frameCount / secondselapsed);
 				System.out.println("Frames total " + tickCount);
+				System.out.println("*******************************");
+				System.out.println();
+				System.out.println();
+
 				secondselapsed = 0;
 				frameCount = 0;
 			}
@@ -276,8 +301,9 @@ public abstract class Engine extends JFrame implements Runnable {
 	 */
 	private void screenUpdate(Graphics g) {
 		try {
-
+			
 			g = bufferStrategy.getDrawGraphics();
+
 		//	g.setColor(Color.BLACK);
 
 	//		g.fillRect(0, 0, 3 * Camera.height, 3 * Camera.width);
