@@ -24,6 +24,7 @@ import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -86,8 +87,8 @@ public class World {
 		// points used for render culling
 		// long starter = System.currentTimeMillis();
 
-		Point origin = Globals.findTile((int) player.getX() - Camera.width / 2, (int) player.getY() - 2 * Camera.height / 3);
-		Point bottomRight = Globals.findTile((int) player.getX() + Camera.width / 2, (int) player.getY() + Camera.height);
+		Point origin = Globals.findTile((int) player.getX() - Camera.width / 2, (int) player.getY() - Camera.height);
+		Point bottomRight = Globals.findTile((int) player.getX() + Camera.width, (int) player.getY() + Camera.height);
 
 		if (origin.x < 0)
 			origin.setLocation(0, origin.y);
@@ -124,7 +125,8 @@ public class World {
 		}
 
 		Collections.sort(sortList, spriteSorter);
-
+		if(player.target != null)
+			player.selection.render(g, (int)((Mob) player.target).getAttbox().getX() - 10, (int)((Mob) player.target).getAttbox().getY() + 130);
 		for (Entity e : sortList) {
 		//	renderct++;
 			e.render(g);
@@ -146,16 +148,20 @@ public class World {
 	}
 
 	public boolean checkWorldCollision(Shape s) {
+		if(s == null)
+			return false;
 		Point area = Globals.findTile(s.getBounds().x, s.getBounds().y);
 
 		int areaX = area.x;
 		int areaY = area.y;
+		areaX--;
+		areaY--;
 		if (areaX < 0)
 			areaX = 0;
 		if (areaY < 0)
 			areaY = 0;
-		int areaXEnd = areaX + 20;
-		int areaYEnd = areaY + 20;
+		int areaXEnd = areaX + 21;
+		int areaYEnd = areaY + 21;
 		if (areaXEnd > xLength)
 			areaXEnd = xLength;
 		if (areaYEnd > yHeight)
@@ -165,7 +171,7 @@ public class World {
 			for (int y = areaY; y < areaYEnd; y++) {
 				if (walls[x][y] == null)
 					continue;
-				if (s != null && s.intersects(walls[x][y].getPhysicsShape())) {
+				if (s.intersects(walls[x][y].getPhysicsShape())) {
 					// walls[x][y].printName();
 					return true;
 				}
@@ -192,8 +198,8 @@ public class World {
 				continue;
 			if (e.playerFriend)
 				continue;
-			if (s.intersects(((Watchman) e).getAttbox())) {
-				if (e.isAlive() && !(e.playerFriend))
+			if (s.intersects(e.getAttbox())) {
+				if (e.isAlive())
 					return e;
 				else if (e.playerFriend)
 					friendMob = e;
@@ -212,17 +218,30 @@ public class World {
 		if (x < 0 || y < 0)
 			return false;
 		Point p = Globals.findTile(x, y);
-		if (p.x < 0 && p.x > xLength && p.y < 0 && p.y > yHeight)
+		if (p.x < 0 || p.x > xLength || p.y < 0 || p.y > yHeight)
 			return false;
 
 		Rectangle r = new Rectangle(x, y, 1, 1);
-		if (checkWorldCollision(r))
+		//if (checkWorldCollision(r))
+			//return false;
+		if(checkWallCollision(x,y))
 			return false;
 		if (p.x > 0 && p.x < xLength && p.y > 0 && p.y < yHeight)
 			return true;
 
 		return false;
 
+	}
+	
+	public boolean checkWallCollision(int x, int y){
+		if (x < 0 || y < 0)
+			return false;
+		Point p = Globals.findTile(x, y);
+		if (p.x < 0 || p.x > xLength || p.y < 0 || p.y > yHeight)
+			return false;
+		if(walls[p.x][p.y]!= null)
+			return true;
+		return false;
 	}
 
 	private void loadEnviro(int lvlno) {
@@ -232,12 +251,14 @@ public class World {
 		Sprite column = new Sprite("column", "column");
 		try {
 
-			File readFile = new File("Level" + lvlno + ".txt");
+			InputStream readFile = this.getClass().getClassLoader().getResourceAsStream("Level" + lvlno + ".txt");
 			Scanner filer = new Scanner(readFile);
 			String line;
 
 			xLength = Integer.parseInt(filer.nextLine());
 			yHeight = Integer.parseInt(filer.nextLine());
+			System.out.println("XLength " + xLength);
+			System.out.println("YLength " + yHeight);
 			tileMap = new Tile[xLength][yHeight];
 			walls = new Wall[xLength][yHeight];
 
@@ -261,22 +282,23 @@ public class World {
 			filer.close();
 			filer = null;
 			line = "";
+			readFile.close();
 
-			readFile = new File("Walls" + (lvlno) + ".txt");
+			//readFile = new File("Walls" + (lvlno) + ".txt");
+			 readFile = this.getClass().getClassLoader().getResourceAsStream("Walls" + lvlno + ".txt");
+
 			filer = new Scanner(readFile);
-
+			ArrayList<double[]> sweepyList = new ArrayList();
 			for (int y = 0; y < yHeight; y++) {
 				line = filer.nextLine();
 				if (line.contains("//")) {
 					y--;
 					continue;
 				}
-
 				for (int x = 0; x < xLength; x++) {
 
 					double xCo = x * tileWidth;
 					double yCo = y * tileHeight;
-
 					if (line.charAt(x) == 'W' || line.charAt(x) == 'S') {
 						int choice = rand.nextInt(9);
 
@@ -296,17 +318,23 @@ public class World {
 						w.init(this);
 						mobList.add(w);
 					} else if (line.charAt(x) == 'X') {
-						Sweepy sw = new Sweepy(xCo, yCo, player);
-						sw.init(this);
-						mobList.add(sw);
+						sweepyList.add(new double[]{xCo,yCo});
 					}
 				}
 			}
+			
+			int index = rand.nextInt(sweepyList.size());
+			double[] d = sweepyList.get(index);
+			Sweepy sw = new Sweepy(d[0], d[1], player);
+			sw.init(this);
+			mobList.add(sw);
+			
 
 			filer.close();
 			filer = null;
+			readFile.close();
 
-		} catch (FileNotFoundException e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 	}

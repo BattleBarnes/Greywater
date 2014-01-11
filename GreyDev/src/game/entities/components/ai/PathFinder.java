@@ -19,7 +19,7 @@ public class PathFinder {
 	}
 
 	public boolean hasPath(){
-		if (pathIndex == path.size())
+		if (path == null || pathIndex == path.size())
 			return false;
 
 		return true;
@@ -100,4 +100,13 @@ public class PathFinder {
 		return null; // no path found
 	}
 
+	public Point2D getDestination(){
+
+		return path.get(path.size()-1);
+	}
+	
+	public void clearPath(){
+		path.clear();
+		pathIndex = 0;
+	}
 }

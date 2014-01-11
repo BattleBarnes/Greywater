@@ -75,7 +75,7 @@ public class StartMenu {
 		
 		// if the game is over, show the win screen
 		if (Globals.state == State.gameWon) {
-			title.render(g, 0, 0);
+			endscreen.render(g, 0, 0);
 			g.setColor(Color.ORANGE);
 			g.setFont(menuFont);
 			String s0 = "You Escaped! You win!";

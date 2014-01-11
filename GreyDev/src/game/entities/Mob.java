@@ -1,6 +1,7 @@
 package game.entities;
 
 import game.Globals;
+import game.engine.Camera;
 import game.engine.audio.SoundLoader;
 import game.entities.components.AnimEvent;
 import game.entities.components.AnimListener;
@@ -11,6 +12,8 @@ import game.overlay.InventoryMenu;
 import game.world.World;
 
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.Random;
 
 public abstract class Mob extends Entity implements AnimListener {
@@ -32,7 +35,7 @@ public abstract class Mob extends Entity implements AnimListener {
 	protected Line2D sight;
 	protected boolean validSight;
 	public int sightRange;
-	
+
 	boolean attacking = false;
 	protected InventoryMenu inv;
 	public InventoryMenu currentLoot;
@@ -44,50 +47,34 @@ public abstract class Mob extends Entity implements AnimListener {
 		graphicsComponent.addAnimListener(this);
 	}
 
-
 	/**
-	 * Generic method for moving entities: Saves last valid position, moves the
-	 * entity on its current trajectory, ticks the graphics component, moves the
-	 * hitBox.
+	 * Generic method for moving entities: Saves last valid position, moves the entity on its current trajectory, ticks the graphics component, moves
+	 * the hitBox.
 	 */
 	public void tick() {
-		if(HP <=0){
+		if (HP <= 0 && !graphicsComponent.getCurrentImageName().contains("Die") && !graphicsComponent.getCurrentImageName().contains("Dead")) {
 			attacking = false;
-			if(graphicsComponent.getCurrentImageName().contains("Attack")){
-				graphicsComponent.animate(0.9, "Die");
-			}
-			//graphicsComponent = new Sprite(this.name, name + "Dead");
-			
+			graphicsComponent.animate(0.9, "Die");
 		}
-		
-		if (HP <= 0 && !graphicsComponent.isAnimating()) {
-			graphicsComponent = new Sprite(this.name, name + "Dead");
-			return;
-		}
-		
+
 		super.tick();
 		if (HP > 0)
 			getInput(); // get input from AI or controls or whatever
-		
-		
+
 		if (!physicsComponent.isMoving())
 			physicsComponent.stopMovement();
 
 		if (HP > 0)
 			walk();
 
-	
-		
-
 	}
 
 	/**
-	 * Dismisses any open loot windows, finds the direction of movement,
-	 * shows the walk animation
+	 * Dismisses any open loot windows, finds the direction of movement, shows the walk animation
 	 */
 	public void walk() {
-		
-		if(attacking){
+
+		if (attacking) {
 			graphicsComponent.animate(.5, "Attack" + currDirection);
 			return;
 		}
@@ -97,7 +84,7 @@ public abstract class Mob extends Entity implements AnimListener {
 			currDirection = Globals.getStringDir(direction);
 			graphicsComponent.loopImg(walkRate, "Walk" + currDirection);
 			currentLoot = null;
-			
+
 		} else if (!attacking) {
 			graphicsComponent.loopImg(.5, "Stand" + currDirection);
 		}
@@ -105,8 +92,7 @@ public abstract class Mob extends Entity implements AnimListener {
 	}
 
 	/**
-	 * Gets next action for this mob, can be AI logic or player input,
-	 * subclasses!
+	 * Gets next action for this mob, can be AI logic or player input, subclasses!
 	 */
 	protected abstract void getInput();
 
@@ -120,31 +106,31 @@ public abstract class Mob extends Entity implements AnimListener {
 	}
 
 	/**
-	 * Determines whether or not the Mob has a valid sightline (exists, is not longer than sightRange, and doesn't collide with walls)
-	 * Sets validSight to whether or not the sight is valid.
+	 * Determines whether or not the Mob has a valid sightline (exists, is not longer than sightRange, and doesn't collide with walls) Sets validSight
+	 * to whether or not the sight is valid.
 	 */
 	public void validateSight() {
-		if(sight != null && Globals.distance(sight.getP1(), sight.getP2()) <= this.sightRange && !world.checkWorldCollision(sight))
+		if (sight != null && Globals.distance(sight.getP1(), sight.getP2()) <= this.sightRange && !world.checkWorldCollision(sight))
 			validSight = true;
 		else
 			validSight = false;
 	}
 
-
 	/**
 	 * Change the Mob's HP by the given amount.
+	 * 
 	 * @param damage - how much to change mob hp by
 	 */
 	public void damage(int damage) {
 		HP -= damage;
-		System.out.println(name + " took " + damage + " dmg ---> " + HP +" HP");
+		System.out.println(name + " took " + damage + " dmg ---> " + HP + " HP");
 		if (HP <= 0) {
 			graphicsComponent.animate(0.9, "Die");
 		}
 	}
 
 	public abstract boolean interact();
-	
+
 	public int getHP() {
 		return HP;
 	}
@@ -170,15 +156,23 @@ public abstract class Mob extends Entity implements AnimListener {
 	}
 
 	@Override
-	public void handleEvent(AnimEvent e){
-		if(e.action.contains("Attack") && e.ending){
+	public void handleEvent(AnimEvent e) {
+		if (e.action.contains("Attack") && e.ending) {
 			attacking = false;
-		}
-		else if(e.action.contains("Walk") && !e.beginning){
+		} 
+		else if (e.action.contains("Walk") && !e.beginning) {
 			int num = 0;
-			num = new Random().nextInt(6)+1;
-			SoundLoader.playSingle(name+"Walk"+num);
+			num = new Random().nextInt(6) + 1;
+			SoundLoader.playSingle(name + "Walk" + num);
+		}
+		else if(e.action.contains("Die") && e.ending){
+			System.out.println(name + " died: " + HP);
+			graphicsComponent = new Sprite(this.name, name + "Dead");
 		}
 	}
-	
+
+	public Rectangle2D getAttbox() {
+		Point2D p = Globals.getIsoCoords(getX() + spriteXOff, getY() + spriteYOff);
+		return new Rectangle2D.Double((int) Math.round(p.getX() ) + 50 - Camera.xOffset, (int) Math.round(p.getY() + 20)- Camera.yOffset, graphicsComponent.getWidth() - 100, graphicsComponent.getHeight() - 45);
+	}
 }

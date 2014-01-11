@@ -16,6 +16,7 @@ public class Sweepy extends Mob {
 		currDirection = "South";
 		this.graphicsComponent = new Sprite(name, name+"South");
 		this.physicsComponent = new Tangible(x, y, 30, 30, 2);
+		System.out.println("Sweep Loc " + x + " " +  y);
 
 		spriteXOff = 0;
 		spriteYOff = 0;

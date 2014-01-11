@@ -72,12 +72,13 @@ public abstract class Engine extends JFrame implements Runnable {
 	 */
 	public Engine(long animPeriod_ns) {
 		try {
+			JOptionPane.showMessageDialog(null, "Welcome to the Greywater Public Alpha. \nIf you would like to assist the Greywater Development Team \nwith system data and performance information, \nplease select a location to save a log file for this playthrough. \nNo personal data is collected. \n\nIf you don't want to submit a log, hit cancel on the next window. \n\nLogs can be sent to teamsweepy@gmail.com.");
 			JFileChooser jfc = new JFileChooser();
 			jfc.showSaveDialog(null);
 			log = new Logger(jfc.getSelectedFile());
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "NOOOO PRINTER");
+			JOptionPane.showMessageDialog(null, "No Printer Selected.");
 		}
 		System.setOut(log);
 		System.setErr(log);

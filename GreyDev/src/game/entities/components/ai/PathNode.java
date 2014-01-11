@@ -111,6 +111,7 @@ public class PathNode {
 
 		if (wd.checkWorldCollision(new Line2D.Double(this.getPoint(), new Point2D.Double(x, y))))
 			return null;
+	
 		PathNode newNode = new PathNode(new Point2D.Double(x, y));
 		newNode.setCostFromStart(getCostFromStart() + Math.pow(Globals.distance(newNode.getPoint(), this.getPoint()), 2));
 		newNode.setParent(this);

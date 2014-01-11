@@ -1,8 +1,11 @@
 package game.engine.audio;
 
+import game.engine.ImageLoader;
+
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -52,8 +55,10 @@ public class AudioLoader {
 		private static void readFile(String filePath){
 			try{
 				
-				File file = new File("Audio/"+filePath);
-				BufferedReader br = new BufferedReader(new FileReader(file));
+				//File file = new File("Audio/"+filePath);
+				InputStream url = AudioLoader.class.getClassLoader().getResourceAsStream("Audio/" + filePath);
+				InputStreamReader isr = new InputStreamReader(url);
+				BufferedReader br = new BufferedReader(isr);
 
 				while(br.ready()){
 					String currLine = br.readLine();
@@ -70,6 +75,8 @@ public class AudioLoader {
 				}
 
 				br.close();
+				isr.close();
+				url.close();
 				br = null;
 			}catch(Exception e){
 				e.printStackTrace();

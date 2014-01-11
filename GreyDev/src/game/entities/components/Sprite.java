@@ -80,35 +80,35 @@ public class Sprite {
 	public void render(Graphics g, int x, int y) {
 		tick();
 		BufferedImage rep = getCurrentImage();
-		if (name.contains("Tavish")) {
-			System.out.println(this.name + " Img accel,priority,type3,truevolatile");
-			try{
-				System.out.println(rep.getCapabilities(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()).isAccelerated());
-			}catch(Exception e){
-				e.printStackTrace();
-				System.out.println(e.getMessage());
-				System.out.println();
-
-			}
-			
-			System.out.println(rep.getAccelerationPriority());
-			System.out.println(rep.getType());
-			System.out.println(rep.getCapabilities(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()).isTrueVolatile());
-			System.out.println();
-			rep.setAccelerationPriority(1f);
-			System.out.println("Headless?");
-			System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().isHeadlessInstance());
-			System.out.println("String");
-			System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().toString());
-			System.out.println("DefaultScreen");
-			System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice());
-			System.out.println("Configs");
-			System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getConfigurations().toString());
-			System.out.println("DefConfigCaps");
-			System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getImageCapabilities().toString());
-			System.out.println("DefConfig");
-			System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration());
-		}
+//		if (name.contains("Tavish")) {
+//			System.out.println(this.name + " Img accel,priority,type3,truevolatile");
+//			try{
+//				System.out.println(rep.getCapabilities(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()).isAccelerated());
+//			}catch(Exception e){
+//				e.printStackTrace();
+//				System.out.println(e.getMessage());
+//				System.out.println();
+//
+//			}
+//			
+//			System.out.println(rep.getAccelerationPriority());
+//			System.out.println(rep.getType());
+//			System.out.println(rep.getCapabilities(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()).isTrueVolatile());
+//			System.out.println();
+//			rep.setAccelerationPriority(1f);
+//			System.out.println("Headless?");
+//			System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().isHeadlessInstance());
+//			System.out.println("String");
+//			System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().toString());
+//			System.out.println("DefaultScreen");
+//			System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice());
+//			System.out.println("Configs");
+//			System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getConfigurations().toString());
+//			System.out.println("DefConfigCaps");
+//			System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getImageCapabilities().toString());
+//			System.out.println("DefConfig");
+//			System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration());
+//		}
 
 		g.drawImage(rep, x, y, rep.getWidth(), rep.getHeight(), null);
 
@@ -193,7 +193,7 @@ public class Sprite {
 		seriesPosition = 0;
 		totalAnimTime_Millis = 0;
 		sequenceDuration_Millis = duration_seconds * 1000;
-		seriesLength = ImageLoader.getSeriesCount(name + ident) + 1;
+		seriesLength = ImageLoader.getSeriesCount(name + ident) ;
 		cycleLength_Millis = sequenceDuration_Millis / seriesLength;
 		currImgName = name + ident;
 	}

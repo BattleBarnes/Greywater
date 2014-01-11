@@ -11,6 +11,7 @@
 package game.entities;
 
 import game.Globals;
+import game.engine.Camera;
 import game.engine.InputHandler;
 import game.entities.components.Sprite;
 import game.entities.components.Tangible;
@@ -24,10 +25,10 @@ import java.awt.geom.Rectangle2D;
 public class Player extends Mob {
 
 	public Rectangle2D attRect;
-	Point2D lastClick = new Point2D.Double();
 
 	int lastPos = 0;
 	public boolean notPlayed = true;
+	public Sprite selection;
 
 	/**
 	 * Constructor!
@@ -43,12 +44,12 @@ public class Player extends Mob {
 		y = (int) (y * Globals.tileHeight);
 
 		this.physicsComponent = new Tangible(x, y, 35, 35, 1.);
-
+		selection = new Sprite("highlight", "highlight");
 		spriteXOff = (int) (-graphicsComponent.getWidth() / 2 - 65 - 35);
 		spriteYOff = (int) (-graphicsComponent.getHeight() + 30 + 35);
 		inv = m;
 		this.walkRate = 1;
-
+		playerFriend = false;
 	}
 
 	/**
@@ -60,36 +61,36 @@ public class Player extends Mob {
 			damage(-inv.buff);
 		inv.buff = 0;
 
+		//if left clicking pathfind and establish attack-collision box.
 		if (InputHandler.leftClick.heldDown) {
 			Point2D clickLoc = InputHandler.leftClick.location;
 			Point2D gridLoc = Globals.isoToGrid(clickLoc.getX(), clickLoc.getY());
 			attRect = new Rectangle2D.Double(clickLoc.getX() - 15, clickLoc.getY() - 15, 30, 30);
 
-			if (interact())
+			if (interact()) //if the attack-collision box hits a mob, don't pathfind.
 				return;
 
-			pathFinder.setNewPath(new Point2D.Double(getX(), getY()), gridLoc);
+			pathFinder.setNewPath(getLocation(), gridLoc); //otherwise, walk to the click
 			System.out.println(name + " began pathfinding...");
 			InputHandler.leftClick.heldDown = false;
 			Point2D newPoint = pathFinder.getNextLoc();
-			newPoint = pathFinder.getNextLoc();
+			newPoint = pathFinder.getNextLoc(); //first point is where the player is standing now, ignore it
 			if (newPoint != null) {
 				physicsComponent.destination = newPoint;
 				physicsComponent.moveTo(newPoint.getX(), newPoint.getY());
 			}
 
-		} else {
+		} else { //if no click, go to next location on path.
 			if (!physicsComponent.isMoving()) {
 				Point2D newPoint = pathFinder.getNextLoc();
 				if (newPoint != null) {
-					physicsComponent.destination = newPoint;
+				//	physicsComponent.destination = newPoint;
 					physicsComponent.moveTo(newPoint.getX(), newPoint.getY());
 				}
 			}
-			//attacking = false;
 		}
 
-		attRect = null;
+		attRect = null; //remove attack rectangle so that attacks don't persist forever
 		inv.update();
 	}
 
@@ -106,23 +107,28 @@ public class Player extends Mob {
 
 	@Override
 	public boolean interact() {
-		if (attRect == null)
+		if (attRect == null) //if no interaction box, no need to look.
 			return false;
-		Mob e = (Mob) world.getEntityCollision(attRect, this);
-
-		if (e instanceof Mob) {
-			if (((Mob) e).isAlive() && !playerFriend) {
-				attack((Mob) e);
-			} else if (!((Mob) e).isAlive()) {
+		Mob e = (Mob) world.getEntityCollision(attRect, this); //find the entity we clicked
+		if (e instanceof Mob) { //if we clicked a Mob
+			if (((Mob) e).isAlive() && !playerFriend) {//if its alive and an enemy
+				attack((Mob) e); //kill!
+				target = e;
+			} else if (!((Mob) e).isAlive() && e.getLocation().distance(getLocation()) < 175) { //if it's dead, loot it.
 				((Mob) e).getInteracted(this);
-			} else if (playerFriend) {
+				target = null;
+			} else if (playerFriend) {//sweepy interaction goes here.
 				// talk or (sweepy).getloot
+			}else{
+				target = null;
+				return false;
 			}
 
-		} else {
+		} else { //interact with walls/tomes/floors (non mob entities)
 			// interact
+			target = null;
 		}
-		if (e != null)
+		if (e != null) //report whether or not we interacted with anything
 			return true;
 		else
 			return false;
@@ -131,7 +137,7 @@ public class Player extends Mob {
 	@Override
 	public void attack(Mob enemy) {
 
-		if (enemy == null || attacking)// && target == null)
+		if (enemy == null || attacking)
 			return;
 
 		//if too far away to attack
@@ -155,7 +161,6 @@ public class Player extends Mob {
 
 		System.out.println(name + " attacked " + ((Mob) enemy).name);
 
-
 		physicsComponent.stopMovement();
 
 		double targX = enemy.getPhysicsShape().getCenterX();
@@ -165,7 +170,6 @@ public class Player extends Mob {
 		this.direction = Globals.getIntDir(targX - x, targY - y);
 		this.currDirection = Globals.getStringDir(direction);
 		attacking = true;
-		this.physicsComponent.stopMovement();
 
 		int damage = 0;
 		int hitMod = 0;
@@ -177,7 +181,7 @@ public class Player extends Mob {
 		int chance = Globals.D(20);
 		System.out.println(this.name + " rolled " + chance + " to hit " + enemy.name);
 		if (chance + hitMod > 2) {
-			damage += damMod + Globals.D(6) + Globals.D(6) + Globals.D(6) + Globals.D(6);
+			damage += damMod + Globals.D(6) + Globals.D(6);
 			enemy.damage(damage);
 			System.out.println(name + " hit " + enemy.name + " for " + damage + " damage...");
 		}
@@ -188,4 +192,9 @@ public class Player extends Mob {
 		return inv;
 	}
 
+	@Override
+	public Rectangle2D getAttbox() {
+		Point2D p = Globals.getIsoCoords(getX() + spriteXOff, getY() + spriteYOff);
+		return new Rectangle2D.Double((int) Math.round(p.getX()) + 70, (int) Math.round(p.getY()) + 70, graphicsComponent.getWidth() -140, graphicsComponent.getHeight() - 70);
+	}
 }

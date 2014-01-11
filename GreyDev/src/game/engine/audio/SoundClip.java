@@ -1,7 +1,9 @@
 package game.engine.audio;
 
-import java.io.File;
+import game.engine.ImageLoader;
+
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -28,8 +30,8 @@ public class SoundClip implements LineListener {
 	private void loadClip(String fnm) {
 		try {
 			// link an audio stream to the sound clip's file
-			AudioInputStream stream = AudioSystem.getAudioInputStream(new File(
-					fnm));
+			InputStream url = SoundClip.class.getClassLoader().getResourceAsStream(fnm);
+			AudioInputStream stream = AudioSystem.getAudioInputStream(url);
 
 			AudioFormat format = stream.getFormat();
 			// convert ULAW/ALAW formats to PCM format
@@ -51,6 +53,7 @@ public class SoundClip implements LineListener {
 			// make sure sound system supports data line
 			if (!AudioSystem.isLineSupported(info)) {
 				System.out.println("Unsupported Clip File: " + fnm);
+				url.close();
 				return;
 			}
 
@@ -61,6 +64,7 @@ public class SoundClip implements LineListener {
 
 			clip.open(stream); // open the sound file as a clip
 			stream.close(); // we're done with the input stream
+			url.close();
 
 		} // end of try block
 

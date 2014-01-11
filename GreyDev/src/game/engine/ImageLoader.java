@@ -46,6 +46,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -87,9 +90,14 @@ public class ImageLoader {
 	private static void readFile(String fPath) {
 		try {
 
-			File file = new File("Images/" + fPath);
-			System.out.println(file.getAbsolutePath());
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			
+		//	File file = new File(ImageLoader.class.getClassLoader().getResourceAsStream("Images/"+fPath));
+			
+			InputStream url = ImageLoader.class.getClassLoader().getResourceAsStream("Images/common/images.ini");
+			InputStreamReader isr = new InputStreamReader(url);
+			BufferedReader br = new BufferedReader(isr);
+			
+
 
 			while (br.ready()) {
 				String currLine = br.readLine();
@@ -113,6 +121,8 @@ public class ImageLoader {
 
 			br.close();
 			br = null;
+			url.close();
+			isr.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -255,9 +265,10 @@ public class ImageLoader {
 	public static BufferedImage loadImage(String imgPath) {
 		BufferedImage I = null;
 		try {
-			I = createCompatibleImage(ImageIO.read(new File(currentFolder + imgPath)));
-			System.out.println("LoadImage Type(3?) " + I.getType());
-
+			InputStream is = ImageLoader.class.getClassLoader().getResourceAsStream(currentFolder + imgPath.toLowerCase());
+	
+			I = createCompatibleImage(ImageIO.read(is));
+			is.close();
 		} catch (Exception e) {
 			System.out.println("ERROR: Cannot load: " + currentFolder + imgPath);
 		}
@@ -301,6 +312,8 @@ public class ImageLoader {
 
 		try {// get the image set out of the Hashmap
 			ArrayList imgSet = (ArrayList) images.get(name);
+			if(imgSet.size()-1 < position)
+				System.out.println("****************************** " +name + " + " + position);
 			im = (BufferedImage) imgSet.get(position);
 		} catch (Exception e) {// if it isn't there, fuck you!
 			return (BufferedImage) images.get(name);
